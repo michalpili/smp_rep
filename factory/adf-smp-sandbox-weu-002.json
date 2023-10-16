@@ -1,0 +1,9 @@
+{
+	"name": "adf-smp-sandbox-weu-002",
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "4d590e55-1fad-4447-bc87-02da4315d7be",
+		"tenantId": "b131966a-2068-4b91-aeab-577ed32cecd1"
+	}
+}
