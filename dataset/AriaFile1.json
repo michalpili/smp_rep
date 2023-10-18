@@ -9,7 +9,8 @@
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "AmazonS3Location"
+				"type": "AmazonS3Location",
+				"bucketName": "falck-migration"
 			}
 		}
 	}
