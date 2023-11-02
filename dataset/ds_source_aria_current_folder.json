@@ -1,5 +1,5 @@
 {
-	"name": "AriaFile1",
+	"name": "ds_source_aria_current_folder",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AmazonS31",

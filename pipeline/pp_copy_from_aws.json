@@ -1,5 +1,5 @@
 {
-	"name": "PIPE - Copy from AWS",
+	"name": "pp_copy_from_aws",
 	"properties": {
 		"activities": [
 			{
@@ -30,7 +30,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AriaFile1",
+						"referenceName": "ds_source_aria_current_folder",
 						"type": "DatasetReference"
 					}
 				]
