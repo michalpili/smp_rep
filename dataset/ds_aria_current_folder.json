@@ -1,16 +1,16 @@
 {
-	"name": "ds_source_aws_s3",
+	"name": "ds_aria_current_folder",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AmazonS31",
+			"referenceName": "AzureBlobStorage",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "AmazonS3Location",
-				"bucketName": "falck-migration"
+				"type": "AzureBlobStorageLocation",
+				"container": "aria"
 			}
 		}
 	}
