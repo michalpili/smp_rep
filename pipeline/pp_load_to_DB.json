@@ -69,7 +69,7 @@
 								"source": {
 									"type": "BinarySource",
 									"storeSettings": {
-										"type": "AmazonS3ReadSettings",
+										"type": "AzureBlobStorageReadSettings",
 										"recursive": true
 									},
 									"formatSettings": {
@@ -80,7 +80,8 @@
 								"sink": {
 									"type": "BinarySink",
 									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
+										"type": "AzureBlobStorageWriteSettings",
+										"copyBehavior": "FlattenHierarchy"
 									}
 								},
 								"enableStaging": false,
@@ -88,42 +89,14 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "BinaryDataSource_File",
-									"type": "DatasetReference",
-									"parameters": {
-										"Bucket": {
-											"value": "@pipeline().parameters.SourceStore_Location",
-											"type": "Expression"
-										},
-										"Directory": {
-											"value": "@pipeline().parameters.SourceStore_Directory",
-											"type": "Expression"
-										},
-										"filename": {
-											"value": "@item().name",
-											"type": "Expression"
-										}
-									}
+									"referenceName": "ds_aria_all_folder",
+									"type": "DatasetReference"
 								}
 							],
 							"outputs": [
 								{
-									"referenceName": "BinaryDataDestination",
-									"type": "DatasetReference",
-									"parameters": {
-										"Container": {
-											"value": "@pipeline().parameters.DestinationStore_Location",
-											"type": "Expression"
-										},
-										"Directory": {
-											"value": "@pipeline().parameters.DestinationStore_Directory",
-											"type": "Expression"
-										},
-										"filename": {
-											"value": "@item().name",
-											"type": "Expression"
-										}
-									}
+									"referenceName": "ds_aria_current_folder",
+									"type": "DatasetReference"
 								}
 							]
 						}
