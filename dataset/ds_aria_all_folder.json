@@ -1,0 +1,17 @@
+{
+	"name": "ds_aria_all_folder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "aria-aws-copy-all"
+			}
+		}
+	}
+}

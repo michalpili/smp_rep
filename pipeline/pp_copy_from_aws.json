@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ACT - Copy from AWS",
-				"description": "activity to copy data from AWS",
+				"name": "Copy ALL from AWS",
+				"description": "",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -42,7 +42,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_aria_current_folder",
+						"referenceName": "ds_aria_all_folder",
 						"type": "DatasetReference"
 					}
 				]
