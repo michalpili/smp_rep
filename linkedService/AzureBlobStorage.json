@@ -2,11 +2,12 @@
 	"name": "AzureBlobStorage",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
+		"description": "migdevelopment",
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {
-			"connectionString": "DefaultEndpointsProtocol=https;AccountName=smpariamigrationdev01;EndpointSuffix=core.windows.net;",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQENDM0VEQ0Q3LURFNzQtNEREQy04OUY4LTRDQTVDMEJEMjRDMl9iYzkzNDEzNC1kMDMxLTRmNmItOTlhNy1lOGIyNGZiNjZjNmUiDQp9"
+			"connectionString": "DefaultEndpointsProtocol=https;AccountName=migdevelopment;EndpointSuffix=core.windows.net;",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQENDM0VEQ0Q3LURFNzQtNEREQy04OUY4LTRDQTVDMEJEMjRDMl9lZDFhZjMzZi00MzVlLTRiMjEtODJhOS1kMDY4MTA2MTEwMWIiDQp9"
 		}
 	}
 }
