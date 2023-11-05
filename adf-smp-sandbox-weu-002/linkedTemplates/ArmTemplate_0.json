@@ -29,6 +29,7 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "migdevelopment",
 				"annotations": [],
 				"type": "AzureBlobStorage",
 				"typeProperties": {
@@ -59,6 +60,28 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_aria_all_folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "aria-aws-copy-all"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_aria_current_folder')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -72,7 +95,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"container": "aria"
+						"container": "aria-aws-copy-current"
 					}
 				}
 			},
@@ -134,8 +157,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "ACT - Copy from AWS",
-						"description": "activity to copy data from AWS",
+						"name": "Copy ALL from AWS",
+						"description": "",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -174,7 +197,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "ds_aria_current_folder",
+								"referenceName": "ds_aria_all_folder",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -188,7 +211,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_source_aws_s3')]",
-				"[concat(variables('factoryId'), '/datasets/ds_aria_current_folder')]"
+				"[concat(variables('factoryId'), '/datasets/ds_aria_all_folder')]"
 			]
 		}
 	]
