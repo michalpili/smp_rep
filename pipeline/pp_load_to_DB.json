@@ -18,25 +18,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "BinaryDataSource_Folder",
-						"type": "DatasetReference",
-						"parameters": {
-							"Bucket": {
-								"value": "@pipeline().parameters.SourceStore_Location",
-								"type": "Expression"
-							},
-							"Directory": {
-								"value": "@pipeline().parameters.SourceStore_Directory",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "ds_aria_all_folder",
+						"type": "DatasetReference"
 					},
 					"fieldList": [
 						"childItems"
 					],
 					"storeSettings": {
-						"type": "AmazonS3ReadSettings",
-						"recursive": true
+						"type": "AzureBlobStorageReadSettings"
 					},
 					"formatSettings": {
 						"type": "BinaryReadSettings"
