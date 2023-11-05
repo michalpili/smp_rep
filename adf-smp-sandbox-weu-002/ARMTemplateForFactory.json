@@ -145,7 +145,7 @@
 								"type": "Expression"
 							},
 							"condition": {
-								"value": "@contains(item().type, '20231029')",
+								"value": "@contains(item().type, pipeline().parameters.ExtractionDate)",
 								"type": "Expression"
 							}
 						}
@@ -155,17 +155,9 @@
 					"elapsedTimeMetric": {}
 				},
 				"parameters": {
-					"SourceStore_Location": {
-						"type": "String"
-					},
-					"SourceStore_Directory": {
-						"type": "String"
-					},
-					"DestinationStore_Location": {
-						"type": "String"
-					},
-					"DestinationStore_Directory": {
-						"type": "String"
+					"ExtractionDate": {
+						"type": "String",
+						"defaultValue": "202310029"
 					}
 				},
 				"annotations": []
