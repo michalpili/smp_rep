@@ -1,0 +1,60 @@
+{
+	"name": "ds_source_metadata_allfiles",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "falck-migration/falck-migration-reporting-raw",
+				"container": "aria-aws-copy-all"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "api_queue_id",
+				"type": "String"
+			},
+			{
+				"name": "plan_instance_no",
+				"type": "String"
+			},
+			{
+				"name": "parent_plan_instance_no",
+				"type": "String"
+			},
+			{
+				"name": "plan_instance_cdid",
+				"type": "String"
+			},
+			{
+				"name": "acct_no",
+				"type": "String"
+			},
+			{
+				"name": "api_method_name",
+				"type": "String"
+			},
+			{
+				"name": "create_date",
+				"type": "String"
+			},
+			{
+				"name": "create_user",
+				"type": "String"
+			},
+			{
+				"name": "effective_date",
+				"type": "String"
+			}
+		]
+	}
+}
