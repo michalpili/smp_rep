@@ -119,7 +119,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Filter1",
+								"activity": "Get Folders Metadata",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -142,29 +142,6 @@
 									}
 								}
 							]
-						}
-					},
-					{
-						"name": "Filter1",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Get Folders Metadata",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Folders Metadata').output.childItems",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@pipeline().parameters.ExtractionDate",
-								"type": "Expression"
-							}
 						}
 					}
 				],
@@ -649,6 +626,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
+						"fileName": "*.csv",
 						"folderPath": "falck-migration/falck-migration-reporting-raw",
 						"container": "aria-aws-copy-all"
 					},
