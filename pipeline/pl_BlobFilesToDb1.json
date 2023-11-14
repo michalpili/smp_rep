@@ -22,7 +22,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "DECLARE @sql NVARCHAR(max)=''\nSELECT @sql += 'DROP TABLE ' + '[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']' FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = 'Aria_Archive' AND TABLE_NAME NOT IN ('client')\nExec Sp_executesql @sql\n"
+							"text": "DECLARE @sql NVARCHAR(max)=''\nSELECT @sql += 'DROP TABLE ' + '[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']' FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = 'Aria_Archive' AND TABLE_NAME IN ('client') and 1=0\nExec Sp_executesql @sql\n"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
