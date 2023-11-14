@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "*.csv",
 				"folderPath": "falck-migration/falck-migration-reporting-raw",
 				"container": "aria-aws-copy-all"
 			},
