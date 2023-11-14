@@ -8,11 +8,26 @@
 		"AmazonS31_secretAccessKey": {
 			"value": ""
 		},
+		"AzureBatch1_accessKey": {
+			"value": ""
+		},
 		"AzureBlobStorage_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabaseMIG_connectionString": {
 			"value": ""
 		},
 		"AmazonS31_properties_typeProperties_accessKeyId": {
 			"value": "AKIAXQJG6VWN7GODEQ5S"
+		},
+		"AzureBatch1_properties_typeProperties_batchUri": {
+			"value": "https://migdevelopment.westeurope.batch.azure.com"
+		},
+		"AzureBatch1_properties_typeProperties_poolName": {
+			"value": "MIG"
+		},
+		"AzureBatch1_properties_typeProperties_accountName": {
+			"value": "migdevelopment"
 		}
 	}
 }
