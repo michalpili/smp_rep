@@ -29,7 +29,7 @@
 				}
 			},
 			{
-				"name": "Get Metadata1",
+				"name": "Get Folders Metadata",
 				"type": "GetMetadata",
 				"dependsOn": [
 					{
@@ -52,9 +52,12 @@
 						"referenceName": "ds_source_metadata_allfiles",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"childItems"
+					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
