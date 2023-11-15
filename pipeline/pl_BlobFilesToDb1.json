@@ -79,7 +79,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get Folders Metadata').output.childItems",
+						"value": "@activity('Filter - foldername').output.value",
 						"type": "Expression"
 					},
 					"isSequential": false,
