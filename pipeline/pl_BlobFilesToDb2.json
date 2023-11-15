@@ -168,7 +168,7 @@
 			},
 			"FolderName": {
 				"type": "string",
-				"defaultValue": "falck-migration/falck-migration-reporting-raw/raw-acct-dunning-group"
+				"defaultValue": "raw-acct-dunning-group"
 			}
 		},
 		"annotations": []
