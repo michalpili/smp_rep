@@ -405,6 +405,592 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_source_main_folder_subfolders_files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FolderName": {
+						"type": "string"
+					},
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "falck-migration/falck-migration-reporting-raw/@dataset().FolderName",
+							"type": "Expression"
+						},
+						"container": "aria-aws-copy-all"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "api_queue_id",
+						"type": "String"
+					},
+					{
+						"name": "plan_instance_no",
+						"type": "String"
+					},
+					{
+						"name": "parent_plan_instance_no",
+						"type": "String"
+					},
+					{
+						"name": "plan_instance_cdid",
+						"type": "String"
+					},
+					{
+						"name": "acct_no",
+						"type": "String"
+					},
+					{
+						"name": "api_method_name",
+						"type": "String"
+					},
+					{
+						"name": "create_date",
+						"type": "String"
+					},
+					{
+						"name": "create_user",
+						"type": "String"
+					},
+					{
+						"name": "effective_date",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sink_mig_stg_db')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseMIG",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "client_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " acct_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " userid",
+						"type": "nvarchar"
+					},
+					{
+						"name": " password",
+						"type": "nvarchar"
+					},
+					{
+						"name": " plan_type",
+						"type": "nvarchar"
+					},
+					{
+						"name": " reg_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": " plan_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " plan_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " first_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": " last_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": " mi",
+						"type": "nvarchar"
+					},
+					{
+						"name": " address1",
+						"type": "nvarchar"
+					},
+					{
+						"name": " address2",
+						"type": "nvarchar"
+					},
+					{
+						"name": " city",
+						"type": "nvarchar"
+					},
+					{
+						"name": " locality",
+						"type": "nvarchar"
+					},
+					{
+						"name": " state_prov",
+						"type": "nvarchar"
+					},
+					{
+						"name": " country",
+						"type": "nvarchar"
+					},
+					{
+						"name": " postal_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": " ssn",
+						"type": "nvarchar"
+					},
+					{
+						"name": " phone_npa",
+						"type": "nvarchar"
+					},
+					{
+						"name": " phone_nxx",
+						"type": "nvarchar"
+					},
+					{
+						"name": " phone_suffix",
+						"type": "nvarchar"
+					},
+					{
+						"name": " phone_extension",
+						"type": "nvarchar"
+					},
+					{
+						"name": " phone_country_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": " intl_phone",
+						"type": "nvarchar"
+					},
+					{
+						"name": " pay_method",
+						"type": "nvarchar"
+					},
+					{
+						"name": " notify_method",
+						"type": "nvarchar"
+					},
+					{
+						"name": " next_bill_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " bill_day",
+						"type": "nvarchar"
+					},
+					{
+						"name": " last_bill_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " last_bill_thru_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " status_cd",
+						"type": "nvarchar"
+					},
+					{
+						"name": " process_flag",
+						"type": "nvarchar"
+					},
+					{
+						"name": " lang_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " legacy",
+						"type": "nvarchar"
+					},
+					{
+						"name": " tax_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": " senior_acct_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " carrier",
+						"type": "nvarchar"
+					},
+					{
+						"name": " comments",
+						"type": "nvarchar"
+					},
+					{
+						"name": " trans_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": " origin_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " old_userid",
+						"type": "nvarchar"
+					},
+					{
+						"name": " old_acct_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " aup_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " created",
+						"type": "nvarchar"
+					},
+					{
+						"name": " update_user",
+						"type": "nvarchar"
+					},
+					{
+						"name": " update_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " client_acct_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": " feature_mask",
+						"type": "nvarchar"
+					},
+					{
+						"name": " promo_cd",
+						"type": "nvarchar"
+					},
+					{
+						"name": " no_edit_ind",
+						"type": "nvarchar"
+					},
+					{
+						"name": " pop_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " alt_email",
+						"type": "nvarchar"
+					},
+					{
+						"name": " alt_homepage",
+						"type": "nvarchar"
+					},
+					{
+						"name": " reg_auth_result",
+						"type": "nvarchar"
+					},
+					{
+						"name": " status_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " status_degrade_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " secret_question_answer",
+						"type": "nvarchar"
+					},
+					{
+						"name": " test_acct_ind",
+						"type": "nvarchar"
+					},
+					{
+						"name": " company_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": " resp_level_cd",
+						"type": "nvarchar"
+					},
+					{
+						"name": " senior_acct_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " inv_approval_req_ind",
+						"type": "nvarchar"
+					},
+					{
+						"name": " currency_cd",
+						"type": "nvarchar"
+					},
+					{
+						"name": " eu_notes",
+						"type": "nvarchar"
+					},
+					{
+						"name": " plan_type_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " plan_roll_override_ind",
+						"type": "nvarchar"
+					},
+					{
+						"name": " last_arrears_bill_thru_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " alt_msg_template_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " require_special_inv",
+						"type": "nvarchar"
+					},
+					{
+						"name": " date_to_suspend",
+						"type": "nvarchar"
+					},
+					{
+						"name": " alt_master_rate_sched_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " reg_load_seq",
+						"type": "nvarchar"
+					},
+					{
+						"name": " pop_phone_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " birthdate",
+						"type": "nvarchar"
+					},
+					{
+						"name": " cell_phone_npa",
+						"type": "nvarchar"
+					},
+					{
+						"name": " cell_phone_nxx",
+						"type": "nvarchar"
+					},
+					{
+						"name": " cell_phone_suffix",
+						"type": "nvarchar"
+					},
+					{
+						"name": " work_phone_npa",
+						"type": "nvarchar"
+					},
+					{
+						"name": " work_phone_nxx",
+						"type": "nvarchar"
+					},
+					{
+						"name": " work_phone_suffix",
+						"type": "nvarchar"
+					},
+					{
+						"name": " work_phone_extension",
+						"type": "nvarchar"
+					},
+					{
+						"name": " date_to_expire",
+						"type": "nvarchar"
+					},
+					{
+						"name": " created_by",
+						"type": "nvarchar"
+					},
+					{
+						"name": " display_userid",
+						"type": "nvarchar"
+					},
+					{
+						"name": " donation_plan_amount",
+						"type": "nvarchar"
+					},
+					{
+						"name": " reg_dad",
+						"type": "nvarchar"
+					},
+					{
+						"name": " dw_export_seq",
+						"type": "nvarchar"
+					},
+					{
+						"name": " fax_phone",
+						"type": "nvarchar"
+					},
+					{
+						"name": " salutation",
+						"type": "nvarchar"
+					},
+					{
+						"name": " job_title",
+						"type": "nvarchar"
+					},
+					{
+						"name": " intl_cell_phone",
+						"type": "nvarchar"
+					},
+					{
+						"name": " master_plan_recurring_factor",
+						"type": "nvarchar"
+					},
+					{
+						"name": " intl_work_phone",
+						"type": "nvarchar"
+					},
+					{
+						"name": " plan_assign_api_receipt_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": " status_assign_api_receipt_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": " acct_create_api_receipt_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": " address_seq",
+						"type": "nvarchar"
+					},
+					{
+						"name": " taxpayer_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": " last_recur_bill_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " last_usage_bill_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " max_seq_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " seq_func_group_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " address3",
+						"type": "nvarchar"
+					},
+					{
+						"name": " notify_tmplt_grp_seq_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": " test_acct_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " acct_balance",
+						"type": "nvarchar"
+					},
+					{
+						"name": " acct_start_date",
+						"type": "nvarchar"
+					},
+					{
+						"name": " default_billing_group_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " acct_address_seq",
+						"type": "nvarchar"
+					},
+					{
+						"name": " inv_posting_method_cd",
+						"type": "nvarchar"
+					},
+					{
+						"name": " consumer_acct_ind",
+						"type": "nvarchar"
+					},
+					{
+						"name": " list_start_master_file",
+						"type": "nvarchar"
+					},
+					{
+						"name": " purchase_order_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " locale_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " legal_entity_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": " perpetual_payment_balance",
+						"type": "nvarchar"
+					},
+					{
+						"name": " is_anonymized",
+						"type": "nvarchar"
+					},
+					{
+						"name": "filename",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Aria_Archive_1",
+					"table": {
+						"value": "@dataset().FileName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseMIG')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AmazonS31')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -461,7 +1047,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Get Folders Metadata",
+						"name": "Get Files Metadata",
 						"type": "GetMetadata",
 						"dependsOn": [],
 						"policy": {
@@ -495,6 +1081,130 @@
 								"type": "DelimitedTextReadSettings"
 							}
 						}
+					},
+					{
+						"name": "ForEach - load file from ExtractionDate",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Filter by ExtractionDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Files Metadata').output.childItems",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy data - load file from ExtractionDate",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"additionalColumns": [
+												{
+													"name": "filename",
+													"value": {
+														"value": "@item().name ",
+														"type": "Expression"
+													}
+												}
+											],
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_source_main_folder_subfolders_files",
+											"type": "DatasetReference",
+											"parameters": {
+												"FolderName": {
+													"value": "@pipeline().parameters.FolderName",
+													"type": "Expression"
+												},
+												"FileName": {
+													"value": "@item().name ",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "sink_mig_stg_db",
+											"type": "DatasetReference",
+											"parameters": {
+												"FileName": {
+													"value": "@replace(replace(item().name,concat('90500012_',pipeline().parameters.ExtractionDate,'_'),''),'.csv' ,'' )",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Filter by ExtractionDate",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get Files Metadata",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Files Metadata').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@contains(item().name,pipeline().parameters.ExtractionDate)",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"policy": {
@@ -502,8 +1212,7 @@
 				},
 				"parameters": {
 					"ExtractionDate": {
-						"type": "string",
-						"defaultValue": "20231029"
+						"type": "string"
 					},
 					"FolderName": {
 						"type": "string"
@@ -512,7 +1221,9 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_source_main_folder_subfolders')]"
+				"[concat(variables('factoryId'), '/datasets/ds_source_main_folder_subfolders')]",
+				"[concat(variables('factoryId'), '/datasets/ds_source_main_folder_subfolders_files')]",
+				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]"
 			]
 		},
 		{
@@ -754,7 +1465,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "DECLARE @sql NVARCHAR(max)=''\nSELECT @sql += 'DROP TABLE ' + '[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']' FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = 'Aria_Archive' AND TABLE_NAME IN ('client') and 1=0\nExec Sp_executesql @sql\n"
+									"text": "DECLARE @sql NVARCHAR(max)=''\nSELECT @sql += 'DROP TABLE ' + '[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']' FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = 'Aria_Archive_1' AND TABLE_NAME IN ('client') and 1=0\nExec Sp_executesql @sql\n"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -799,11 +1510,11 @@
 						}
 					},
 					{
-						"name": "ForEach - loop through tables",
+						"name": "ForEach - loop through folders",
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Get Folders Metadata",
+								"activity": "Filter - foldername",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -818,7 +1529,7 @@
 							"isSequential": false,
 							"activities": [
 								{
-									"name": "Execute Pipeline1",
+									"name": "Execute Pipeline- load table",
 									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"userProperties": [],
@@ -829,6 +1540,10 @@
 										},
 										"waitOnCompletion": true,
 										"parameters": {
+											"ExtractionDate": {
+												"value": "@pipeline().parameters.ExtractionDate",
+												"type": "Expression"
+											},
 											"FolderName": {
 												"value": "@item().name",
 												"type": "Expression"
@@ -838,10 +1553,43 @@
 								}
 							]
 						}
+					},
+					{
+						"name": "Filter - foldername",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get Folders Metadata",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Folders Metadata').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@contains(item().name,pipeline().parameters.FilterFolderName)",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"ExtractionDate": {
+						"type": "string",
+						"defaultValue": "20231029"
+					},
+					"FilterFolderName": {
+						"type": "string",
+						"defaultValue": "raw-acct-dunning-group"
+					}
 				},
 				"annotations": []
 			},
@@ -849,70 +1597,6 @@
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseMIG')]",
 				"[concat(variables('factoryId'), '/datasets/ds_source_main_folder')]",
 				"[concat(variables('factoryId'), '/pipelines/pl_BlobFilesToDb2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pp_copy_from_aws')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy ALL from AWS",
-						"description": "",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AmazonS3ReadSettings",
-									"recursive": true
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "ds_source_aws_s3",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ds_aria_all_folder",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_source_aws_s3')]",
-				"[concat(variables('factoryId'), '/datasets/ds_aria_all_folder')]"
 			]
 		}
 	]
