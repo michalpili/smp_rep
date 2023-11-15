@@ -49,11 +49,11 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "ds_source_metadata_allfiles",
+						"referenceName": "ds_source_folders",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
-						"childItems"
+						"itemName"
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
