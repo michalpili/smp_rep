@@ -193,7 +193,7 @@
 									},
 									"metric": {
 										"value": {
-											"value": "'CSV->DB'",
+											"value": "CSV->DB",
 											"type": "Expression"
 										},
 										"type": "String"
