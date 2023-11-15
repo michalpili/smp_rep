@@ -165,10 +165,12 @@
 		],
 		"parameters": {
 			"ExtractionDate": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "20231029"
 			},
 			"FolderName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "falck-migration/falck-migration-reporting-raw/raw-acct-dunning-group"
 			}
 		},
 		"annotations": []
