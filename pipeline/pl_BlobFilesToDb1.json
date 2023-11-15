@@ -136,10 +136,12 @@
 		],
 		"parameters": {
 			"ExtractionDate": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "20231029"
 			},
 			"FilterFolderName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "raw-acct-dunning-group"
 			}
 		},
 		"annotations": []
