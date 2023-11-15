@@ -16,7 +16,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"folderPath": {
-					"value": "@falck-migration/falck-migration-reporting-raw/dataset().FolderName",
+					"value": "concat('falck-migration/falck-migration-reporting-raw',@dataset().FolderName )",
 					"type": "Expression"
 				},
 				"container": "aria-aws-copy-all"
