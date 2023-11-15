@@ -52,7 +52,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Filter by ExtractionDate').output",
+						"value": "@activity('Filter by ExtractionDate').output.childitems",
 						"type": "Expression"
 					},
 					"activities": [
