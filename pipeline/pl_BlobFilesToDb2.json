@@ -82,10 +82,6 @@
 									],
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
-										"recursive": {
-											"value": "@item().name",
-											"type": "Expression"
-										},
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
