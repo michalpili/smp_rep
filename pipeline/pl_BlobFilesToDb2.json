@@ -52,7 +52,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get Files Metadata').output.childItems",
+						"value": "@activity('Filter by ExtractionDate').output",
 						"type": "Expression"
 					},
 					"activities": [
