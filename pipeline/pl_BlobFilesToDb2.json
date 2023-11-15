@@ -31,36 +31,6 @@
 						"type": "DelimitedTextReadSettings"
 					}
 				}
-			},
-			{
-				"name": "ForEach - loop through tables",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "Get Folders Metadata",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Get Folders Metadata').output.childItems",
-						"type": "Expression"
-					},
-					"activities": [
-						{
-							"name": "Wait1",
-							"type": "Wait",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"waitTimeInSeconds": 1
-							}
-						}
-					]
-				}
 			}
 		],
 		"parameters": {
