@@ -53,7 +53,7 @@
 						"type": "DatasetReference"
 					},
 					"fieldList": [
-						"itemName"
+						"childItems"
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
@@ -79,7 +79,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get folders metadata').output.childItems",
+						"value": "@activity('Get Folders Metadata').output.childItems",
 						"type": "Expression"
 					},
 					"activities": [
