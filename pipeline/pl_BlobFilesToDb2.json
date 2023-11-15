@@ -67,6 +67,9 @@
 			"ExtractionDate": {
 				"type": "string",
 				"defaultValue": "20231029"
+			},
+			"FolderName": {
+				"type": "string"
 			}
 		},
 		"annotations": []
