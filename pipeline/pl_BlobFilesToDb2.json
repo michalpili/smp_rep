@@ -17,7 +17,13 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "ds_source_main_folder_subfolders",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"FolderName": {
+								"value": "@pipeline().parameters.FolderName",
+								"type": "Expression"
+							}
+						}
 					},
 					"fieldList": [
 						"childItems"
