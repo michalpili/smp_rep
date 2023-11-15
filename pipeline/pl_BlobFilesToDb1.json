@@ -96,6 +96,10 @@
 								},
 								"waitOnCompletion": true,
 								"parameters": {
+									"ExtractionDate": {
+										"value": "@pipeline().parameters.ExtractionDate",
+										"type": "Expression"
+									},
 									"FolderName": {
 										"value": "@item().name",
 										"type": "Expression"
@@ -107,6 +111,11 @@
 				}
 			}
 		],
+		"parameters": {
+			"ExtractionDate": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
