@@ -57,32 +57,9 @@
 					},
 					"activities": [
 						{
-							"name": "Filter - ExtractionDate",
-							"type": "Filter",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"items": {
-									"value": "@item().itemName",
-									"type": "Expression"
-								},
-								"condition": {
-									"value": "@contains(item().name,pipeline().parameters.ExtractionDate)",
-									"type": "Expression"
-								}
-							}
-						},
-						{
 							"name": "Copy data - load file from ExtractionDate",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "Filter - ExtractionDate",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
