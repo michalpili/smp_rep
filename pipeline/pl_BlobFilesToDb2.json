@@ -71,8 +71,7 @@
 		],
 		"parameters": {
 			"ExtractionDate": {
-				"type": "string",
-				"defaultValue": "20231029"
+				"type": "string"
 			},
 			"FolderName": {
 				"type": "string"
