@@ -1,5 +1,5 @@
 {
-	"name": "ds_source_metadata_allfiles",
+	"name": "ds_source_folders",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage",
