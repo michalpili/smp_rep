@@ -156,9 +156,16 @@
 							"typeProperties": {
 								"storedProcedureName": "[Audit].[mig_recon_stg_db_load_proc]",
 								"storedProcedureParameters": {
+									"copyduration": {
+										"value": {
+											"value": "@activity('Copy data - load file from ExtractionDate').output.copyDuration",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									},
 									"filename": {
 										"value": {
-											"value": "@pipeline().parameters.FolderName",
+											"value": "@item().name ",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -170,7 +177,14 @@
 										},
 										"type": "String"
 									},
-									"rowcnt": {
+									"rowscopied": {
+										"value": {
+											"value": "@activity('Copy data - load file from ExtractionDate').output.rowsCopied",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									},
+									"rowsread": {
 										"value": {
 											"value": "@activity('Copy data - load file from ExtractionDate').output.rowsRead",
 											"type": "Expression"
