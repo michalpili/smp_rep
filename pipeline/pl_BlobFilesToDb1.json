@@ -70,7 +70,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Get Folders Metadata",
+						"activity": "Filter - foldername",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -109,10 +109,36 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Filter - foldername",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Get Folders Metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Folders Metadata').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@contains(item().name,pipeline().parameters.FilterFolderName)",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
 			"ExtractionDate": {
+				"type": "string"
+			},
+			"FilterFolderName": {
 				"type": "string"
 			}
 		},
