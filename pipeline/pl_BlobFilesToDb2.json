@@ -172,7 +172,7 @@
 									},
 									"rowcnt": {
 										"value": {
-											"value": "@activity('Copy data - load file from ExtractionDate').output.rowcnt",
+											"value": "@activity('Copy data - load file from ExtractionDate').output.rowsRead",
 											"type": "Expression"
 										},
 										"type": "Int32"
