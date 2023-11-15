@@ -91,7 +91,7 @@
 								"sink": {
 									"type": "AzureSqlSink",
 									"writeBehavior": "insert",
-									"sqlWriterUseTableLock": false,
+									"sqlWriterUseTableLock": true,
 									"tableOption": "autoCreate",
 									"disableMetricsCollection": false
 								},
@@ -133,6 +133,56 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Stored procedure - audit",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Copy data - load file from ExtractionDate",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[Audit].[mig_recon_stg_db_load_proc]",
+								"storedProcedureParameters": {
+									"filename": {
+										"value": {
+											"value": "@pipeline().parameters.FolderName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"pipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"rowcnt": {
+										"value": {
+											"value": "@activity('Copy data - load file from ExtractionDate').output.rowcnt",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "AzureSqlDatabaseMIG",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
 				}
