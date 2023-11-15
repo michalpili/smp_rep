@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Folders Metadata",
+				"name": "Get Files Metadata",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -39,11 +39,11 @@
 				}
 			},
 			{
-				"name": "ForEach - loop sub folder files",
+				"name": "ForEach - load file from ExtractionDate",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Get Folders Metadata",
+						"activity": "Get Files Metadata",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -52,16 +52,32 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get Folders Metadata').output.childItems",
+						"value": "@activity('Get Files Metadata').output.childItems",
 						"type": "Expression"
 					},
 					"activities": [
 						{
-							"name": "Copy data1",
+							"name": "Filter - ExtractionDate",
+							"type": "Filter",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"items": {
+									"value": "@item().itemName",
+									"type": "Expression"
+								},
+								"condition": {
+									"value": "@contains(item().name,pipeline().parameters.ExtractionDate)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Copy data - load file from ExtractionDate",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Filter1",
+									"activity": "Filter - ExtractionDate",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -76,24 +92,72 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"enableStaging": false
-							}
-						},
-						{
-							"name": "Filter1",
-							"type": "Filter",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"items": {
-									"value": "@item()",
-									"type": "Expression"
+								"source": {
+									"type": "DelimitedTextSource",
+									"additionalColumns": [
+										{
+											"name": "filename",
+											"value": {
+												"value": "@item().name ",
+												"type": "Expression"
+											}
+										}
+									],
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
 								},
-								"condition": {
-									"value": "@contains(item().name,pipeline().parameters.ExtractionDate)",
-									"type": "Expression"
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
 								}
-							}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_source_main_folder_subfolders_files",
+									"type": "DatasetReference",
+									"parameters": {
+										"FolderName": {
+											"value": "@pipeline().parameters.FolderName",
+											"type": "Expression"
+										},
+										"FileName": {
+											"value": "@item().name ",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "sink_mig_stg_db",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@replace(replace(item().name,concat('90500012_',pipeline().parameters.ExtractionDate,'_'),''),'.csv' ,'' )",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						}
 					]
 				}
