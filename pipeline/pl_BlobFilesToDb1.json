@@ -89,7 +89,7 @@
 						"type": "Expression"
 					},
 					"isSequential": false,
-					"batchCount": 20,
+					"batchCount": 40,
 					"activities": [
 						{
 							"name": "Execute Pipeline- load table",
@@ -166,7 +166,7 @@
 				"typeProperties": {
 					"scripts": [
 						{
-							"type": "Query",
+							"type": "NonQuery",
 							"text": "CREATE OR ALTER PROCEDURE Audit.mig_recon_stg_db_load_proc\n    @pipeline varchar(1000),\n    @filename varchar(1000),\n    @rowsread INT,\n    @rowscopied INT,\n    @copyduration INT,\n    @metric varchar(1000)\nAS\nBEGIN\n    insert into Audit.mig_recon_stg_db_load (pipeline, filename, rowsread, rowscopied, copyduration, metric) values (@pipeline,@filename, @rowsread, @rowscopied, @copyduration, @metric )\nEND;\n\n"
 						}
 					],
