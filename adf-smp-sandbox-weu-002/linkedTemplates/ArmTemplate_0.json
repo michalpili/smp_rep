@@ -1299,114 +1299,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pp_load_to_DB')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Load to staging DB",
-				"activities": [
-					{
-						"name": "GetFileList",
-						"description": "Get the list of file",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "ds_aria_all_folder_raw",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true
-							},
-							"formatSettings": {
-								"type": "BinaryReadSettings"
-							}
-						}
-					},
-					{
-						"name": "FilterFiles",
-						"description": "Only files will be selected, the source-folders will not be selected.",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "GetFileList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('GetFileList').output.childItems",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@contains(item().type, pipeline().parameters.ExtractionDate)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "FilterFiles",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('FilterFiles').output",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Wait1",
-									"type": "Wait",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"waitTimeInSeconds": 1
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"ExtractionDate": {
-						"type": "String",
-						"defaultValue": "202310029"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_aria_all_folder_raw')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/BinaryDataSource_File')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1518,7 +1410,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Cleanup DB",
+						"name": "Cleanup DB - drop Aria tables",
 						"type": "Script",
 						"dependsOn": [],
 						"policy": {
@@ -1548,7 +1440,13 @@
 						"type": "GetMetadata",
 						"dependsOn": [
 							{
-								"activity": "Cleanup DB",
+								"activity": "Cleanup DB - drop Aria tables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Create audit procedure",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1599,7 +1497,7 @@
 								"type": "Expression"
 							},
 							"isSequential": false,
-							"batchCount": 20,
+							"batchCount": 40,
 							"activities": [
 								{
 									"name": "Execute Pipeline- load table",
@@ -1649,6 +1547,65 @@
 								"type": "Expression"
 							}
 						}
+					},
+					{
+						"name": "Create audit procedure",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Create audit table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "CREATE OR ALTER PROCEDURE Audit.mig_recon_stg_db_load_proc\n    @pipeline varchar(1000),\n    @filename varchar(1000),\n    @rowsread INT,\n    @rowscopied INT,\n    @copyduration INT,\n    @metric varchar(1000)\nAS\nBEGIN\n    insert into Audit.mig_recon_stg_db_load (pipeline, filename, rowsread, rowscopied, copyduration, metric) values (@pipeline,@filename, @rowsread, @rowscopied, @copyduration, @metric )\nEND;\n\n"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "Create audit table",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "DROP TABLE IF EXISTS Audit.mig_recon_stg_db_load;\nCREATE TABLE Audit.mig_recon_stg_db_load(\n    id int identity(1,1),\n    pipeline varchar(1000),\n    filename varchar(1000),\n    rowsread int,\n    rowscopied int,\n    copyduration int,\n    comment varchar(1000),\n    metric varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
 					}
 				],
 				"policy": {
@@ -1670,6 +1627,70 @@
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseMIG')]",
 				"[concat(variables('factoryId'), '/datasets/ds_source_main_folder')]",
 				"[concat(variables('factoryId'), '/pipelines/pl_BlobFilesToDb2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pp_copy_from_aws')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy ALL from AWS",
+						"description": "",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AmazonS3ReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_source_aws_s3",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_aria_all_folder",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_source_aws_s3')]",
+				"[concat(variables('factoryId'), '/datasets/ds_aria_all_folder')]"
 			]
 		}
 	]
