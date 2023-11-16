@@ -192,7 +192,7 @@
 				"typeProperties": {
 					"scripts": [
 						{
-							"type": "NonQuery",
+							"type": "Query",
 							"text": "DROP TABLE IF EXISTS Audit.mig_recon_stg_db_load;\nCREATE TABLE Audit.mig_recon_stg_db_load(\n    id int identity(1,1),\n    pipeline varchar(1000),\n    filename varchar(1000),\n    rowsread int,\n    rowscopied int,\n    copyduration int,\n    comment varchar(1000),\n    metric varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
 						}
 					],
