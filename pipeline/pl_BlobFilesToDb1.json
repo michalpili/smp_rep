@@ -160,7 +160,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "DROP TABLE IF EXISTS Audit.mig_recon_stg_db_load;\nCREATE TABLE Audit.mig_recon_stg_db_load(\n    id int identity(1,1),\n    pipeline varchar(1000),\n    filename varchar(1000),\n    rowsread int,\n    rowscopied int,\n    copyduration int,\n    comment varchar(1000),\n    metric varchar(1000),\n    insert_datetime datetime default GETDATE()\n);\n\ndrop procedure if exists Audit.mig_recon_stg_db_load_proc;\n\nGO\nCREATE PROCEDURE Audit.mig_recon_stg_db_load_proc\n    @pipeline varchar(1000),\n    @filename varchar(1000),\n    @rowsread INT,\n    @rowscopied INT,\n    @copyduration INT,\n    @metric varchar(1000)\nAS\nBEGIN\n    insert into Audit.mig_recon_stg_db_load (pipeline, filename, rowsread, rowscopied, copyduration, metric) values (@pipeline,@filename, @rowsread, @rowscopied, @copyduration, @metric )\nEND;"
+							"text": "CREATE OR ALTER PROCEDURE Audit.mig_recon_stg_db_load_proc\n    @pipeline varchar(1000),\n    @filename varchar(1000),\n    @rowsread INT,\n    @rowscopied INT,\n    @copyduration INT,\n    @metric varchar(1000)\nAS\nBEGIN\n    insert into Audit.mig_recon_stg_db_load (pipeline, filename, rowsread, rowscopied, copyduration, metric) values (@pipeline,@filename, @rowsread, @rowscopied, @copyduration, @metric )\nEND;\n\nDROP TABLE IF EXISTS Audit.mig_recon_stg_db_load;\nCREATE TABLE Audit.mig_recon_stg_db_load(\n    id int identity(1,1),\n    pipeline varchar(1000),\n    filename varchar(1000),\n    rowsread int,\n    rowscopied int,\n    copyduration int,\n    comment varchar(1000),\n    metric varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
