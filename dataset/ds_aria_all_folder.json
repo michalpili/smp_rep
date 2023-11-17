@@ -13,7 +13,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "falck-migration",
 				"container": "aria-aws-copy-all"
 			}
 		}
