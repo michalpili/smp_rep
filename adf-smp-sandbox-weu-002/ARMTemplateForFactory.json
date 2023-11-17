@@ -262,6 +262,9 @@
 						"defaultValue": "raw-acct-dunning-group"
 					}
 				},
+				"folder": {
+					"name": "pl - load Aria CSV to Staging DB"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -356,6 +359,7 @@
 											],
 											"storeSettings": {
 												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
 												"enablePartitionDiscovery": false
 											},
 											"formatSettings": {
@@ -519,6 +523,9 @@
 						"defaultValue": "raw-acct-dunning-group"
 					}
 				},
+				"folder": {
+					"name": "pl - load Aria CSV to Staging DB"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -529,7 +536,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pp_copy_from_aws')]",
+			"name": "[concat(parameters('factoryName'), '/pl_copy_from_aws')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -585,200 +592,14 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "pl -  copy from AWS"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_source_aws_s3')]",
 				"[concat(variables('factoryId'), '/datasets/ds_aria_all_folder')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BinaryDataDestination')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "It describes the destination store.",
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Container": {
-						"type": "String"
-					},
-					"Directory": {
-						"type": "String"
-					},
-					"filename": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": {
-							"value": "@{dataset().Directory}",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@{dataset().Container}",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BinaryDataSource_File')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "It describes the file in the data source store.",
-				"linkedServiceName": {
-					"referenceName": "AmazonS31",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Bucket": {
-						"type": "String"
-					},
-					"Directory": {
-						"type": "String"
-					},
-					"filename": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AmazonS3Location",
-						"bucketName": {
-							"value": "@{dataset().Bucket}",
-							"type": "Expression"
-						},
-						"folderPath": {
-							"value": "@{dataset().Directory}",
-							"type": "Expression"
-						},
-						"fileName": {
-							"value": "@dataset().filename",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AmazonS31')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BinaryDataSource_Folder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "It describes the folder in the data source store.",
-				"linkedServiceName": {
-					"referenceName": "AmazonS31",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Bucket": {
-						"type": "String"
-					},
-					"Directory": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AmazonS3Location",
-						"bucketName": {
-							"value": "@{dataset().Bucket}",
-							"type": "Expression"
-						},
-						"folderPath": {
-							"value": "@{dataset().Directory}",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AmazonS31')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/aria_all')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": "falck-migration/falck-migration-reporting-raw",
-						"container": "aria-aws-copy-all"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "api_queue_id",
-						"type": "String"
-					},
-					{
-						"name": "plan_instance_no",
-						"type": "String"
-					},
-					{
-						"name": "parent_plan_instance_no",
-						"type": "String"
-					},
-					{
-						"name": "plan_instance_cdid",
-						"type": "String"
-					},
-					{
-						"name": "acct_no",
-						"type": "String"
-					},
-					{
-						"name": "api_method_name",
-						"type": "String"
-					},
-					{
-						"name": "create_date",
-						"type": "String"
-					},
-					{
-						"name": "create_user",
-						"type": "String"
-					},
-					{
-						"name": "effective_date",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
 			]
 		},
 		{
@@ -789,6 +610,9 @@
 				"linkedServiceName": {
 					"referenceName": "AzureBlobStorage",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ds - Azure Storage"
 				},
 				"annotations": [],
 				"type": "Binary",
@@ -805,51 +629,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_aria_all_folder_raw')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": "falck-migration/falck-migration-reporting-raw/raw*",
-						"container": "aria-aws-copy-all"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_aria_current_folder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "aria-aws-copy-current"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ds_source_aws_s3')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -857,6 +636,9 @@
 				"linkedServiceName": {
 					"referenceName": "AmazonS31",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ds - AWS"
 				},
 				"annotations": [],
 				"type": "Binary",
@@ -879,6 +661,9 @@
 				"linkedServiceName": {
 					"referenceName": "AzureBlobStorage",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ds - Azure Storage"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -949,6 +734,9 @@
 					"FolderName": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "ds - Azure Storage"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -1026,6 +814,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "ds - Azure Storage"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -1102,6 +893,9 @@
 					"FileName": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "ds - DB"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
