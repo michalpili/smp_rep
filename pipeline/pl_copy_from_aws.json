@@ -1,5 +1,5 @@
 {
-	"name": "pp_copy_from_aws",
+	"name": "pl_copy_from_aws",
 	"properties": {
 		"activities": [
 			{
@@ -48,6 +48,9 @@
 				]
 			}
 		],
+		"folder": {
+			"name": "pl -  copy from AWS"
+		},
 		"annotations": []
 	}
 }

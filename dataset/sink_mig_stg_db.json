@@ -10,6 +10,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "ds - DB"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [

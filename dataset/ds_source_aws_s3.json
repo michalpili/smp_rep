@@ -5,6 +5,9 @@
 			"referenceName": "AmazonS31",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "ds - AWS"
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {

@@ -5,6 +5,9 @@
 			"referenceName": "AzureBlobStorage",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "ds - Azure Storage"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {

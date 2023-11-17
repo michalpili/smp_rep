@@ -210,6 +210,9 @@
 				"defaultValue": "raw-acct-dunning-group"
 			}
 		},
+		"folder": {
+			"name": "pl - load Aria CSV to Staging DB"
+		},
 		"annotations": []
 	}
 }
