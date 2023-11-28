@@ -23,6 +23,22 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseMIG'"
 		},
+		"Leg_SalesforceTEST_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Leg_SalesforceTEST'"
+		},
+		"Leg_SalesforceTEST_securityToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'securityToken' of 'Leg_SalesforceTEST'"
+		},
+		"Tar_SalesforceTEST_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Tar_SalesforceTEST'"
+		},
+		"Tar_SalesforceTEST_securityToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'securityToken' of 'Tar_SalesforceTEST'"
+		},
 		"AmazonS31_properties_typeProperties_accessKeyId": {
 			"type": "string",
 			"defaultValue": "AKIAXQJG6VWN7GODEQ5S"
@@ -38,6 +54,22 @@
 		"AzureBatch1_properties_typeProperties_accountName": {
 			"type": "string",
 			"defaultValue": "migdevelopment"
+		},
+		"Leg_SalesforceTEST_properties_typeProperties_environmentUrl": {
+			"type": "string",
+			"defaultValue": "https://falckcrm--pacmtest.sandbox.my.salesforce.com"
+		},
+		"Leg_SalesforceTEST_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "azuredatafactory@falck.com.pacmtest"
+		},
+		"Tar_SalesforceTEST_properties_typeProperties_environmentUrl": {
+			"type": "string",
+			"defaultValue": "https://falck-smp--test.sandbox.my.salesforce.com/"
+		},
+		"Tar_SalesforceTEST_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "azure.integration@falck.com.smp.test"
 		},
 		"containerUri": {
 			"type": "string",
@@ -72,11 +104,35 @@
 					"AzureSqlDatabaseMIG_connectionString": {
 						"value": "[parameters('AzureSqlDatabaseMIG_connectionString')]"
 					},
+					"Leg_SalesforceTEST_password": {
+						"value": "[parameters('Leg_SalesforceTEST_password')]"
+					},
+					"Leg_SalesforceTEST_securityToken": {
+						"value": "[parameters('Leg_SalesforceTEST_securityToken')]"
+					},
+					"Tar_SalesforceTEST_password": {
+						"value": "[parameters('Tar_SalesforceTEST_password')]"
+					},
+					"Tar_SalesforceTEST_securityToken": {
+						"value": "[parameters('Tar_SalesforceTEST_securityToken')]"
+					},
 					"AmazonS31_secretAccessKey": {
 						"value": "[parameters('AmazonS31_secretAccessKey')]"
 					},
 					"AzureBatch1_accessKey": {
 						"value": "[parameters('AzureBatch1_accessKey')]"
+					},
+					"Leg_SalesforceTEST_properties_typeProperties_environmentUrl": {
+						"value": "[parameters('Leg_SalesforceTEST_properties_typeProperties_environmentUrl')]"
+					},
+					"Leg_SalesforceTEST_properties_typeProperties_username": {
+						"value": "[parameters('Leg_SalesforceTEST_properties_typeProperties_username')]"
+					},
+					"Tar_SalesforceTEST_properties_typeProperties_environmentUrl": {
+						"value": "[parameters('Tar_SalesforceTEST_properties_typeProperties_environmentUrl')]"
+					},
+					"Tar_SalesforceTEST_properties_typeProperties_username": {
+						"value": "[parameters('Tar_SalesforceTEST_properties_typeProperties_username')]"
 					},
 					"AmazonS31_properties_typeProperties_accessKeyId": {
 						"value": "[parameters('AmazonS31_properties_typeProperties_accessKeyId')]"
@@ -93,6 +149,26 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "adf-smp-sandbox-weu-002_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-smp-sandbox-weu-002_ArmTemplate_0')]"
+			]
 		}
 	]
 }

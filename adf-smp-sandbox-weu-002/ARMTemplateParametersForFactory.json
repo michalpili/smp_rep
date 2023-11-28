@@ -17,6 +17,18 @@
 		"AzureSqlDatabaseMIG_connectionString": {
 			"value": ""
 		},
+		"Leg_SalesforceTEST_password": {
+			"value": ""
+		},
+		"Leg_SalesforceTEST_securityToken": {
+			"value": ""
+		},
+		"Tar_SalesforceTEST_password": {
+			"value": ""
+		},
+		"Tar_SalesforceTEST_securityToken": {
+			"value": ""
+		},
 		"AmazonS31_properties_typeProperties_accessKeyId": {
 			"value": "AKIAXQJG6VWN7GODEQ5S"
 		},
@@ -28,6 +40,18 @@
 		},
 		"AzureBatch1_properties_typeProperties_accountName": {
 			"value": "migdevelopment"
+		},
+		"Leg_SalesforceTEST_properties_typeProperties_environmentUrl": {
+			"value": "https://falckcrm--pacmtest.sandbox.my.salesforce.com"
+		},
+		"Leg_SalesforceTEST_properties_typeProperties_username": {
+			"value": "azuredatafactory@falck.com.pacmtest"
+		},
+		"Tar_SalesforceTEST_properties_typeProperties_environmentUrl": {
+			"value": "https://falck-smp--test.sandbox.my.salesforce.com/"
+		},
+		"Tar_SalesforceTEST_properties_typeProperties_username": {
+			"value": "azure.integration@falck.com.smp.test"
 		}
 	}
 }
