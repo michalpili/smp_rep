@@ -58,8 +58,8 @@
 					"batchCount": 5,
 					"activities": [
 						{
-							"name": "CopyOnePartition",
-							"description": "Copy activity to copy each partition from source database store to destination store.",
+							"name": "CopyOneObject",
+							"description": "Copy activity to copy one object",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -72,23 +72,41 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "SqlSource",
-									"sqlReaderQuery": {
-										"value": "@item().FilterQuery",
-										"type": "Expression"
-									},
-									"partitionOption": "None"
+									"type": "SalesforceSource",
+									"readBehavior": "query"
 								},
 								"sink": {
-									"type": "DelimitedTextSink"
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
 								},
 								"enableStaging": false,
-								"dataIntegrationUnits": 0
+								"dataIntegrationUnits": 0,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
-									"referenceName": "AzureSqlDatabaseDataSource",
-									"type": "DatasetReference"
+									"referenceName": "SalesforceObject",
+									"type": "DatasetReference",
+									"parameters": {
+										"SFObjectName": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
