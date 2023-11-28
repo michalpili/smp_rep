@@ -164,8 +164,15 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "AzureSqlDatabaseDataSource",
-									"type": "DatasetReference"
+									"referenceName": "sink_mig_stg_db",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"SchemaName": "SF_archive"
+									}
 								}
 							]
 						}
