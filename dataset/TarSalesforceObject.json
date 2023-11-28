@@ -2,7 +2,7 @@
 	"name": "TarSalesforceObject",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Leg_SalesforceTEST",
+			"referenceName": "Tar_SalesforceTEST",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
