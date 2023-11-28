@@ -7,7 +7,14 @@
 				"name": "GetPartitionList",
 				"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Create mig_object_list table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -18,11 +25,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": {
-							"value": "select @{pipeline().parameters.Control_Table_Schema_PartitionID} as PartitionID, @{pipeline().parameters.Control_Table_Schema_SourceTableName} as SourceTableName, @{pipeline().parameters.Control_Table_Schema_FilterQuery} as FilterQuery from @{pipeline().parameters.Control_Table_Name}",
-							"type": "Expression"
-						},
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
@@ -30,7 +34,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"TableName": {
-								"value": "@pipeline().parameters.Control_Table_Name",
+								"value": "mig_object_list",
 								"type": "Expression"
 							}
 						}
@@ -110,6 +114,32 @@
 							]
 						}
 					]
+				}
+			},
+			{
+				"name": "Create mig_object_list table",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseMIG",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "DROP TABLE IF EXISTS Audit.mig_object_list;\nCREATE TABLE Audit.mig_objects_list(\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],
