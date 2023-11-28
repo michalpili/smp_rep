@@ -497,7 +497,10 @@
 			}
 		],
 		"typeProperties": {
-			"schema": "Aria_Archive_1",
+			"schema": {
+				"value": "@dataset().SchemaName",
+				"type": "Expression"
+			},
 			"table": {
 				"value": "@dataset().FileName",
 				"type": "Expression"
