@@ -31,14 +31,8 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "AzureSqlDatabaseExternal_ControlTable",
-						"type": "DatasetReference",
-						"parameters": {
-							"TableName": {
-								"value": "mig_object_list",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "AzureSqlDatabaseDataSource",
+						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
 				}
