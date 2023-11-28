@@ -41,8 +41,6 @@
 				"name": "ForEachPartition",
 				"description": "ForEach activity to get the partition list from Lookup activity and then iterate each of them to Copy activity. ",
 				"type": "ForEach",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "GetObjectList",
@@ -54,7 +52,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('GetPartitionList').output.value",
+						"value": "@activity('GetObjectList').output.value",
 						"type": "Expression"
 					},
 					"batchCount": 5,
