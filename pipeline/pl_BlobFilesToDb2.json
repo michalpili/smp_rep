@@ -82,6 +82,7 @@
 									],
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
@@ -129,7 +130,8 @@
 										"FileName": {
 											"value": "@replace(replace(item().name,concat('90500012_',pipeline().parameters.ExtractionDate,'_'),''),'.csv' ,'' )",
 											"type": "Expression"
-										}
+										},
+										"SchemaName": "Aria_archive_1"
 									}
 								}
 							]
