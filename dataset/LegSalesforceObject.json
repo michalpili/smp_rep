@@ -1,5 +1,5 @@
 {
-	"name": "SalesforceObject",
+	"name": "LegSalesforceObject",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Leg_SalesforceTEST",
