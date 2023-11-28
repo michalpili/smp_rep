@@ -1,0 +1,26 @@
+{
+	"name": "TarSalesforceObject",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Leg_SalesforceTEST",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SFObjectName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "ds - Salesforce"
+		},
+		"annotations": [],
+		"type": "SalesforceObject",
+		"schema": [],
+		"typeProperties": {
+			"objectApiName": {
+				"value": "@dataset().SFObjectName",
+				"type": "Expression"
+			}
+		}
+	}
+}
