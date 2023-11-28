@@ -76,26 +76,13 @@
 									"readBehavior": "query"
 								},
 								"sink": {
-									"type": "DelimitedTextSink",
+									"type": "BinarySink",
 									"storeSettings": {
 										"type": "AzureBlobStorageWriteSettings"
-									},
-									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".txt"
 									}
 								},
 								"enableStaging": false,
-								"dataIntegrationUnits": 0,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
+								"dataIntegrationUnits": 0
 							},
 							"inputs": [
 								{
@@ -111,18 +98,8 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "DataDestination",
-									"type": "DatasetReference",
-									"parameters": {
-										"Data_Destination_Container": {
-											"value": "@pipeline().parameters.Data_Destination_Container",
-											"type": "Expression"
-										},
-										"Data_Destination_Directory": {
-											"value": "@pipeline().parameters.Data_Destination_Directory",
-											"type": "Expression"
-										}
-									}
+									"referenceName": "ds_salesforce_extract",
+									"type": "DatasetReference"
 								}
 							]
 						}
