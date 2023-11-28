@@ -958,7 +958,7 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"FileName": {
-													"value": "@item().name",
+													"value": "@item().objectname",
 													"type": "Expression"
 												},
 												"SchemaName": "SF_archive"
@@ -1031,26 +1031,6 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"Control_Table_Name": {
-						"type": "String"
-					},
-					"Control_Table_Schema_PartitionID": {
-						"type": "String"
-					},
-					"Control_Table_Schema_SourceTableName": {
-						"type": "String"
-					},
-					"Control_Table_Schema_FilterQuery": {
-						"type": "String"
-					},
-					"Data_Destination_Container": {
-						"type": "String"
-					},
-					"Data_Destination_Directory": {
-						"type": "String"
-					}
 				},
 				"annotations": []
 			},
@@ -1182,26 +1162,6 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"Control_Table_Name": {
-						"type": "String"
-					},
-					"Control_Table_Schema_PartitionID": {
-						"type": "String"
-					},
-					"Control_Table_Schema_SourceTableName": {
-						"type": "String"
-					},
-					"Control_Table_Schema_FilterQuery": {
-						"type": "String"
-					},
-					"Data_Destination_Container": {
-						"type": "String"
-					},
-					"Data_Destination_Directory": {
-						"type": "String"
-					}
 				},
 				"annotations": []
 			},
