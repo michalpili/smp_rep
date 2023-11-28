@@ -103,7 +103,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"SFObjectName": {
-											"value": "@item().name",
+											"value": "@item().objectname",
 											"type": "Expression"
 										}
 									}
