@@ -58,7 +58,7 @@
 					"batchCount": 5,
 					"activities": [
 						{
-							"name": "CopyOneObject",
+							"name": "Salesforce - CopyOneObject",
 							"description": "Copy activity to copy one object",
 							"type": "Copy",
 							"dependsOn": [],
