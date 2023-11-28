@@ -1,0 +1,20 @@
+{
+	"name": "ds_salesforce_extract",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ds - Azure Storage"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "salesforce-extract"
+			}
+		}
+	}
+}
