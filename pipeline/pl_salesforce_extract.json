@@ -139,7 +139,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "DROP TABLE IF EXISTS Audit.mig_object_list;\nCREATE TABLE Audit.mig_objects_list(\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+							"text": "DROP TABLE IF EXISTS [Audit].[mig_objects_list]\nCREATE TABLE [Audit].[mig_objects_list] (\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
