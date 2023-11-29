@@ -65,8 +65,19 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "SalesforceSource",
-									"readBehavior": "query"
+									"type": "AzureSqlSource",
+									"sqlReaderStoredProcedureName": "[SF_Archive].[ColsWithoutSystemCols]",
+									"storedProcedureParameters": {
+										"TableName": {
+											"type": "String",
+											"value": {
+												"value": "@item().objectname",
+												"type": "Expression"
+											}
+										}
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
 								},
 								"sink": {
 									"type": "SalesforceSink",
@@ -86,13 +97,14 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "LegSalesforceObject",
+									"referenceName": "sink_mig_stg_db",
 									"type": "DatasetReference",
 									"parameters": {
-										"SFObjectName": {
+										"FileName": {
 											"value": "@item().objectname",
 											"type": "Expression"
-										}
+										},
+										"SchemaName": "SF_Archive"
 									}
 								}
 							],
