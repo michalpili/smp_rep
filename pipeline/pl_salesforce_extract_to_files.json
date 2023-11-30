@@ -232,7 +232,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('MDB_Settings__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('PerProfileSettings__c', 'Salesforce', 'Salesforce settings');\n"
+							"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('AzureSBConfiguration__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('PKB__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('pkb_ka__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Quote_Setup__c', 'Salesforce', 'Salesforce settings');\n"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
