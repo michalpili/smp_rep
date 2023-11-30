@@ -136,7 +136,7 @@
 								"sink": {
 									"type": "AzureSqlSink",
 									"preCopyScript": {
-										"value": "truncate table [SF_Archive].[AzureSBConfiguration__c]",
+										"value": "drop table if exists SF_Archive.PKB__c",
 										"type": "Expression"
 									},
 									"writeBehavior": "insert",
