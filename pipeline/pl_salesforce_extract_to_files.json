@@ -136,7 +136,7 @@
 								"sink": {
 									"type": "AzureSqlSink",
 									"preCopyScript": {
-										"value": "truncate table [Archive_SF].[AzureSBConfiguration__c]",
+										"value": "concat('truncate table [Archive_SF].[AzureSBConfiguration__c]')",
 										"type": "Expression"
 									},
 									"writeBehavior": "insert",
