@@ -136,7 +136,7 @@
 								"sink": {
 									"type": "AzureSqlSink",
 									"preCopyScript": {
-										"value": "drop table if exists Archive_SF.@{item().objectname}",
+										"value": "drop table if exists Archive_SF.AzureSBConfiguration__c",
 										"type": "Expression"
 									},
 									"writeBehavior": "insert",
