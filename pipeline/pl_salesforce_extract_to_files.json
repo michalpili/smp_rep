@@ -136,7 +136,7 @@
 								"sink": {
 									"type": "AzureSqlSink",
 									"preCopyScript": {
-										"value": "concat('drop table if exists ','Archive_SF.',@{item().objectname})",
+										"value": "concat('drop  table if exists ','Archive_SF.',@{item().objectname})",
 										"type": "Expression"
 									},
 									"writeBehavior": "insert",
