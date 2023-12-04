@@ -1041,6 +1041,9 @@
 						"type": "String"
 					}
 				},
+				"folder": {
+					"name": "pl - salesforce settings"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1201,6 +1204,9 @@
 						"type": "string",
 						"defaultValue": "azure.integration@falck.com.smp.test"
 					}
+				},
+				"folder": {
+					"name": "pl - salesforce settings"
 				},
 				"annotations": []
 			},
