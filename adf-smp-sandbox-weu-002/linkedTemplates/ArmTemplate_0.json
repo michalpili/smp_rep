@@ -308,6 +308,12 @@
 				"parameters": {
 					"SFObjectName": {
 						"type": "string"
+					},
+					"SFLinkedServiceURL": {
+						"type": "string"
+					},
+					"SFLinkedServiceUserName": {
+						"type": "string"
 					}
 				},
 				"folder": {

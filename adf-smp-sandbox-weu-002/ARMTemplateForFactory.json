@@ -925,6 +925,10 @@
 										},
 										"sink": {
 											"type": "AzureSqlSink",
+											"preCopyScript": {
+												"value": "drop  table if exists [SF_Archive].@{item().objectname}",
+												"type": "Expression"
+											},
 											"writeBehavior": "insert",
 											"sqlWriterUseTableLock": false,
 											"tableOption": "autoCreate",
@@ -1032,6 +1036,11 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"variables": {
+					"drop-table": {
+						"type": "String"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1112,8 +1121,19 @@
 									"userProperties": [],
 									"typeProperties": {
 										"source": {
-											"type": "SalesforceSource",
-											"readBehavior": "query"
+											"type": "AzureSqlSource",
+											"sqlReaderStoredProcedureName": "[[SF_Archive].[ColsWithoutSystemCols]",
+											"storedProcedureParameters": {
+												"TableName": {
+													"type": "String",
+													"value": {
+														"value": "@item().objectname",
+														"type": "Expression"
+													}
+												}
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
 										},
 										"sink": {
 											"type": "SalesforceSink",
@@ -1133,13 +1153,14 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "LegSalesforceObject",
+											"referenceName": "sink_mig_stg_db",
 											"type": "DatasetReference",
 											"parameters": {
-												"SFObjectName": {
+												"FileName": {
 													"value": "@item().objectname",
 													"type": "Expression"
-												}
+												},
+												"SchemaName": "SF_Archive"
 											}
 										}
 									],
@@ -1150,6 +1171,14 @@
 											"parameters": {
 												"SFObjectName": {
 													"value": "@item().objectname",
+													"type": "Expression"
+												},
+												"SFLinkedServiceURL": {
+													"value": "@pipeline().parameters.URL",
+													"type": "Expression"
+												},
+												"SFLinkedServiceUserName": {
+													"value": "@pipeline().parameters.UserName",
 													"type": "Expression"
 												}
 											}
@@ -1163,11 +1192,21 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"parameters": {
+					"URL": {
+						"type": "string",
+						"defaultValue": "https://falck-smp--test.sandbox.my.salesforce.com/"
+					},
+					"UserName": {
+						"type": "string",
+						"defaultValue": "azure.integration@falck.com.smp.test"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabaseDataSource')]",
-				"[concat(variables('factoryId'), '/datasets/LegSalesforceObject')]",
+				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]",
 				"[concat(variables('factoryId'), '/datasets/TarSalesforceObject')]"
 			]
 		},
@@ -1308,6 +1347,12 @@
 				},
 				"parameters": {
 					"SFObjectName": {
+						"type": "string"
+					},
+					"SFLinkedServiceURL": {
+						"type": "string"
+					},
+					"SFLinkedServiceUserName": {
 						"type": "string"
 					}
 				},
