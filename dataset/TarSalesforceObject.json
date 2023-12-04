@@ -3,12 +3,21 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Tar_SalesforceTEST",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"URL": {
+					"value": "@dataset().SFLinkedServiceURL",
+					"type": "Expression"
+				},
+				"UserName": {
+					"value": "@dataset().SFLinkedServiceUserName",
+					"type": "Expression"
+				}
+			}
 		},
 		"parameters": {
 			"SFObjectName": {
-				"type": "string",
-				"defaultValue": "dds"
+				"type": "string"
 			},
 			"SFLinkedServiceURL": {
 				"type": "string"
