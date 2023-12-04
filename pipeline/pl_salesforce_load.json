@@ -125,6 +125,16 @@
 				}
 			}
 		],
+		"parameters": {
+			"URL": {
+				"type": "string",
+				"defaultValue": "https://falck-smp--test.sandbox.my.salesforce.com/"
+			},
+			"UserName": {
+				"type": "string",
+				"defaultValue": "azure.integration@falck.com.smp.test"
+			}
+		},
 		"annotations": []
 	}
 }
