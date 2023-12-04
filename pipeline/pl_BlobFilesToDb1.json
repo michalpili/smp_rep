@@ -211,7 +211,7 @@
 			}
 		},
 		"folder": {
-			"name": "pl - load Aria CSV to Staging DB"
+			"name": "2. pl - load Aria CSV to Staging DB"
 		},
 		"annotations": []
 	}
