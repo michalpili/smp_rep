@@ -49,11 +49,11 @@
 		},
 		"Tar_SalesforceTEST_properties_typeProperties_environmentUrl": {
 			"type": "string",
-			"defaultValue": "https://falck-smp--test.sandbox.my.salesforce.com/"
+			"defaultValue": "@{linkedService().URL}"
 		},
 		"Tar_SalesforceTEST_properties_typeProperties_username": {
 			"type": "string",
-			"defaultValue": "azure.integration@falck.com.smp.test"
+			"defaultValue": "@{linkedService().UserName}"
 		},
 		"AmazonS31_properties_typeProperties_accessKeyId": {
 			"type": "string",
@@ -131,6 +131,14 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"parameters": {
+					"URL": {
+						"type": "string"
+					},
+					"UserName": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "Salesforce",
 				"typeProperties": {
@@ -303,7 +311,17 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "Tar_SalesforceTEST",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"URL": {
+							"value": "@dataset().SFLinkedServiceURL",
+							"type": "Expression"
+						},
+						"UserName": {
+							"value": "@dataset().SFLinkedServiceUserName",
+							"type": "Expression"
+						}
+					}
 				},
 				"parameters": {
 					"SFObjectName": {

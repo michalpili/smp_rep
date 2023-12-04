@@ -48,10 +48,10 @@
 			"value": "azuredatafactory@falck.com.pacmtest"
 		},
 		"Tar_SalesforceTEST_properties_typeProperties_environmentUrl": {
-			"value": "https://falck-smp--test.sandbox.my.salesforce.com/"
+			"value": "@{linkedService().URL}"
 		},
 		"Tar_SalesforceTEST_properties_typeProperties_username": {
-			"value": "azure.integration@falck.com.smp.test"
+			"value": "@{linkedService().UserName}"
 		},
 		"containerUri": {
 			"value": ""

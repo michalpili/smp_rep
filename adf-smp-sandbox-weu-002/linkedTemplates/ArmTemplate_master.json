@@ -65,11 +65,11 @@
 		},
 		"Tar_SalesforceTEST_properties_typeProperties_environmentUrl": {
 			"type": "string",
-			"defaultValue": "https://falck-smp--test.sandbox.my.salesforce.com/"
+			"defaultValue": "@{linkedService().URL}"
 		},
 		"Tar_SalesforceTEST_properties_typeProperties_username": {
 			"type": "string",
-			"defaultValue": "azure.integration@falck.com.smp.test"
+			"defaultValue": "@{linkedService().UserName}"
 		},
 		"containerUri": {
 			"type": "string",
