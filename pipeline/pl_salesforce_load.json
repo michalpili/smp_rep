@@ -143,6 +143,9 @@
 				"defaultValue": "azure.integration@falck.com.smp.test"
 			}
 		},
+		"folder": {
+			"name": "pl - salesforce settings"
+		},
 		"annotations": []
 	}
 }

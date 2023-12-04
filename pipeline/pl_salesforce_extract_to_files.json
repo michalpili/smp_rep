@@ -248,6 +248,9 @@
 				"type": "String"
 			}
 		},
+		"folder": {
+			"name": "pl - salesforce settings"
+		},
 		"annotations": []
 	}
 }
