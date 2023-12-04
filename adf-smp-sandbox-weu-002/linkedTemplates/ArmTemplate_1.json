@@ -264,7 +264,7 @@
 					}
 				},
 				"folder": {
-					"name": "pl - load Aria CSV to Staging DB"
+					"name": "2. pl - load Aria CSV to Staging DB"
 				},
 				"annotations": []
 			},
@@ -528,7 +528,7 @@
 					}
 				},
 				"folder": {
-					"name": "pl - salesforce settings"
+					"name": "3. pl - salesforce settings"
 				},
 				"annotations": []
 			},
@@ -686,7 +686,7 @@
 					}
 				},
 				"folder": {
-					"name": "pl - salesforce settings"
+					"name": "3. pl - salesforce settings"
 				},
 				"annotations": []
 			},
@@ -934,7 +934,7 @@
 					}
 				},
 				"folder": {
-					"name": "pl - load Aria CSV to Staging DB"
+					"name": "2. pl - load Aria CSV to Staging DB"
 				},
 				"annotations": []
 			},
@@ -1000,7 +1000,7 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "pl -  copy from AWS"
+					"name": "1. pl -  copy from AWS"
 				},
 				"annotations": []
 			},
