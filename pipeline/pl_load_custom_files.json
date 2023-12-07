@@ -121,7 +121,8 @@
 		],
 		"parameters": {
 			"FolderName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "salesforce-extract"
 			},
 			"FileName": {
 				"type": "string"
