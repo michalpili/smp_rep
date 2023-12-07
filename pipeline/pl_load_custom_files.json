@@ -98,7 +98,10 @@
 							"inputs": [
 								{
 									"referenceName": "ds_source_main_folder_subfolders_files",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": "@item().objectname"
+									}
 								}
 							],
 							"outputs": [
