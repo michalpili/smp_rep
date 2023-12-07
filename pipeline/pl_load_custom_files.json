@@ -119,6 +119,14 @@
 				}
 			}
 		],
+		"parameters": {
+			"FolderName": {
+				"type": "string"
+			},
+			"FileName": {
+				"type": "string"
+			}
+		},
 		"variables": {
 			"drop-table": {
 				"type": "String"
