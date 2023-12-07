@@ -97,7 +97,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "ds_source_main_folder_subfolders_files",
+									"referenceName": "ds_source_custom_folder_subfolders_files_copy1",
 									"type": "DatasetReference",
 									"parameters": {
 										"FolderName": {
