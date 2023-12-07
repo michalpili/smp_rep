@@ -1,0 +1,78 @@
+{
+	"name": "ds_source_custom_folder_subfolders_files_copy1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FolderName": {
+				"type": "string"
+			},
+			"FileName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "ds - Azure Storage"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat('falck-migration/falck-migration-reporting-raw/',dataset().FolderName)",
+					"type": "Expression"
+				},
+				"container": "aria-aws-copy-all"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\"",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "api_queue_id",
+				"type": "String"
+			},
+			{
+				"name": "plan_instance_no",
+				"type": "String"
+			},
+			{
+				"name": "parent_plan_instance_no",
+				"type": "String"
+			},
+			{
+				"name": "plan_instance_cdid",
+				"type": "String"
+			},
+			{
+				"name": "acct_no",
+				"type": "String"
+			},
+			{
+				"name": "api_method_name",
+				"type": "String"
+			},
+			{
+				"name": "create_date",
+				"type": "String"
+			},
+			{
+				"name": "create_user",
+				"type": "String"
+			},
+			{
+				"name": "effective_date",
+				"type": "String"
+			}
+		]
+	}
+}
