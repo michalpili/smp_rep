@@ -25,11 +25,7 @@
 					"value": "@dataset().FileName",
 					"type": "Expression"
 				},
-				"folderPath": {
-					"value": "@concat('falck-migration/falck-migration-reporting-raw/',dataset().FolderName)",
-					"type": "Expression"
-				},
-				"container": "aria-aws-copy-all"
+				"container": "salesforce-extract"
 			},
 			"columnDelimiter": "|",
 			"escapeChar": "\"",
