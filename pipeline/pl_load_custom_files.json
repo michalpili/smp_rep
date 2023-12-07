@@ -135,7 +135,8 @@
 				"defaultValue": "salesforce-extract"
 			},
 			"FileName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "sslfalck_sfdc_plan-20231203-220624.csv"
 			}
 		},
 		"variables": {
