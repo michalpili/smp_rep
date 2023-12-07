@@ -117,7 +117,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"FileName": {
-											"value": "@item().objectname",
+											"value": "@replace(item().objectname,'.csv' ,'' )",
 											"type": "Expression"
 										},
 										"SchemaName": "SF_archive"
