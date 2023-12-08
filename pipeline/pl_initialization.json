@@ -107,7 +107,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "CREATE   PROCEDURE [SF_Archive].[ColsWithoutSystemCols]\n    @TableName varchar(max)\nAS\nBEGIN\n\tdeclare @cols varchar(max), @query varchar(max);\n\tSELECT  @cols = STUFF\n    (\n        ( \n            SELECT DISTINCT '], [' + name\n            FROM sys.columns\n            where object_id = (\n                select top 1 object_id from sys.objects\n                where name = @TableName \n            )\n            and name not in ('Id', 'IsDeleted', 'SetupOwnerId', 'CreatedById','LastModifiedById','SystemModstamp')\n            FOR XML PATH('')\n        ), 1, 2, ''\n    ) + ']';\nSELECT @query = 'select ' + @cols + ' from [SF_Archive].' + '[' + @TableName + '] where IsDeleted = 0';\nEXEC (@query);\nEND;"
+							"text": "CREATE OR ALTER PROCEDURE [SF_Archive].[ColsWithoutSystemCols]\n    @TableName varchar(max)\nAS\nBEGIN\n\tdeclare @cols varchar(max), @query varchar(max);\n\tSELECT  @cols = STUFF\n    (\n        ( \n            SELECT DISTINCT '], [' + name\n            FROM sys.columns\n            where object_id = (\n                select top 1 object_id from sys.objects\n                where name = @TableName \n            )\n            and name not in ('Id', 'IsDeleted', 'SetupOwnerId', 'CreatedById','LastModifiedById','SystemModstamp')\n            FOR XML PATH('')\n        ), 1, 2, ''\n    ) + ']';\nSELECT @query = 'select ' + @cols + ' from [SF_Archive].' + '[' + @TableName + '] where IsDeleted = 0';\nEXEC (@query);\nEND;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
