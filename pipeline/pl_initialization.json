@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Cleanup DB - drop Aria tables",
+				"name": "AR - Cleanup DB - drop Aria tables",
 				"type": "Script",
 				"dependsOn": [],
 				"policy": {
@@ -88,7 +88,7 @@
 				}
 			},
 			{
-				"name": "Create ColsWithoutSystemCols procedure",
+				"name": "SF - Create ColsWithoutSystemCols procedure",
 				"type": "Script",
 				"dependsOn": [],
 				"policy": {
@@ -108,6 +108,65 @@
 						{
 							"type": "NonQuery",
 							"text": "CREATE OR ALTER PROCEDURE [SF_Archive].[ColsWithoutSystemCols]\n    @TableName varchar(max)\nAS\nBEGIN\n\tdeclare @cols varchar(max), @query varchar(max);\n\tSELECT  @cols = STUFF\n    (\n        ( \n            SELECT DISTINCT '], [' + name\n            FROM sys.columns\n            where object_id = (\n                select top 1 object_id from sys.objects\n                where name = @TableName \n            )\n            and name not in ('Id', 'IsDeleted', 'SetupOwnerId', 'CreatedById','LastModifiedById','SystemModstamp')\n            FOR XML PATH('')\n        ), 1, 2, ''\n    ) + ']';\nSELECT @query = 'select ' + @cols + ' from [SF_Archive].' + '[' + @TableName + '] where IsDeleted = 0';\nEXEC (@query);\nEND;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "SF - Create mig_object_list table",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseMIG",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "DROP TABLE IF EXISTS [Audit].[mig_objects_list]\nCREATE TABLE [Audit].[mig_objects_list] (\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "SF - Insert mig objects to list",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "SF - Create mig_object_list table",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseMIG",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('AzureSBConfiguration__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('PKB__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('pkb_ka__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Quote_Setup__c', 'Salesforce', 'Salesforce settings');\n"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
