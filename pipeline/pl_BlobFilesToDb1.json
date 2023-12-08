@@ -203,7 +203,7 @@
 		"parameters": {
 			"ExtractionDate": {
 				"type": "string",
-				"defaultValue": "20231029"
+				"defaultValue": "20231203"
 			},
 			"FilterFolderName": {
 				"type": "string",
