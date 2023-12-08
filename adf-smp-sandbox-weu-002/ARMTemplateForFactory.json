@@ -266,12 +266,6 @@
 								"dependencyConditions": [
 									"Succeeded"
 								]
-							},
-							{
-								"activity": "Create audit procedure",
-								"dependencyConditions": [
-									"Succeeded"
-								]
 							}
 						],
 						"policy": {
@@ -369,65 +363,6 @@
 								"type": "Expression"
 							}
 						}
-					},
-					{
-						"name": "Create audit procedure",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "Create audit table",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzureSqlDatabaseMIG",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "NonQuery",
-									"text": "CREATE OR ALTER PROCEDURE Audit.mig_recon_stg_db_load_proc\n    @pipeline varchar(1000),\n    @filename varchar(1000),\n    @rowsread INT,\n    @rowscopied INT,\n    @copyduration INT,\n    @metric varchar(1000)\nAS\nBEGIN\n    insert into Audit.mig_recon_stg_db_load (pipeline, filename, rowsread, rowscopied, copyduration, metric) values (@pipeline,@filename, @rowsread, @rowscopied, @copyduration, @metric )\nEND;\n\n"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "Create audit table",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzureSqlDatabaseMIG",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "NonQuery",
-									"text": "DROP TABLE IF EXISTS Audit.mig_recon_stg_db_load;\nCREATE TABLE Audit.mig_recon_stg_db_load(\n    id int identity(1,1),\n    pipeline varchar(1000),\n    filename varchar(1000),\n    rowsread int,\n    rowscopied int,\n    copyduration int,\n    comment varchar(1000),\n    metric varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
 					}
 				],
 				"policy": {
@@ -436,7 +371,7 @@
 				"parameters": {
 					"ExtractionDate": {
 						"type": "string",
-						"defaultValue": "20231029"
+						"defaultValue": "20231203"
 					},
 					"FilterFolderName": {
 						"type": "string",
@@ -513,6 +448,7 @@
 								"value": "@activity('Filter by ExtractionDate').output.value",
 								"type": "Expression"
 							},
+							"batchCount": 20,
 							"activities": [
 								{
 									"name": "Copy data - load file from ExtractionDate",
@@ -697,12 +633,10 @@
 				},
 				"parameters": {
 					"ExtractionDate": {
-						"type": "string",
-						"defaultValue": "20231029"
+						"type": "string"
 					},
 					"FolderName": {
-						"type": "string",
-						"defaultValue": "raw-acct-dunning-group"
+						"type": "string"
 					}
 				},
 				"folder": {
@@ -782,6 +716,294 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_source_aws_s3')]",
 				"[concat(variables('factoryId'), '/datasets/ds_aria_all_folder')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_initialization')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Cleanup DB - drop Aria tables",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "DECLARE @sql NVARCHAR(max)=''\nSELECT @sql += 'DROP TABLE ' + '[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']' FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = 'Aria_Archive_1' \nExec Sp_executesql @sql\n"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "Create audit procedure",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Create audit table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "CREATE OR ALTER PROCEDURE Audit.mig_recon_stg_db_load_proc\n    @pipeline varchar(1000),\n    @filename varchar(1000),\n    @rowsread INT,\n    @rowscopied INT,\n    @copyduration INT,\n    @metric varchar(1000)\nAS\nBEGIN\n    insert into Audit.mig_recon_stg_db_load (pipeline, filename, rowsread, rowscopied, copyduration, metric) values (@pipeline,@filename, @rowsread, @rowscopied, @copyduration, @metric )\nEND;\n\n"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "Create audit table",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "DROP TABLE IF EXISTS Audit.mig_recon_stg_db_load;\nCREATE TABLE Audit.mig_recon_stg_db_load(\n    id int identity(1,1),\n    pipeline varchar(1000),\n    filename varchar(1000),\n    rowsread int,\n    rowscopied int,\n    copyduration int,\n    comment varchar(1000),\n    metric varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "Create ColsWithoutSystemCols procedure",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "CREATE OR ALTER PROCEDURE [SF_Archive].[ColsWithoutSystemCols]\n    @TableName varchar(max)\nAS\nBEGIN\n\tdeclare @cols varchar(max), @query varchar(max);\n\tSELECT  @cols = STUFF\n    (\n        ( \n            SELECT DISTINCT '], [' + name\n            FROM sys.columns\n            where object_id = (\n                select top 1 object_id from sys.objects\n                where name = @TableName \n            )\n            and name not in ('Id', 'IsDeleted', 'SetupOwnerId', 'CreatedById','LastModifiedById','SystemModstamp')\n            FOR XML PATH('')\n        ), 1, 2, ''\n    ) + ']';\nSELECT @query = 'select ' + @cols + ' from [SF_Archive].' + '[' + @TableName + '] where IsDeleted = 0';\nEXEC (@query);\nEND;"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "0. pl - Initialization"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseMIG')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_load_custom_files')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
+				"activities": [
+					{
+						"name": "GetObjectList",
+						"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_file_load]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlDatabaseDataSource",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For - loop files",
+						"description": "ForEach activity to get the partition list from Lookup activity and then iterate each of them to Copy activity. ",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetObjectList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetObjectList').output.value",
+								"type": "Expression"
+							},
+							"batchCount": 5,
+							"activities": [
+								{
+									"name": "Copy to STG DB",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_source_custom_folder_subfolders_files_copy1",
+											"type": "DatasetReference",
+											"parameters": {
+												"FolderName": {
+													"value": "@pipeline().parameters.FolderName",
+													"type": "Expression"
+												},
+												"FileName": {
+													"value": "@item().objectname",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "sink_mig_stg_db",
+											"type": "DatasetReference",
+											"parameters": {
+												"FileName": {
+													"value": "@replace(item().objectname,'.csv' ,'' )",
+													"type": "Expression"
+												},
+												"SchemaName": "SF_archive"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"FolderName": {
+						"type": "string"
+					},
+					"FileName": {
+						"type": "string",
+						"defaultValue": "sslfalck_sfdc_plan-20231203-220624.csv"
+					}
+				},
+				"variables": {
+					"drop-table": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "3. pl - salesforce settings"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabaseDataSource')]",
+				"[concat(variables('factoryId'), '/datasets/ds_source_custom_folder_subfolders_files_copy1')]",
+				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]"
 			]
 		},
 		{
@@ -1055,7 +1277,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_salesforce_load')]",
+			"name": "[concat(parameters('factoryName'), '/pl_salesforce_simple_load')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1107,7 +1329,7 @@
 								"value": "@activity('GetObjectList').output.value",
 								"type": "Expression"
 							},
-							"batchCount": 5,
+							"batchCount": 20,
 							"activities": [
 								{
 									"name": "Salesforce - CopyOneObject",
@@ -1492,6 +1714,85 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AmazonS31')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_source_custom_folder_subfolders_files_copy1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FolderName": {
+						"type": "string"
+					},
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "ds - Azure Storage"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"container": "salesforce-extract"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": ""
+				},
+				"schema": [
+					{
+						"name": "api_queue_id",
+						"type": "String"
+					},
+					{
+						"name": "plan_instance_no",
+						"type": "String"
+					},
+					{
+						"name": "parent_plan_instance_no",
+						"type": "String"
+					},
+					{
+						"name": "plan_instance_cdid",
+						"type": "String"
+					},
+					{
+						"name": "acct_no",
+						"type": "String"
+					},
+					{
+						"name": "api_method_name",
+						"type": "String"
+					},
+					{
+						"name": "create_date",
+						"type": "String"
+					},
+					{
+						"name": "create_user",
+						"type": "String"
+					},
+					{
+						"name": "effective_date",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
 			]
 		},
 		{
