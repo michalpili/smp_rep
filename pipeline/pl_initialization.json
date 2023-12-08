@@ -5,8 +5,6 @@
 			{
 				"name": "Cleanup DB - drop Aria tables",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
