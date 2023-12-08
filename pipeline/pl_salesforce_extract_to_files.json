@@ -31,8 +31,8 @@
 				}
 			},
 			{
-				"name": "ForEachPartition",
-				"description": "ForEach activity to get the partition list from Lookup activity and then iterate each of them to Copy activity. ",
+				"name": "ForEachObject",
+				"description": "Extract and load to STG DB",
 				"type": "ForEach",
 				"dependsOn": [
 					{
