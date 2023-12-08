@@ -61,7 +61,7 @@
 					{
 						"activity": "SF - Create mig_object_list table",
 						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
 						]
 					}
 				],
