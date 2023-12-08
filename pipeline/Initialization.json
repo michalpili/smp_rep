@@ -1,0 +1,106 @@
+{
+	"name": "Initialization",
+	"properties": {
+		"activities": [
+			{
+				"name": "Cleanup DB - drop Aria tables",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseMIG",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DECLARE @sql NVARCHAR(max)=''\nSELECT @sql += 'DROP TABLE ' + '[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']' FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = 'Aria_Archive_1' \nExec Sp_executesql @sql\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create audit procedure",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create audit table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseMIG",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "CREATE OR ALTER PROCEDURE Audit.mig_recon_stg_db_load_proc\n    @pipeline varchar(1000),\n    @filename varchar(1000),\n    @rowsread INT,\n    @rowscopied INT,\n    @copyduration INT,\n    @metric varchar(1000)\nAS\nBEGIN\n    insert into Audit.mig_recon_stg_db_load (pipeline, filename, rowsread, rowscopied, copyduration, metric) values (@pipeline,@filename, @rowsread, @rowscopied, @copyduration, @metric )\nEND;\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create audit table",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseMIG",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "DROP TABLE IF EXISTS Audit.mig_recon_stg_db_load;\nCREATE TABLE Audit.mig_recon_stg_db_load(\n    id int identity(1,1),\n    pipeline varchar(1000),\n    filename varchar(1000),\n    rowsread int,\n    rowscopied int,\n    copyduration int,\n    comment varchar(1000),\n    metric varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"ExtractionDate": {
+				"type": "string",
+				"defaultValue": "20231029"
+			},
+			"FilterFolderName": {
+				"type": "string",
+				"defaultValue": "raw-acct-dunning-group"
+			}
+		},
+		"folder": {
+			"name": "0. pl - Initialization"
+		},
+		"annotations": []
+	}
+}
