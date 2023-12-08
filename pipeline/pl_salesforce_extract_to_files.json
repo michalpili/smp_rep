@@ -19,7 +19,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE category = 'Salesforce'",
+						"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE systemname = 'Salesforce'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
