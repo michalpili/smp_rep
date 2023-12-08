@@ -116,9 +116,6 @@
 					"Tar_SalesforceTEST_securityToken": {
 						"value": "[parameters('Tar_SalesforceTEST_securityToken')]"
 					},
-					"AmazonS31_secretAccessKey": {
-						"value": "[parameters('AmazonS31_secretAccessKey')]"
-					},
 					"Leg_SalesforceTEST_properties_typeProperties_environmentUrl": {
 						"value": "[parameters('Leg_SalesforceTEST_properties_typeProperties_environmentUrl')]"
 					},
@@ -130,9 +127,6 @@
 					},
 					"Tar_SalesforceTEST_properties_typeProperties_username": {
 						"value": "[parameters('Tar_SalesforceTEST_properties_typeProperties_username')]"
-					},
-					"AmazonS31_properties_typeProperties_accessKeyId": {
-						"value": "[parameters('AmazonS31_properties_typeProperties_accessKeyId')]"
 					}
 				}
 			},
@@ -152,8 +146,14 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AmazonS31_secretAccessKey": {
+						"value": "[parameters('AmazonS31_secretAccessKey')]"
+					},
 					"AzureBatch1_accessKey": {
 						"value": "[parameters('AzureBatch1_accessKey')]"
+					},
+					"AmazonS31_properties_typeProperties_accessKeyId": {
+						"value": "[parameters('AmazonS31_properties_typeProperties_accessKeyId')]"
 					},
 					"AzureBatch1_properties_typeProperties_batchUri": {
 						"value": "[parameters('AzureBatch1_properties_typeProperties_batchUri')]"

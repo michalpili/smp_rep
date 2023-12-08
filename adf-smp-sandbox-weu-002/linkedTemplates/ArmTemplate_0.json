@@ -31,10 +31,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'securityToken' of 'Tar_SalesforceTEST'"
 		},
-		"AmazonS31_secretAccessKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'secretAccessKey' of 'AmazonS31'"
-		},
 		"Leg_SalesforceTEST_properties_typeProperties_environmentUrl": {
 			"type": "string",
 			"defaultValue": "https://falckcrm--pacmtest.sandbox.my.salesforce.com"
@@ -50,10 +46,6 @@
 		"Tar_SalesforceTEST_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "@{linkedService().UserName}"
-		},
-		"AmazonS31_properties_typeProperties_accessKeyId": {
-			"type": "string",
-			"defaultValue": "AKIAXQJG6VWN7GODEQ5S"
 		}
 	},
 	"variables": {
@@ -163,13 +155,13 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_initialization')]",
+			"name": "[concat(parameters('factoryName'), '/pl_initialization_ARIA')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Cleanup DB - drop Aria tables",
+						"name": "AR - Cleanup DB - drop Aria tables",
 						"type": "Script",
 						"dependsOn": [],
 						"policy": {
@@ -193,7 +185,26 @@
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
-					},
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "0. pl - Initialization"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseMIG')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_initialization_GEN')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
 					{
 						"name": "Create audit procedure",
 						"type": "Script",
@@ -252,9 +263,28 @@
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
-					},
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "0. pl - Initialization"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseMIG')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_initialization_SF')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
 					{
-						"name": "Create ColsWithoutSystemCols procedure",
+						"name": "SF - Create ColsWithoutSystemCols procedure",
 						"type": "Script",
 						"dependsOn": [],
 						"policy": {
@@ -274,6 +304,65 @@
 								{
 									"type": "NonQuery",
 									"text": "CREATE OR ALTER PROCEDURE [SF_Archive].[ColsWithoutSystemCols]\n    @TableName varchar(max)\nAS\nBEGIN\n\tdeclare @cols varchar(max), @query varchar(max);\n\tSELECT  @cols = STUFF\n    (\n        ( \n            SELECT DISTINCT '], [' + name\n            FROM sys.columns\n            where object_id = (\n                select top 1 object_id from sys.objects\n                where name = @TableName \n            )\n            and name not in ('Id', 'IsDeleted', 'SetupOwnerId', 'CreatedById','LastModifiedById','SystemModstamp')\n            FOR XML PATH('')\n        ), 1, 2, ''\n    ) + ']';\nSELECT @query = 'select ' + @cols + ' from [SF_Archive].' + '[' + @TableName + '] where IsDeleted = 0';\nEXEC (@query);\nEND;"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "SF - Create mig_object_list table",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "DROP TABLE IF EXISTS [Audit].[mig_objects_list]\nCREATE TABLE [Audit].[mig_objects_list] (\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "SF - Insert mig objects to list",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "SF - Create mig_object_list table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('AzureSBConfiguration__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('PKB__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('pkb_ka__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Quote_Setup__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Lead', 'Salesforce', 'Salesforce standard');"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -849,546 +938,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sink_mig_stg_db')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseMIG",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string"
-					},
-					"SchemaName": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "ds - DB"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "client_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " acct_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " userid",
-						"type": "nvarchar"
-					},
-					{
-						"name": " password",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_type",
-						"type": "nvarchar"
-					},
-					{
-						"name": " reg_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " first_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": " mi",
-						"type": "nvarchar"
-					},
-					{
-						"name": " address1",
-						"type": "nvarchar"
-					},
-					{
-						"name": " address2",
-						"type": "nvarchar"
-					},
-					{
-						"name": " city",
-						"type": "nvarchar"
-					},
-					{
-						"name": " locality",
-						"type": "nvarchar"
-					},
-					{
-						"name": " state_prov",
-						"type": "nvarchar"
-					},
-					{
-						"name": " country",
-						"type": "nvarchar"
-					},
-					{
-						"name": " postal_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": " ssn",
-						"type": "nvarchar"
-					},
-					{
-						"name": " phone_npa",
-						"type": "nvarchar"
-					},
-					{
-						"name": " phone_nxx",
-						"type": "nvarchar"
-					},
-					{
-						"name": " phone_suffix",
-						"type": "nvarchar"
-					},
-					{
-						"name": " phone_extension",
-						"type": "nvarchar"
-					},
-					{
-						"name": " phone_country_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": " intl_phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": " pay_method",
-						"type": "nvarchar"
-					},
-					{
-						"name": " notify_method",
-						"type": "nvarchar"
-					},
-					{
-						"name": " next_bill_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " bill_day",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_bill_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_bill_thru_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " status_cd",
-						"type": "nvarchar"
-					},
-					{
-						"name": " process_flag",
-						"type": "nvarchar"
-					},
-					{
-						"name": " lang_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " legacy",
-						"type": "nvarchar"
-					},
-					{
-						"name": " tax_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " senior_acct_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " carrier",
-						"type": "nvarchar"
-					},
-					{
-						"name": " comments",
-						"type": "nvarchar"
-					},
-					{
-						"name": " trans_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " origin_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " old_userid",
-						"type": "nvarchar"
-					},
-					{
-						"name": " old_acct_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " aup_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " created",
-						"type": "nvarchar"
-					},
-					{
-						"name": " update_user",
-						"type": "nvarchar"
-					},
-					{
-						"name": " update_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " client_acct_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " feature_mask",
-						"type": "nvarchar"
-					},
-					{
-						"name": " promo_cd",
-						"type": "nvarchar"
-					},
-					{
-						"name": " no_edit_ind",
-						"type": "nvarchar"
-					},
-					{
-						"name": " pop_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " alt_email",
-						"type": "nvarchar"
-					},
-					{
-						"name": " alt_homepage",
-						"type": "nvarchar"
-					},
-					{
-						"name": " reg_auth_result",
-						"type": "nvarchar"
-					},
-					{
-						"name": " status_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " status_degrade_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " secret_question_answer",
-						"type": "nvarchar"
-					},
-					{
-						"name": " test_acct_ind",
-						"type": "nvarchar"
-					},
-					{
-						"name": " company_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": " resp_level_cd",
-						"type": "nvarchar"
-					},
-					{
-						"name": " senior_acct_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " inv_approval_req_ind",
-						"type": "nvarchar"
-					},
-					{
-						"name": " currency_cd",
-						"type": "nvarchar"
-					},
-					{
-						"name": " eu_notes",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_type_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_roll_override_ind",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_arrears_bill_thru_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " alt_msg_template_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " require_special_inv",
-						"type": "nvarchar"
-					},
-					{
-						"name": " date_to_suspend",
-						"type": "nvarchar"
-					},
-					{
-						"name": " alt_master_rate_sched_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " reg_load_seq",
-						"type": "nvarchar"
-					},
-					{
-						"name": " pop_phone_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " birthdate",
-						"type": "nvarchar"
-					},
-					{
-						"name": " cell_phone_npa",
-						"type": "nvarchar"
-					},
-					{
-						"name": " cell_phone_nxx",
-						"type": "nvarchar"
-					},
-					{
-						"name": " cell_phone_suffix",
-						"type": "nvarchar"
-					},
-					{
-						"name": " work_phone_npa",
-						"type": "nvarchar"
-					},
-					{
-						"name": " work_phone_nxx",
-						"type": "nvarchar"
-					},
-					{
-						"name": " work_phone_suffix",
-						"type": "nvarchar"
-					},
-					{
-						"name": " work_phone_extension",
-						"type": "nvarchar"
-					},
-					{
-						"name": " date_to_expire",
-						"type": "nvarchar"
-					},
-					{
-						"name": " created_by",
-						"type": "nvarchar"
-					},
-					{
-						"name": " display_userid",
-						"type": "nvarchar"
-					},
-					{
-						"name": " donation_plan_amount",
-						"type": "nvarchar"
-					},
-					{
-						"name": " reg_dad",
-						"type": "nvarchar"
-					},
-					{
-						"name": " dw_export_seq",
-						"type": "nvarchar"
-					},
-					{
-						"name": " fax_phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": " salutation",
-						"type": "nvarchar"
-					},
-					{
-						"name": " job_title",
-						"type": "nvarchar"
-					},
-					{
-						"name": " intl_cell_phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": " master_plan_recurring_factor",
-						"type": "nvarchar"
-					},
-					{
-						"name": " intl_work_phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_assign_api_receipt_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " status_assign_api_receipt_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " acct_create_api_receipt_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " address_seq",
-						"type": "nvarchar"
-					},
-					{
-						"name": " taxpayer_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_recur_bill_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_usage_bill_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " max_seq_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " seq_func_group_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " address3",
-						"type": "nvarchar"
-					},
-					{
-						"name": " notify_tmplt_grp_seq_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " test_acct_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " acct_balance",
-						"type": "nvarchar"
-					},
-					{
-						"name": " acct_start_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " default_billing_group_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " acct_address_seq",
-						"type": "nvarchar"
-					},
-					{
-						"name": " inv_posting_method_cd",
-						"type": "nvarchar"
-					},
-					{
-						"name": " consumer_acct_ind",
-						"type": "nvarchar"
-					},
-					{
-						"name": " list_start_master_file",
-						"type": "nvarchar"
-					},
-					{
-						"name": " purchase_order_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " locale_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " legal_entity_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " perpetual_payment_balance",
-						"type": "nvarchar"
-					},
-					{
-						"name": " is_anonymized",
-						"type": "nvarchar"
-					},
-					{
-						"name": "filename",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().SchemaName",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().FileName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseMIG')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AmazonS31')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AmazonS3",
-				"typeProperties": {
-					"serviceUrl": "https://s3.amazonaws.com",
-					"accessKeyId": "[parameters('AmazonS31_properties_typeProperties_accessKeyId')]",
-					"secretAccessKey": {
-						"type": "SecureString",
-						"value": "[parameters('AmazonS31_secretAccessKey')]"
-					},
-					"authenticationType": "AccessKey"
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime2",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime2')]"
 			]
 		}
 	]
