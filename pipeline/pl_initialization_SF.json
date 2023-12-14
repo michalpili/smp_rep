@@ -80,12 +80,6 @@
 				"typeProperties": {
 					"scripts": [
 						{
-							"parameters": [
-								{
-									"name": "",
-									"value": ""
-								}
-							],
 							"type": "NonQuery",
 							"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('AzureSBConfiguration__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('PKB__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('pkb_ka__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Quote_Setup__c', 'Salesforce', 'Salesforce settings');\n"
 						}
@@ -119,12 +113,6 @@
 				"typeProperties": {
 					"scripts": [
 						{
-							"parameters": [
-								{
-									"name": "",
-									"value": ""
-								}
-							],
 							"type": "NonQuery",
 							"text": "\n--- Lead\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Lead','Salesforce','Salesforce Standard',null,1,0,1,1);\n---"
 						}
