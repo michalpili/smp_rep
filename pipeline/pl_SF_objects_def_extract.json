@@ -103,7 +103,8 @@
 					"dataset": {
 						"referenceName": "AzureSqlDatabaseDataSource",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
