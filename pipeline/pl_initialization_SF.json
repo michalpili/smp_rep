@@ -48,7 +48,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "DROP TABLE IF EXISTS [Audit].[mig_objects_list]\nCREATE TABLE [Audit].[mig_objects_list] (\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+							"text": "DROP TABLE IF EXISTS [Audit].[mig_objects_list]\nCREATE TABLE [Audit].[mig_objects_list] (\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    sql varchar(4000),\n    enabled int,\n    insert_datetime datetime default GETDATE()\n);"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -81,7 +81,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('AzureSBConfiguration__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('PKB__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('pkb_ka__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Quote_Setup__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Lead', 'Salesforce', 'Salesforce standard');"
+							"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('AzureSBConfiguration__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('PKB__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('pkb_ka__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Quote_Setup__c', 'Salesforce', 'Salesforce settings');\n---\ninsert into [Audit].[mig_objects_list] (objectname , systemname , sql, enabled, category) values ('Lead', 'Salesforce', 'Salesforce standard');\n---"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
