@@ -73,13 +73,13 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Drop table FieldDefinition ",
+						"activity": "Copy EntityDefintion to STG DB",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "Copy EntityDefintion to STG DB",
+						"activity": "Drop table FieldDefinition",
 						"dependencyConditions": [
 							"Succeeded"
 						]
