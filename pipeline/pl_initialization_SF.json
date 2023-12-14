@@ -48,14 +48,14 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "DROP TABLE IF EXISTS [Audit].[mig_objects_list]\nCREATE TABLE [Audit].[mig_objects_list] (\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    sql varchar(4000),\n    enabled int,\n    insert_datetime datetime default GETDATE()\n);"
+							"text": "DROP TABLE IF EXISTS [Audit].[mig_objects_list]\nCREATE TABLE [Audit].[mig_objects_list] (\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    sql varchar(4000),\n    enabled int,\n    order_position int,\n    insert_datetime datetime default GETDATE()\n);"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			},
 			{
-				"name": "SF - Insert mig objects to list",
+				"name": "SF - simple MIG_OBJECTS",
 				"type": "Script",
 				"dependsOn": [
 					{
@@ -80,8 +80,53 @@
 				"typeProperties": {
 					"scripts": [
 						{
+							"parameters": [
+								{
+									"name": "",
+									"value": ""
+								}
+							],
 							"type": "NonQuery",
 							"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('AzureSBConfiguration__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('PKB__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('pkb_ka__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Quote_Setup__c', 'Salesforce', 'Salesforce settings');\n---\ninsert into [Audit].[mig_objects_list] (objectname , systemname , sql, enabled, category) values ('Lead', 'Salesforce', 'Salesforce standard');\n---"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "SF - standard MIG_OBJECTS",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "SF - Create mig_object_list table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseMIG",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "",
+									"value": ""
+								}
+							],
+							"type": "NonQuery",
+							"text": "\n--- Lead\ninsert into [Audit].[mig_objects_list] (objectname , systemname , sql, enabled, category) values ('Lead', 'Salesforce', 'Salesforce standard');\n---"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
