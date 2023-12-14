@@ -92,7 +92,7 @@
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "SF - Create mig_object_list table",
+						"activity": "SF - simple MIG_OBJECTS",
 						"dependencyConditions": [
 							"Succeeded"
 						]
