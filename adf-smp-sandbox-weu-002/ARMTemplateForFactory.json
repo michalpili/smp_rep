@@ -652,6 +652,240 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_SF_objects_def_extract')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
+				"activities": [
+					{
+						"name": "Copy EntityDefintion to STG DB",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "select  DurableId, DeveloperName, MasterLabel, Label, IsCustomizable, IsCustomSetting, IsDeprecatedAndHidden, IsQueryable, IsIdEnabled from EntityDefinition",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": {
+									"value": "drop  table if exists [SF_Archive].EntityDefinition",
+									"type": "Expression"
+								},
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "LegSalesforceObject",
+								"type": "DatasetReference",
+								"parameters": {
+									"SFObjectName": {
+										"value": "EntityDefinition",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "EntityDefinition",
+										"type": "Expression"
+									},
+									"SchemaName": "SF_archive"
+								}
+							}
+						]
+					},
+					{
+						"name": "Lookup List of objects",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Copy EntityDefintion to STG DB",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT [DurableId]\n  FROM [SF_Archive].[EntityDefinition]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlDatabaseDataSource",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ForEach SF Object",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup List of objects",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup List of objects').output",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy to STG DB",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SalesforceSource",
+											"query": "SELECT Id, DurableId, QualifiedApiName, EntityDefinitionId, NamespacePrefix, DeveloperName, MasterLabel, Label, Length, DataType, ServiceDataTypeId, ValueTypeId, ExtraTypeInfo, IsCalculated, \r\nIsHighScaleNumber, IsHtmlFormatted, IsNameField, IsNillable, IsWorkflowFilterable, IsCompactLayoutable, Precision, Scale, IsFieldHistoryTracked, IsIndexed, IsApiFilterable, IsApiSortable,\r\n IsListFilterable, IsListSortable, IsApiGroupable, IsListVisible, ControllingFieldDefinitionId, LastModifiedDate, LastModifiedById, PublisherId, RunningUserFieldAccessId, RelationshipName,\r\n  ReferenceTo, ReferenceTargetField, IsCompound, IsSearchPrefilterable, IsPolymorphicForeignKey, IsAiPredictionField, BusinessOwnerId, BusinessStatus, SecurityClassification, ComplianceGroup, Description\r\n   FROM FieldDefinition WHERE EntityDefinition.QualifiedApiName = '@item().DurableId' \r\n",
+											"readBehavior": "query"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "LegSalesforceObject",
+											"type": "DatasetReference",
+											"parameters": {
+												"SFObjectName": {
+													"value": "@item().DurableId",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "sink_mig_stg_db",
+											"type": "DatasetReference",
+											"parameters": {
+												"FileName": {
+													"value": "@item().objectname",
+													"type": "Expression"
+												},
+												"SchemaName": "SF_archive"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Drop table FieldDefinition",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "drop  table if exists [SF_Archive].FieldDefinition "
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"drop-table": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "3. pl - salesforce settings"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/LegSalesforceObject')]",
+				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabaseDataSource')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseMIG')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_copy_from_aws')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -893,14 +1127,14 @@
 							"scripts": [
 								{
 									"type": "NonQuery",
-									"text": "DROP TABLE IF EXISTS [Audit].[mig_objects_list]\nCREATE TABLE [Audit].[mig_objects_list] (\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+									"text": "DROP TABLE IF EXISTS [Audit].[mig_objects_list]\nCREATE TABLE [Audit].[mig_objects_list] (\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    sql varchar(4000),\n    enabled int,\n    order_position int,\n    extract int,\n    load int,\n    insert_datetime datetime default GETDATE()\n);"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "SF - Insert mig objects to list",
+						"name": "SF - simple MIG_OBJECTS",
 						"type": "Script",
 						"dependsOn": [
 							{
@@ -926,7 +1160,40 @@
 							"scripts": [
 								{
 									"type": "NonQuery",
-									"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('AzureSBConfiguration__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('PKB__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('pkb_ka__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Quote_Setup__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Lead', 'Salesforce', 'Salesforce standard');"
+									"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('AzureSBConfiguration__c','Salesforce','Salesforce settings',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('PKB__c','Salesforce','Salesforce settings',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('pkb_ka__c','Salesforce','Salesforce settings',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Quote_Setup__c','Salesforce','Salesforce settings',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('FieldDefinition','Salesforce','Salesforce settings',null,1,0,1,0);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('EntityDefinition','Salesforce','Salesforce settings',null,1,0,1,0);\n\n"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "SF - standard MIG_OBJECTS",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "SF - simple MIG_OBJECTS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "\n--- Lead\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Account','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Contact','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Lead','Salesforce','Salesforce Standard',null,1,0,1,1);\n\n---"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -1126,7 +1393,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE systemname = 'Salesforce'",
+								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE enabled=1 and extract=1",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},

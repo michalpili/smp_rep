@@ -329,14 +329,14 @@
 							"scripts": [
 								{
 									"type": "NonQuery",
-									"text": "DROP TABLE IF EXISTS [Audit].[mig_objects_list]\nCREATE TABLE [Audit].[mig_objects_list] (\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+									"text": "DROP TABLE IF EXISTS [Audit].[mig_objects_list]\nCREATE TABLE [Audit].[mig_objects_list] (\n    id int identity(1,1),\n    objectname varchar(1000),\n    systemname varchar(1000),\n    category varchar(1000),\n    sql varchar(4000),\n    enabled int,\n    order_position int,\n    extract int,\n    load int,\n    insert_datetime datetime default GETDATE()\n);"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "SF - Insert mig objects to list",
+						"name": "SF - simple MIG_OBJECTS",
 						"type": "Script",
 						"dependsOn": [
 							{
@@ -362,7 +362,40 @@
 							"scripts": [
 								{
 									"type": "NonQuery",
-									"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('AzureSBConfiguration__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('PKB__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('pkb_ka__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Quote_Setup__c', 'Salesforce', 'Salesforce settings');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category) values ('Lead', 'Salesforce', 'Salesforce standard');"
+									"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('AzureSBConfiguration__c','Salesforce','Salesforce settings',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('PKB__c','Salesforce','Salesforce settings',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('pkb_ka__c','Salesforce','Salesforce settings',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Quote_Setup__c','Salesforce','Salesforce settings',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('FieldDefinition','Salesforce','Salesforce settings',null,1,0,1,0);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('EntityDefinition','Salesforce','Salesforce settings',null,1,0,1,0);\n\n"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "SF - standard MIG_OBJECTS",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "SF - simple MIG_OBJECTS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "\n--- Lead\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Account','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Contact','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Lead','Salesforce','Salesforce Standard',null,1,0,1,1);\n\n---"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
