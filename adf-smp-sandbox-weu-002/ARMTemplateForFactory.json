@@ -724,11 +724,17 @@
 						]
 					},
 					{
-						"name": "Lookup List of objects",
+						"name": "GetObjectList",
 						"type": "Lookup",
 						"dependsOn": [
 							{
 								"activity": "Copy EntityDefintion to STG DB",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Drop table FieldDefinition",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -745,7 +751,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [DurableId]\n  FROM [SF_Archive].[EntityDefinition]",
+								"sqlReaderQuery": "SELECT top 10 DurableId\nFROM [SF_Archive].[EntityDefinition] where DurableId='Contact'\n",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -753,7 +759,8 @@
 								"referenceName": "AzureSqlDatabaseDataSource",
 								"type": "DatasetReference",
 								"parameters": {}
-							}
+							},
+							"firstRowOnly": false
 						}
 					},
 					{
@@ -761,7 +768,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup List of objects",
+								"activity": "GetObjectList",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -770,7 +777,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup List of objects').output",
+								"value": "@activity('GetObjectList').output.value",
 								"type": "Expression"
 							},
 							"activities": [
@@ -789,7 +796,7 @@
 									"typeProperties": {
 										"source": {
 											"type": "SalesforceSource",
-											"query": "SELECT Id, DurableId, QualifiedApiName, EntityDefinitionId, NamespacePrefix, DeveloperName, MasterLabel, Label, Length, DataType, ServiceDataTypeId, ValueTypeId, ExtraTypeInfo, IsCalculated, \r\nIsHighScaleNumber, IsHtmlFormatted, IsNameField, IsNillable, IsWorkflowFilterable, IsCompactLayoutable, Precision, Scale, IsFieldHistoryTracked, IsIndexed, IsApiFilterable, IsApiSortable,\r\n IsListFilterable, IsListSortable, IsApiGroupable, IsListVisible, ControllingFieldDefinitionId, LastModifiedDate, LastModifiedById, PublisherId, RunningUserFieldAccessId, RelationshipName,\r\n  ReferenceTo, ReferenceTargetField, IsCompound, IsSearchPrefilterable, IsPolymorphicForeignKey, IsAiPredictionField, BusinessOwnerId, BusinessStatus, SecurityClassification, ComplianceGroup, Description\r\n   FROM FieldDefinition WHERE EntityDefinition.QualifiedApiName = '@item().DurableId' \r\n",
+											"query": "SELECT Id, DurableId, QualifiedApiName, EntityDefinitionId, NamespacePrefix, DeveloperName, MasterLabel, Label, Length, DataType, ServiceDataTypeId, ValueTypeId, ExtraTypeInfo, IsCalculated, \nIsHighScaleNumber, IsHtmlFormatted, IsNameField, IsNillable, IsWorkflowFilterable, IsCompactLayoutable, Precision, Scale, IsFieldHistoryTracked, IsIndexed, IsApiFilterable, IsApiSortable,\n IsListFilterable, IsListSortable, IsApiGroupable, IsListVisible, ControllingFieldDefinitionId, LastModifiedDate, LastModifiedById, PublisherId, RunningUserFieldAccessId, RelationshipName,\n  ReferenceTo, ReferenceTargetField, IsCompound, IsSearchPrefilterable, IsPolymorphicForeignKey, IsAiPredictionField, BusinessOwnerId, BusinessStatus, SecurityClassification, ComplianceGroup, Description\n   FROM FieldDefinition WHERE EntityDefinition.QualifiedApiName = '@item().DurableId' \n",
 											"readBehavior": "query"
 										},
 										"sink": {
@@ -827,7 +834,7 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"FileName": {
-													"value": "@item().objectname",
+													"value": "EntityDefinition",
 													"type": "Expression"
 												},
 												"SchemaName": "SF_archive"
