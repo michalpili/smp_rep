@@ -114,7 +114,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "\n--- Lead\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Lead','Salesforce','Salesforce Standard',null,1,0,1,1);\n---"
+							"text": "\n--- Lead\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Account','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Contact','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Lead','Salesforce','Salesforce Standard',null,1,0,1,1);\n\n---"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
