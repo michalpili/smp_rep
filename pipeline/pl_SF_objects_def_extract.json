@@ -120,7 +120,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup List of objects').output",
+						"value": "@activity('Lookup List of objects').output.value",
 						"type": "Expression"
 					},
 					"activities": [
