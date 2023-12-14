@@ -71,7 +71,20 @@
 			{
 				"name": "Lookup List of objects",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Drop table FieldDefinition ",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy EntityDefintion to STG DB",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -94,7 +107,7 @@
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "ForEach SF Object",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -106,14 +119,17 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup List of objects').output",
+						"type": "Expression"
+					},
 					"activities": [
 						{
-							"name": "Salesforce - copy FieldDefinitions",
-							"description": "Copy activity to copy one object",
+							"name": "Copy to STG DB",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
-								"timeout": "7.00:00:00",
+								"timeout": "0.12:00:00",
 								"retry": 0,
 								"retryIntervalInSeconds": 30,
 								"secureOutput": false,
@@ -123,19 +139,17 @@
 							"typeProperties": {
 								"source": {
 									"type": "SalesforceSource",
-									"query": {
-										"value": "@item()",
-										"type": "Expression"
-									},
+									"query": "SELECT Id, DurableId, QualifiedApiName, EntityDefinitionId, NamespacePrefix, DeveloperName, MasterLabel, Label, Length, DataType, ServiceDataTypeId, ValueTypeId, ExtraTypeInfo, IsCalculated, \r\nIsHighScaleNumber, IsHtmlFormatted, IsNameField, IsNillable, IsWorkflowFilterable, IsCompactLayoutable, Precision, Scale, IsFieldHistoryTracked, IsIndexed, IsApiFilterable, IsApiSortable,\r\n IsListFilterable, IsListSortable, IsApiGroupable, IsListVisible, ControllingFieldDefinitionId, LastModifiedDate, LastModifiedById, PublisherId, RunningUserFieldAccessId, RelationshipName,\r\n  ReferenceTo, ReferenceTargetField, IsCompound, IsSearchPrefilterable, IsPolymorphicForeignKey, IsAiPredictionField, BusinessOwnerId, BusinessStatus, SecurityClassification, ComplianceGroup, Description\r\n   FROM FieldDefinition WHERE EntityDefinition.QualifiedApiName = '@item().DurableId' \r\n",
 									"readBehavior": "query"
 								},
 								"sink": {
-									"type": "SalesforceSink",
-									"writeBatchSize": 5000,
-									"writeBehavior": "insert"
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
 								},
 								"enableStaging": false,
-								"dataIntegrationUnits": 0,
 								"translator": {
 									"type": "TabularTranslator",
 									"typeConversion": true,
@@ -159,26 +173,45 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "TarSalesforceObject",
+									"referenceName": "sink_mig_stg_db",
 									"type": "DatasetReference",
 									"parameters": {
-										"SFObjectName": {
+										"FileName": {
 											"value": "@item().objectname",
 											"type": "Expression"
 										},
-										"SFLinkedServiceURL": {
-											"value": "@pipeline().parameters.URL",
-											"type": "Expression"
-										},
-										"SFLinkedServiceUserName": {
-											"value": "@pipeline().parameters.UserName",
-											"type": "Expression"
-										}
+										"SchemaName": "SF_archive"
 									}
 								}
 							]
 						}
 					]
+				}
+			},
+			{
+				"name": "Drop table FieldDefinition",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseMIG",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "drop  table if exists [SF_Archive].FieldDefinition "
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],
