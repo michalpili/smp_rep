@@ -96,7 +96,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT top (1) distinct DurableId\n  FROM [SF_Archive].[EntityDefinition]\n",
+						"sqlReaderQuery": "SELECT top 10 DurableId\nFROM [SF_Archive].[EntityDefinition] where DurableId='Contact'\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
