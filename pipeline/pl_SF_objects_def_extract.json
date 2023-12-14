@@ -178,7 +178,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"FileName": {
-											"value": "@item().DurableId",
+											"value": "EntityDefinition",
 											"type": "Expression"
 										},
 										"SchemaName": "SF_archive"
