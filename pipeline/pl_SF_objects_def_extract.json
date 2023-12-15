@@ -209,7 +209,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "drop  table if exists [SF_Archive].FieldDefinition "
+							"text": "drop  table if exists [SF_Archive].FieldDefinitionSRC"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
