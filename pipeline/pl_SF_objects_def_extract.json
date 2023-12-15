@@ -83,6 +83,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "Drop table FieldDefinitionTAR",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"policy": {
@@ -185,12 +191,98 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Copy FieldDefinitionTAR - STG DB",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SalesforceSource",
+									"readBehavior": "query"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "TarSalesforceObject",
+									"type": "DatasetReference",
+									"parameters": {
+										"SFObjectName": {
+											"value": "@item().DurableId",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "sink_mig_stg_db",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "FieldDefinitionTAR",
+											"type": "Expression"
+										},
+										"SchemaName": "SF_archive"
+									}
+								}
+							]
 						}
 					]
 				}
 			},
 			{
 				"name": "Drop table FieldDefinitionSRC",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseMIG",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "drop  table if exists [SF_Archive].FieldDefinitionSRC"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Drop table FieldDefinitionTAR",
 				"type": "Script",
 				"dependsOn": [],
 				"policy": {
