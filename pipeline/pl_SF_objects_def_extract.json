@@ -79,7 +79,7 @@
 						]
 					},
 					{
-						"activity": "Drop table FieldDefinition",
+						"activity": "Drop table FieldDefinitionSRC",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -126,7 +126,7 @@
 					},
 					"activities": [
 						{
-							"name": "Copy to STG DB",
+							"name": "Copy FieldDefinitionSRC - STG DB",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -190,7 +190,7 @@
 				}
 			},
 			{
-				"name": "Drop table FieldDefinition",
+				"name": "Drop table FieldDefinitionSRC",
 				"type": "Script",
 				"dependsOn": [],
 				"policy": {
