@@ -178,7 +178,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"FileName": {
-											"value": "EntityDefinition",
+											"value": "FieldDefinition",
 											"type": "Expression"
 										},
 										"SchemaName": "SF_archive"
