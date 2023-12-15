@@ -235,6 +235,14 @@
 										"SFObjectName": {
 											"value": "@item().DurableId",
 											"type": "Expression"
+										},
+										"SFLinkedServiceURL": {
+											"value": "@pipeline().parameters.URL",
+											"type": "Expression"
+										},
+										"SFLinkedServiceUserName": {
+											"value": "@pipeline().parameters.UserName",
+											"type": "Expression"
 										}
 									}
 								}
