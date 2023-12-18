@@ -734,7 +734,13 @@
 								]
 							},
 							{
-								"activity": "Drop table FieldDefinition",
+								"activity": "Drop table FieldDefinitionSRC",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Drop table FieldDefinitionTAR",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -751,7 +757,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT top 10 DurableId\nFROM [SF_Archive].[EntityDefinition] where DurableId='Contact'\n",
+								"sqlReaderQuery": "SELECT DurableId\nFROM [SF_Archive].[EntityDefinition]\n",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -780,9 +786,10 @@
 								"value": "@activity('GetObjectList').output.value",
 								"type": "Expression"
 							},
+							"batchCount": 50,
 							"activities": [
 								{
-									"name": "Copy to STG DB",
+									"name": "Copy FieldDefinitionSRC - STG DB",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -796,7 +803,10 @@
 									"typeProperties": {
 										"source": {
 											"type": "SalesforceSource",
-											"query": "SELECT Id, DurableId, QualifiedApiName, EntityDefinitionId, NamespacePrefix, DeveloperName, MasterLabel, Label, Length, DataType, ServiceDataTypeId, ValueTypeId, ExtraTypeInfo, IsCalculated, \nIsHighScaleNumber, IsHtmlFormatted, IsNameField, IsNillable, IsWorkflowFilterable, IsCompactLayoutable, Precision, Scale, IsFieldHistoryTracked, IsIndexed, IsApiFilterable, IsApiSortable,\n IsListFilterable, IsListSortable, IsApiGroupable, IsListVisible, ControllingFieldDefinitionId, LastModifiedDate, LastModifiedById, PublisherId, RunningUserFieldAccessId, RelationshipName,\n  ReferenceTo, ReferenceTargetField, IsCompound, IsSearchPrefilterable, IsPolymorphicForeignKey, IsAiPredictionField, BusinessOwnerId, BusinessStatus, SecurityClassification, ComplianceGroup, Description\n   FROM FieldDefinition WHERE EntityDefinition.QualifiedApiName = 'Contact'",
+											"query": {
+												"value": "SELECT Id, DurableId, QualifiedApiName, EntityDefinitionId, NamespacePrefix, DeveloperName, MasterLabel, Label, Length, DataType, ServiceDataTypeId, \nValueTypeId, ExtraTypeInfo, IsCalculated, \nIsHighScaleNumber, IsHtmlFormatted, IsNameField, IsNillable, IsWorkflowFilterable, IsCompactLayoutable, Precision, Scale, IsFieldHistoryTracked,\n IsIndexed, IsApiFilterable, IsApiSortable,\n IsListFilterable, IsListSortable, IsApiGroupable, IsListVisible, ControllingFieldDefinitionId, LastModifiedDate, LastModifiedById, PublisherId,\n RunningUserFieldAccessId, RelationshipName, ReferenceTargetField, Description\n   FROM FieldDefinition WHERE EntityDefinitionId = '@{item().DurableId}'",
+												"type": "Expression"
+											},
 											"readBehavior": "query"
 										},
 										"sink": {
@@ -834,7 +844,79 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"FileName": {
-													"value": "EntityDefinition",
+													"value": "FieldDefinitionSRC",
+													"type": "Expression"
+												},
+												"SchemaName": "SF_archive"
+											}
+										}
+									]
+								},
+								{
+									"name": "Copy FieldDefinitionTAR - STG DB",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SalesforceSource",
+											"query": {
+												"value": "SELECT Id, DurableId, QualifiedApiName, EntityDefinitionId, NamespacePrefix, DeveloperName, MasterLabel, Label, Length, DataType, ServiceDataTypeId, \nValueTypeId, ExtraTypeInfo, IsCalculated, \nIsHighScaleNumber, IsHtmlFormatted, IsNameField, IsNillable, IsWorkflowFilterable, IsCompactLayoutable, Precision, Scale, IsFieldHistoryTracked,\n IsIndexed, IsApiFilterable, IsApiSortable,\n IsListFilterable, IsListSortable, IsApiGroupable, IsListVisible, ControllingFieldDefinitionId, LastModifiedDate, LastModifiedById, PublisherId,\n RunningUserFieldAccessId, RelationshipName, ReferenceTargetField, Description\n   FROM FieldDefinition WHERE EntityDefinitionId = '@{item().DurableId}'",
+												"type": "Expression"
+											},
+											"readBehavior": "query"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "TarSalesforceObject",
+											"type": "DatasetReference",
+											"parameters": {
+												"SFObjectName": {
+													"value": "@item().DurableId",
+													"type": "Expression"
+												},
+												"SFLinkedServiceURL": {
+													"value": "@pipeline().parameters.URL",
+													"type": "Expression"
+												},
+												"SFLinkedServiceUserName": {
+													"value": "@pipeline().parameters.UserName",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "sink_mig_stg_db",
+											"type": "DatasetReference",
+											"parameters": {
+												"FileName": {
+													"value": "FieldDefinitionTAR",
 													"type": "Expression"
 												},
 												"SchemaName": "SF_archive"
@@ -846,7 +928,7 @@
 						}
 					},
 					{
-						"name": "Drop table FieldDefinition",
+						"name": "Drop table FieldDefinitionSRC",
 						"type": "Script",
 						"dependsOn": [],
 						"policy": {
@@ -865,7 +947,33 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "drop  table if exists [SF_Archive].FieldDefinition "
+									"text": "drop  table if exists [SF_Archive].FieldDefinitionSRC"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "Drop table FieldDefinitionTAR",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabaseMIG",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "drop  table if exists [SF_Archive].FieldDefinitionSRC"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -874,6 +982,16 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"URL": {
+						"type": "string",
+						"defaultValue": "https://falck-smp--test.sandbox.my.salesforce.com/"
+					},
+					"UserName": {
+						"type": "string",
+						"defaultValue": "azure.integration@falck.com.smp.test"
+					}
 				},
 				"variables": {
 					"drop-table": {
@@ -889,7 +1007,8 @@
 				"[concat(variables('factoryId'), '/datasets/LegSalesforceObject')]",
 				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabaseDataSource')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseMIG')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseMIG')]",
+				"[concat(variables('factoryId'), '/datasets/TarSalesforceObject')]"
 			]
 		},
 		{
