@@ -66,9 +66,9 @@
 							"typeProperties": {
 								"source": {
 									"type": "AzureSqlSource",
-									"sqlReaderStoredProcedureName": "[SF_Archive].[ColsWithoutSystemCols]",
+									"sqlReaderStoredProcedureName": "[SF_Archive].[proc_sf_sql_extract]",
 									"storedProcedureParameters": {
-										"TableName": {
+										"ObjectName": {
 											"type": "String",
 											"value": {
 												"value": "@item().objectname",
