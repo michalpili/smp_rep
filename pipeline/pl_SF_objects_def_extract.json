@@ -147,7 +147,10 @@
 							"typeProperties": {
 								"source": {
 									"type": "SalesforceSource",
-									"query": "SELECT Id, DurableId, QualifiedApiName, EntityDefinitionId, NamespacePrefix, DeveloperName, MasterLabel, Label, Length, DataType, ServiceDataTypeId, \nValueTypeId, ExtraTypeInfo, IsCalculated, \nIsHighScaleNumber, IsHtmlFormatted, IsNameField, IsNillable, IsWorkflowFilterable, IsCompactLayoutable, Precision, Scale, IsFieldHistoryTracked,\n IsIndexed, IsApiFilterable, IsApiSortable,\n IsListFilterable, IsListSortable, IsApiGroupable, IsListVisible, ControllingFieldDefinitionId, LastModifiedDate, LastModifiedById, PublisherId,\n RunningUserFieldAccessId, RelationshipName, ReferenceTargetField, Description\n   FROM FieldDefinition WHERE EntityDefinitionId = '@{item().DurableId}'",
+									"query": {
+										"value": "SELECT Id, DurableId, QualifiedApiName, EntityDefinitionId, NamespacePrefix, DeveloperName, MasterLabel, Label, Length, DataType, ServiceDataTypeId, \nValueTypeId, ExtraTypeInfo, IsCalculated, \nIsHighScaleNumber, IsHtmlFormatted, IsNameField, IsNillable, IsWorkflowFilterable, IsCompactLayoutable, Precision, Scale, IsFieldHistoryTracked,\n IsIndexed, IsApiFilterable, IsApiSortable,\n IsListFilterable, IsListSortable, IsApiGroupable, IsListVisible, ControllingFieldDefinitionId, LastModifiedDate, LastModifiedById, PublisherId,\n RunningUserFieldAccessId, RelationshipName, ReferenceTargetField, Description\n   FROM FieldDefinition WHERE EntityDefinitionId = '@{item().DurableId}'",
+										"type": "Expression"
+									},
 									"readBehavior": "query"
 								},
 								"sink": {
@@ -208,7 +211,10 @@
 							"typeProperties": {
 								"source": {
 									"type": "SalesforceSource",
-									"query": "SELECT Id, DurableId, QualifiedApiName, EntityDefinitionId, NamespacePrefix, DeveloperName, MasterLabel, Label, Length, DataType, ServiceDataTypeId, \nValueTypeId, ExtraTypeInfo, IsCalculated, \nIsHighScaleNumber, IsHtmlFormatted, IsNameField, IsNillable, IsWorkflowFilterable, IsCompactLayoutable, Precision, Scale, IsFieldHistoryTracked,\n IsIndexed, IsApiFilterable, IsApiSortable,\n IsListFilterable, IsListSortable, IsApiGroupable, IsListVisible, ControllingFieldDefinitionId, LastModifiedDate, LastModifiedById, PublisherId,\n RunningUserFieldAccessId, RelationshipName, ReferenceTargetField, Description\n   FROM FieldDefinition WHERE EntityDefinitionId = '@{item().DurableId}'",
+									"query": {
+										"value": "SELECT Id, DurableId, QualifiedApiName, EntityDefinitionId, NamespacePrefix, DeveloperName, MasterLabel, Label, Length, DataType, ServiceDataTypeId, \nValueTypeId, ExtraTypeInfo, IsCalculated, \nIsHighScaleNumber, IsHtmlFormatted, IsNameField, IsNillable, IsWorkflowFilterable, IsCompactLayoutable, Precision, Scale, IsFieldHistoryTracked,\n IsIndexed, IsApiFilterable, IsApiSortable,\n IsListFilterable, IsListSortable, IsApiGroupable, IsListVisible, ControllingFieldDefinitionId, LastModifiedDate, LastModifiedById, PublisherId,\n RunningUserFieldAccessId, RelationshipName, ReferenceTargetField, Description\n   FROM FieldDefinition WHERE EntityDefinitionId = '@{item().DurableId}'",
+										"type": "Expression"
+									},
 									"readBehavior": "query"
 								},
 								"sink": {
@@ -311,7 +317,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "drop  table if exists [SF_Archive].FieldDefinitionSRC"
+							"text": "drop  table if exists [SF_Archive].FieldDefinitionTAR"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
