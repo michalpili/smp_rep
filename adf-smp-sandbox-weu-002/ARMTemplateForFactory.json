@@ -973,7 +973,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "drop  table if exists [SF_Archive].FieldDefinitionSRC"
+									"text": "drop  table if exists [SF_Archive].FieldDefinitionTAR"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
