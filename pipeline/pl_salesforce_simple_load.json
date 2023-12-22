@@ -17,16 +17,6 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE category = 'Salesforce settings'",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "AzureSqlDatabaseDataSource",
-						"type": "DatasetReference"
-					},
 					"firstRowOnly": false
 				}
 			},
