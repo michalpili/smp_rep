@@ -6,740 +6,12 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-smp-sandbox-weu-002"
-		},
-		"AmazonS31_secretAccessKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'secretAccessKey' of 'AmazonS31'"
-		},
-		"AzureBatch1_accessKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accessKey' of 'AzureBatch1'"
-		},
-		"AmazonS31_properties_typeProperties_accessKeyId": {
-			"type": "string",
-			"defaultValue": "AKIAXQJG6VWN7GODEQ5S"
-		},
-		"AzureBatch1_properties_typeProperties_batchUri": {
-			"type": "string",
-			"defaultValue": "https://migdevelopment.westeurope.batch.azure.com"
-		},
-		"AzureBatch1_properties_typeProperties_poolName": {
-			"type": "string",
-			"defaultValue": "MIG"
-		},
-		"AzureBatch1_properties_typeProperties_accountName": {
-			"type": "string",
-			"defaultValue": "migdevelopment"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/sink_mig_stg_db')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseMIG",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string"
-					},
-					"SchemaName": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "ds - DB"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "client_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " acct_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " userid",
-						"type": "nvarchar"
-					},
-					{
-						"name": " password",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_type",
-						"type": "nvarchar"
-					},
-					{
-						"name": " reg_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " first_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": " mi",
-						"type": "nvarchar"
-					},
-					{
-						"name": " address1",
-						"type": "nvarchar"
-					},
-					{
-						"name": " address2",
-						"type": "nvarchar"
-					},
-					{
-						"name": " city",
-						"type": "nvarchar"
-					},
-					{
-						"name": " locality",
-						"type": "nvarchar"
-					},
-					{
-						"name": " state_prov",
-						"type": "nvarchar"
-					},
-					{
-						"name": " country",
-						"type": "nvarchar"
-					},
-					{
-						"name": " postal_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": " ssn",
-						"type": "nvarchar"
-					},
-					{
-						"name": " phone_npa",
-						"type": "nvarchar"
-					},
-					{
-						"name": " phone_nxx",
-						"type": "nvarchar"
-					},
-					{
-						"name": " phone_suffix",
-						"type": "nvarchar"
-					},
-					{
-						"name": " phone_extension",
-						"type": "nvarchar"
-					},
-					{
-						"name": " phone_country_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": " intl_phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": " pay_method",
-						"type": "nvarchar"
-					},
-					{
-						"name": " notify_method",
-						"type": "nvarchar"
-					},
-					{
-						"name": " next_bill_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " bill_day",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_bill_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_bill_thru_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " status_cd",
-						"type": "nvarchar"
-					},
-					{
-						"name": " process_flag",
-						"type": "nvarchar"
-					},
-					{
-						"name": " lang_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " legacy",
-						"type": "nvarchar"
-					},
-					{
-						"name": " tax_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " senior_acct_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " carrier",
-						"type": "nvarchar"
-					},
-					{
-						"name": " comments",
-						"type": "nvarchar"
-					},
-					{
-						"name": " trans_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " origin_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " old_userid",
-						"type": "nvarchar"
-					},
-					{
-						"name": " old_acct_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " aup_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " created",
-						"type": "nvarchar"
-					},
-					{
-						"name": " update_user",
-						"type": "nvarchar"
-					},
-					{
-						"name": " update_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " client_acct_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " feature_mask",
-						"type": "nvarchar"
-					},
-					{
-						"name": " promo_cd",
-						"type": "nvarchar"
-					},
-					{
-						"name": " no_edit_ind",
-						"type": "nvarchar"
-					},
-					{
-						"name": " pop_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " alt_email",
-						"type": "nvarchar"
-					},
-					{
-						"name": " alt_homepage",
-						"type": "nvarchar"
-					},
-					{
-						"name": " reg_auth_result",
-						"type": "nvarchar"
-					},
-					{
-						"name": " status_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " status_degrade_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " secret_question_answer",
-						"type": "nvarchar"
-					},
-					{
-						"name": " test_acct_ind",
-						"type": "nvarchar"
-					},
-					{
-						"name": " company_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": " resp_level_cd",
-						"type": "nvarchar"
-					},
-					{
-						"name": " senior_acct_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " inv_approval_req_ind",
-						"type": "nvarchar"
-					},
-					{
-						"name": " currency_cd",
-						"type": "nvarchar"
-					},
-					{
-						"name": " eu_notes",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_type_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_roll_override_ind",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_arrears_bill_thru_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " alt_msg_template_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " require_special_inv",
-						"type": "nvarchar"
-					},
-					{
-						"name": " date_to_suspend",
-						"type": "nvarchar"
-					},
-					{
-						"name": " alt_master_rate_sched_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " reg_load_seq",
-						"type": "nvarchar"
-					},
-					{
-						"name": " pop_phone_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " birthdate",
-						"type": "nvarchar"
-					},
-					{
-						"name": " cell_phone_npa",
-						"type": "nvarchar"
-					},
-					{
-						"name": " cell_phone_nxx",
-						"type": "nvarchar"
-					},
-					{
-						"name": " cell_phone_suffix",
-						"type": "nvarchar"
-					},
-					{
-						"name": " work_phone_npa",
-						"type": "nvarchar"
-					},
-					{
-						"name": " work_phone_nxx",
-						"type": "nvarchar"
-					},
-					{
-						"name": " work_phone_suffix",
-						"type": "nvarchar"
-					},
-					{
-						"name": " work_phone_extension",
-						"type": "nvarchar"
-					},
-					{
-						"name": " date_to_expire",
-						"type": "nvarchar"
-					},
-					{
-						"name": " created_by",
-						"type": "nvarchar"
-					},
-					{
-						"name": " display_userid",
-						"type": "nvarchar"
-					},
-					{
-						"name": " donation_plan_amount",
-						"type": "nvarchar"
-					},
-					{
-						"name": " reg_dad",
-						"type": "nvarchar"
-					},
-					{
-						"name": " dw_export_seq",
-						"type": "nvarchar"
-					},
-					{
-						"name": " fax_phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": " salutation",
-						"type": "nvarchar"
-					},
-					{
-						"name": " job_title",
-						"type": "nvarchar"
-					},
-					{
-						"name": " intl_cell_phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": " master_plan_recurring_factor",
-						"type": "nvarchar"
-					},
-					{
-						"name": " intl_work_phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": " plan_assign_api_receipt_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " status_assign_api_receipt_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " acct_create_api_receipt_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " address_seq",
-						"type": "nvarchar"
-					},
-					{
-						"name": " taxpayer_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_recur_bill_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " last_usage_bill_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " max_seq_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " seq_func_group_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " address3",
-						"type": "nvarchar"
-					},
-					{
-						"name": " notify_tmplt_grp_seq_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": " test_acct_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " acct_balance",
-						"type": "nvarchar"
-					},
-					{
-						"name": " acct_start_date",
-						"type": "nvarchar"
-					},
-					{
-						"name": " default_billing_group_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " acct_address_seq",
-						"type": "nvarchar"
-					},
-					{
-						"name": " inv_posting_method_cd",
-						"type": "nvarchar"
-					},
-					{
-						"name": " consumer_acct_ind",
-						"type": "nvarchar"
-					},
-					{
-						"name": " list_start_master_file",
-						"type": "nvarchar"
-					},
-					{
-						"name": " purchase_order_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " locale_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " legal_entity_no",
-						"type": "nvarchar"
-					},
-					{
-						"name": " perpetual_payment_balance",
-						"type": "nvarchar"
-					},
-					{
-						"name": " is_anonymized",
-						"type": "nvarchar"
-					},
-					{
-						"name": "filename",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().SchemaName",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().FileName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AmazonS31')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AmazonS3",
-				"typeProperties": {
-					"serviceUrl": "https://s3.amazonaws.com",
-					"accessKeyId": "[parameters('AmazonS31_properties_typeProperties_accessKeyId')]",
-					"secretAccessKey": {
-						"type": "SecureString",
-						"value": "[parameters('AmazonS31_secretAccessKey')]"
-					},
-					"authenticationType": "AccessKey"
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime2",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureBatch1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBatch",
-				"typeProperties": {
-					"batchUri": "[parameters('AzureBatch1_properties_typeProperties_batchUri')]",
-					"poolName": "[parameters('AzureBatch1_properties_typeProperties_poolName')]",
-					"accountName": "[parameters('AzureBatch1_properties_typeProperties_accountName')]",
-					"linkedServiceName": {
-						"referenceName": "AzureBlobStorage",
-						"type": "LinkedServiceReference"
-					},
-					"accessKey": {
-						"type": "SecureString",
-						"value": "[parameters('AzureBatch1_accessKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BulkCopyfromDB_with_ControlTable')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
-				"activities": [
-					{
-						"name": "GetPartitionList",
-						"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select @{pipeline().parameters.Control_Table_Schema_PartitionID} as PartitionID, @{pipeline().parameters.Control_Table_Schema_SourceTableName} as SourceTableName, @{pipeline().parameters.Control_Table_Schema_FilterQuery} as FilterQuery from @{pipeline().parameters.Control_Table_Name}",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "AzureSqlDatabaseExternal_ControlTable",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": {
-										"value": "@pipeline().parameters.Control_Table_Name",
-										"type": "Expression"
-									}
-								}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEachPartition",
-						"description": "ForEach activity to get the partition list from Lookup activity and then iterate each of them to Copy activity. ",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "GetPartitionList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('GetPartitionList').output.value",
-								"type": "Expression"
-							},
-							"batchCount": 5,
-							"activities": [
-								{
-									"name": "CopyOnePartition",
-									"description": "Copy activity to copy each partition from source database store to destination store.",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SqlSource",
-											"sqlReaderQuery": {
-												"value": "@item().FilterQuery",
-												"type": "Expression"
-											},
-											"partitionOption": "None"
-										},
-										"sink": {
-											"type": "DelimitedTextSink"
-										},
-										"enableStaging": false,
-										"dataIntegrationUnits": 0
-									},
-									"inputs": [
-										{
-											"referenceName": "AzureSqlDatabaseDataSource",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "DataDestination",
-											"type": "DatasetReference",
-											"parameters": {
-												"Data_Destination_Container": {
-													"value": "@pipeline().parameters.Data_Destination_Container",
-													"type": "Expression"
-												},
-												"Data_Destination_Directory": {
-													"value": "@pipeline().parameters.Data_Destination_Directory",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"Control_Table_Name": {
-						"type": "String"
-					},
-					"Control_Table_Schema_PartitionID": {
-						"type": "String"
-					},
-					"Control_Table_Schema_SourceTableName": {
-						"type": "String"
-					},
-					"Control_Table_Schema_FilterQuery": {
-						"type": "String"
-					},
-					"Data_Destination_Container": {
-						"type": "String"
-					},
-					"Data_Destination_Directory": {
-						"type": "String"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pl_BlobFilesToDb2')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -995,9 +267,365 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]"
-			]
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_SF_custom_extract_load_StgDB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
+				"activities": [
+					{
+						"name": "GetObjectList",
+						"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_file_load]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": "x",
+									"SchemaName": "x"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For - loop files",
+						"description": "ForEach activity to get the partition list from Lookup activity and then iterate each of them to Copy activity. ",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetObjectList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetObjectList').output.value",
+								"type": "Expression"
+							},
+							"batchCount": 5,
+							"activities": [
+								{
+									"name": "Copy to STG DB",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_source_custom_folder_subfolders_files_copy1",
+											"type": "DatasetReference",
+											"parameters": {
+												"FolderName": {
+													"value": "@pipeline().parameters.FolderName",
+													"type": "Expression"
+												},
+												"FileName": {
+													"value": "@item().objectname",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "sink_mig_stg_db",
+											"type": "DatasetReference",
+											"parameters": {
+												"FileName": {
+													"value": "@replace(item().objectname,'.csv' ,'' )",
+													"type": "Expression"
+												},
+												"SchemaName": "SF_archive"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"FolderName": {
+						"type": "string"
+					},
+					"FileName": {
+						"type": "string",
+						"defaultValue": "sslfalck_sfdc_plan-20231203-220624.csv"
+					}
+				},
+				"variables": {
+					"drop-table": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "3. pl - salesforce extract"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_SF_extract_load_StgDB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
+				"activities": [
+					{
+						"name": "GetObjectList",
+						"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE sql is not null and enabled=1 and extract =1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": "x",
+									"SchemaName": "x"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEachObject",
+						"description": "Extract and load to STG DB",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetObjectList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetObjectList').output.value",
+								"type": "Expression"
+							},
+							"batchCount": 5,
+							"activities": [
+								{
+									"name": "Salesforce - CopyOneObject",
+									"description": "Copy activity to copy one object",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SalesforceSource",
+											"readBehavior": "query"
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"dataIntegrationUnits": 0,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "LegSalesforceObject",
+											"type": "DatasetReference",
+											"parameters": {
+												"SFObjectName": {
+													"value": "@item().objectname",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_salesforce_extract_csv",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								},
+								{
+									"name": "Copy to STG DB",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SalesforceSource",
+											"readBehavior": "query"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"preCopyScript": {
+												"value": "drop  table if exists [SF_Archive].@{item().objectname}",
+												"type": "Expression"
+											},
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "LegSalesforceObject",
+											"type": "DatasetReference",
+											"parameters": {
+												"SFObjectName": {
+													"value": "@item().objectname",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "sink_mig_stg_db",
+											"type": "DatasetReference",
+											"parameters": {
+												"FileName": {
+													"value": "@item().objectname",
+													"type": "Expression"
+												},
+												"SchemaName": "SF_archive"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"drop-table": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "3. pl - salesforce extract"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pl_SF_objects_def_extract')]",
@@ -1105,14 +733,17 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT DurableId\nFROM [SF_Archive].[EntityDefinition]\n",
+								"sqlReaderQuery": "SELECT [DurableId]\nFROM [SF_Archive].[EntityDefinition]\n--WHERE DurableId='Contact'",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "AzureSqlDatabaseDataSource",
+								"referenceName": "sink_mig_stg_db",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"FileName": "x",
+									"SchemaName": "x"
+								}
 							},
 							"firstRowOnly": false
 						}
@@ -1134,7 +765,7 @@
 								"value": "@activity('GetObjectList').output.value",
 								"type": "Expression"
 							},
-							"batchCount": 50,
+							"batchCount": 10,
 							"activities": [
 								{
 									"name": "Copy FieldDefinitionSRC - STG DB",
@@ -1347,369 +978,11 @@
 					}
 				},
 				"folder": {
-					"name": "3. pl - salesforce settings"
+					"name": "3. pl - salesforce extract"
 				},
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_load_custom_files')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
-				"activities": [
-					{
-						"name": "GetObjectList",
-						"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_file_load]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "AzureSqlDatabaseDataSource",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "For - loop files",
-						"description": "ForEach activity to get the partition list from Lookup activity and then iterate each of them to Copy activity. ",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "GetObjectList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('GetObjectList').output.value",
-								"type": "Expression"
-							},
-							"batchCount": 5,
-							"activities": [
-								{
-									"name": "Copy to STG DB",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "AzureSqlSink",
-											"writeBehavior": "insert",
-											"sqlWriterUseTableLock": false,
-											"tableOption": "autoCreate",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "ds_source_custom_folder_subfolders_files_copy1",
-											"type": "DatasetReference",
-											"parameters": {
-												"FolderName": {
-													"value": "@pipeline().parameters.FolderName",
-													"type": "Expression"
-												},
-												"FileName": {
-													"value": "@item().objectname",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "sink_mig_stg_db",
-											"type": "DatasetReference",
-											"parameters": {
-												"FileName": {
-													"value": "@replace(item().objectname,'.csv' ,'' )",
-													"type": "Expression"
-												},
-												"SchemaName": "SF_archive"
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"FolderName": {
-						"type": "string"
-					},
-					"FileName": {
-						"type": "string",
-						"defaultValue": "sslfalck_sfdc_plan-20231203-220624.csv"
-					}
-				},
-				"variables": {
-					"drop-table": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "3. pl - salesforce settings"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_salesforce_extract_to_files')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
-				"activities": [
-					{
-						"name": "GetObjectList",
-						"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE enabled=1 and extract=1",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "AzureSqlDatabaseDataSource",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEachObject",
-						"description": "Extract and load to STG DB",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "GetObjectList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('GetObjectList').output.value",
-								"type": "Expression"
-							},
-							"batchCount": 5,
-							"activities": [
-								{
-									"name": "Salesforce - CopyOneObject",
-									"description": "Copy activity to copy one object",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SalesforceSource",
-											"readBehavior": "query"
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobStorageWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"dataIntegrationUnits": 0,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "LegSalesforceObject",
-											"type": "DatasetReference",
-											"parameters": {
-												"SFObjectName": {
-													"value": "@item().objectname",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "ds_salesforce_extract_csv",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								},
-								{
-									"name": "Copy to STG DB",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SalesforceSource",
-											"readBehavior": "query"
-										},
-										"sink": {
-											"type": "AzureSqlSink",
-											"preCopyScript": {
-												"value": "drop  table if exists [SF_Archive].@{item().objectname}",
-												"type": "Expression"
-											},
-											"writeBehavior": "insert",
-											"sqlWriterUseTableLock": false,
-											"tableOption": "autoCreate",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "LegSalesforceObject",
-											"type": "DatasetReference",
-											"parameters": {
-												"SFObjectName": {
-													"value": "@item().objectname",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "sink_mig_stg_db",
-											"type": "DatasetReference",
-											"parameters": {
-												"FileName": {
-													"value": "@item().objectname",
-													"type": "Expression"
-												},
-												"SchemaName": "SF_archive"
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"drop-table": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "3. pl - salesforce settings"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pl_salesforce_simple_load')]",
@@ -1734,14 +1007,17 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE category = 'Salesforce settings'",
+								"sqlReaderQuery": "SELECT [objectname]\r\n  FROM [Audit].[mig_objects_list]\r\n  WHERE category='Salesforce settings' \r\n  AND enabled=1 and extract=1",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "AzureSqlDatabaseDataSource",
+								"referenceName": "sink_mig_stg_db",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"FileName": "x",
+									"SchemaName": "x"
+								}
 							},
 							"firstRowOnly": false
 						}
@@ -1863,45 +1139,18 @@
 					}
 				},
 				"folder": {
-					"name": "3. pl - salesforce settings"
+					"name": "4. pl - salesforce load"
 				},
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_source_aws_s3')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AmazonS31",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "ds - AWS"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AmazonS3Location",
-						"bucketName": "falck-migration"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AmazonS31')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pl_salesforce_sql_load')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
+				"description": "to load to SF based on sql stored in mig_objects_list table",
 				"activities": [
 					{
 						"name": "GetObjectList",
@@ -1924,9 +1173,12 @@
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "AzureSqlDatabaseDataSource",
+								"referenceName": "sink_mig_stg_db",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"FileName": "x",
+									"SchemaName": "x"
+								}
 							},
 							"firstRowOnly": false
 						}
@@ -1967,9 +1219,9 @@
 									"typeProperties": {
 										"source": {
 											"type": "AzureSqlSource",
-											"sqlReaderStoredProcedureName": "[[SF_Archive].[ColsWithoutSystemCols]",
+											"sqlReaderStoredProcedureName": "[[SF_Archive].[proc_sf_sql_extract]",
 											"storedProcedureParameters": {
-												"TableName": {
+												"ObjectName": {
 													"type": "String",
 													"value": {
 														"value": "@item().objectname",
@@ -2048,13 +1300,34 @@
 					}
 				},
 				"folder": {
-					"name": "3. pl - salesforce settings"
+					"name": "4. pl - salesforce load"
 				},
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]"
-			]
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_source_aws_s3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AmazonS31",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ds - AWS"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AmazonS3Location",
+						"bucketName": "falck-migration"
+					}
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pl_BlobFilesToDb1')]",
