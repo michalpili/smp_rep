@@ -6,8 +6,6 @@
 			{
 				"name": "Copy EntityDefintion to STG DB",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -136,7 +134,7 @@
 						"value": "@activity('GetObjectList').output.value",
 						"type": "Expression"
 					},
-					"batchCount": 50,
+					"batchCount": 10,
 					"activities": [
 						{
 							"name": "Copy FieldDefinitionSRC - STG DB",
@@ -280,8 +278,6 @@
 			{
 				"name": "Drop table FieldDefinitionSRC",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -308,8 +304,6 @@
 			{
 				"name": "Drop table FieldDefinitionTAR",
 				"type": "Script",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
