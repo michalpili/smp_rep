@@ -17,6 +17,15 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "sink_mig_stg_db",
+						"type": "DatasetReference"
+					},
 					"firstRowOnly": false
 				}
 			},
