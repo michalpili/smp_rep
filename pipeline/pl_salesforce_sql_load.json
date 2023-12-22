@@ -25,7 +25,11 @@
 					},
 					"dataset": {
 						"referenceName": "sink_mig_stg_db",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "x",
+							"SchemaName": "x"
+						}
 					},
 					"firstRowOnly": false
 				}
