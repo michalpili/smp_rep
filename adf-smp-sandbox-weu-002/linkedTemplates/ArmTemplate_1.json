@@ -628,7 +628,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_SF_objects_def_extract')]",
+			"name": "[concat(parameters('factoryName'), '/pl_SF_objects_def_extract_load_StgDB')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -733,7 +733,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [DurableId]\nFROM [SF_Archive].[EntityDefinition]\n--WHERE DurableId='Contact'",
+								"sqlReaderQuery": "SELECT [DurableId]\nFROM [SF_Archive].[EntityDefinition]\nWHERE DurableId in ('A''Lead'",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
