@@ -44,13 +44,10 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "LegSalesforceObject",
+						"referenceName": "TarSalesforceObject",
 						"type": "DatasetReference",
 						"parameters": {
-							"SFObjectName": {
-								"value": "Account",
-								"type": "Expression"
-							}
+							"SFObjectName": "Account "
 						}
 					}
 				],
