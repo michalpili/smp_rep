@@ -868,6 +868,118 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_SF_extract_load_mig_mapIDs')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
+				"activities": [
+					{
+						"name": "Account - map IDs",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"additionalColumns": [
+									{
+										"name": "objectname",
+										"value": "Account"
+									}
+								],
+								"query": "select  Id, LegacyId__c from Account where LegacyId__c != null",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": {
+									"value": "delete from [Audit].[mig_mapIDs] where [objectname]='Account';",
+									"type": "Expression"
+								},
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "TarSalesforceObject",
+								"type": "DatasetReference",
+								"parameters": {
+									"SFObjectName": "Account ",
+									"SFLinkedServiceURL": {
+										"value": "@pipeline().parameters.URL",
+										"type": "Expression"
+									},
+									"SFLinkedServiceUserName": {
+										"value": "@pipeline().parameters.UserName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "mig_mapIDs",
+										"type": "Expression"
+									},
+									"SchemaName": "Audit"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"URL": {
+						"type": "string",
+						"defaultValue": "https://falck-smp--test.sandbox.my.salesforce.com/"
+					},
+					"UserName": {
+						"type": "string",
+						"defaultValue": "azure.integration@falck.com.smp.test"
+					}
+				},
+				"variables": {
+					"drop-table": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "3. pl - salesforce extract"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/TarSalesforceObject')]",
+				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_SF_objects_def_extract_load_StgDB')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1537,7 +1649,7 @@
 							"scripts": [
 								{
 									"type": "NonQuery",
-									"text": "\n--- Lead\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Account','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Contact','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Lead','Salesforce','Salesforce Standard',\n'\nselect\nt.LastName,\nt.FirstName,\nt.Salutation,\nt.Title,\nt.Company,\nt.Street,\nt.City,\nt.State,\nt.PostalCode,\nt.Country,\nt.Latitude,\nt.Longitude,\nt.GeocodeAccuracy,\nt.Phone,\nt.MobilePhone,\nt.Fax,\nt.Email,\nt.Website,\nt.Description,\nt.LeadSource,\nt.Status,\nt.Industry,\nt.Rating,\nt.AnnualRevenue,\nt.NumberOfEmployees,\nt.HasOptedOutOfEmail,\n/*0 as IsConverted,\nnull as ConvertedDate,*/\n/*case when t.IsConverted = 1 then ''0017a00002SXIlXAAX'' else null end ConvertedAccountId,\ncase when t.IsConverted = 1 then ''0037a000029ISiTAAW'' else null end ConvertedContactId,*/\nt.IsUnreadByOwner,\nt.CreatedDate,\nt.LastModifiedDate,\nt.DoNotCall,\nt.HasOptedOutOfFax,\nt.smagicinteract__SMSOptOut__c,\nt.Unica_AddressLine1__c,\nt.Unica_AddressLine2__c,\nt.Unica_Base_ID__c,\nt.Unica_City__c,\nt.Unica_MDB_ID__c,\nt.Unica_ZipCode__c\nfrom SF_archive.Lead t\nwhere t.IsDeleted =0\n',1,0,1,1);\n\n---"
+									"text": "\n--- Lead\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Account','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Contact','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Lead','Salesforce','Salesforce Standard',\n'\nselect\nt.LastName,\nt.FirstName,\nt.Salutation,\nt.Title,\nt.Company,\nt.Street,\nt.City,\nt.State,\nt.PostalCode,\nt.Country,\nt.Latitude,\nt.Longitude,\nt.GeocodeAccuracy,\nt.Phone,\nt.MobilePhone,\nt.Fax,\nt.Email,\nt.Website,\nt.Description,\nt.LeadSource,\nt.Status,\nt.Industry,\nt.Rating,\nt.AnnualRevenue,\nt.NumberOfEmployees,\nt.HasOptedOutOfEmail,\nt.IsConverted,\nt.ConvertedDate,\ncase \nwhen t.IsConverted =1 then \n(select m.Id from audit.mig_mapIDs m where m.LegacyId__c = t.ConvertedAccountId ) \nend ConvertedAccountId,\n/*case when t.IsConverted = 1 then ''0017a00002SXIlXAAX'' else null end ConvertedAccountId,\ncase when t.IsConverted = 1 then ''0037a000029ISiTAAW'' else null end ConvertedContactId,*/\nt.IsUnreadByOwner,\nt.CreatedDate,\nt.LastModifiedDate,\nt.DoNotCall,\nt.HasOptedOutOfFax,\nt.smagicinteract__SMSOptOut__c,\nt.Unica_AddressLine1__c,\nt.Unica_AddressLine2__c,\nt.Unica_Base_ID__c,\nt.Unica_City__c,\nt.Unica_MDB_ID__c,\nt.Unica_ZipCode__c\nfrom SF_archive.Lead t\nwhere t.IsDeleted =0\n',1,0,1,1);\n\n---"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -3098,97 +3210,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_SF_extract_load_mig_mapIDs')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
-				"activities": [
-					{
-						"name": "Account - map IDs",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SalesforceSource",
-								"query": "select Id, LegacyId__c from Account where LegacyId__c != null  ",
-								"readBehavior": "query"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": {
-									"value": "delete from [Audit].[mig_mapIDs] where [objectname]='Account';",
-									"type": "Expression"
-								},
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "LegSalesforceObject",
-								"type": "DatasetReference",
-								"parameters": {
-									"SFObjectName": {
-										"value": "Account",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "sink_mig_stg_db",
-								"type": "DatasetReference",
-								"parameters": {
-									"FileName": {
-										"value": "mig_mapIDs",
-										"type": "Expression"
-									},
-									"SchemaName": "Audit"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"drop-table": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "3. pl - salesforce extract"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/LegSalesforceObject')]",
-				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]"
-			]
 		}
 	]
 }

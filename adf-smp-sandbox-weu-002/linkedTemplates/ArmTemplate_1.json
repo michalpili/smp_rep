@@ -628,6 +628,115 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_SF_extract_load_mig_mapIDs')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
+				"activities": [
+					{
+						"name": "Account - map IDs",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"additionalColumns": [
+									{
+										"name": "objectname",
+										"value": "Account"
+									}
+								],
+								"query": "select  Id, LegacyId__c from Account where LegacyId__c != null",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": {
+									"value": "delete from [Audit].[mig_mapIDs] where [objectname]='Account';",
+									"type": "Expression"
+								},
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "TarSalesforceObject",
+								"type": "DatasetReference",
+								"parameters": {
+									"SFObjectName": "Account ",
+									"SFLinkedServiceURL": {
+										"value": "@pipeline().parameters.URL",
+										"type": "Expression"
+									},
+									"SFLinkedServiceUserName": {
+										"value": "@pipeline().parameters.UserName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "mig_mapIDs",
+										"type": "Expression"
+									},
+									"SchemaName": "Audit"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"URL": {
+						"type": "string",
+						"defaultValue": "https://falck-smp--test.sandbox.my.salesforce.com/"
+					},
+					"UserName": {
+						"type": "string",
+						"defaultValue": "azure.integration@falck.com.smp.test"
+					}
+				},
+				"variables": {
+					"drop-table": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "3. pl - salesforce extract"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_SF_objects_def_extract_load_StgDB')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1326,94 +1435,6 @@
 						"bucketName": "falck-migration"
 					}
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_SF_extract_load_mig_mapIDs')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
-				"activities": [
-					{
-						"name": "Account - map IDs",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SalesforceSource",
-								"query": "select Id, LegacyId__c from Account where LegacyId__c != null  ",
-								"readBehavior": "query"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": {
-									"value": "delete from [Audit].[mig_mapIDs] where [objectname]='Account';",
-									"type": "Expression"
-								},
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "LegSalesforceObject",
-								"type": "DatasetReference",
-								"parameters": {
-									"SFObjectName": {
-										"value": "Account",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "sink_mig_stg_db",
-								"type": "DatasetReference",
-								"parameters": {
-									"FileName": {
-										"value": "mig_mapIDs",
-										"type": "Expression"
-									},
-									"SchemaName": "Audit"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"drop-table": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "3. pl - salesforce extract"
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		},
