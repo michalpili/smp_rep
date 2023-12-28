@@ -18,7 +18,13 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceSource",
-						"query": "select Id, LegacyId__c from Account where LegacyId__c != null  ",
+						"additionalColumns": [
+							{
+								"name": "objectname",
+								"value": "Account"
+							}
+						],
+						"query": "select  Id, LegacyId__c from Account where LegacyId__c != null  ",
 						"readBehavior": "query"
 					},
 					"sink": {
