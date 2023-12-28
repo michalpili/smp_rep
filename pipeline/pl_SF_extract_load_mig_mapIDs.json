@@ -47,7 +47,15 @@
 						"referenceName": "TarSalesforceObject",
 						"type": "DatasetReference",
 						"parameters": {
-							"SFObjectName": "Account "
+							"SFObjectName": "Account ",
+							"SFLinkedServiceURL": {
+								"value": "@pipeline().parameters.URL",
+								"type": "Expression"
+							},
+							"SFLinkedServiceUserName": {
+								"value": "@pipeline().parameters.UserName",
+								"type": "Expression"
+							}
 						}
 					}
 				],
