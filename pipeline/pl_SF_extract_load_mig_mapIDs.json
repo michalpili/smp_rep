@@ -19,7 +19,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE enabled=1 and extract=1",
+						"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE enabled=1 and  [objectname] ='Account' ",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -54,65 +54,6 @@
 					},
 					"batchCount": 5,
 					"activities": [
-						{
-							"name": "Salesforce - CopyOneObject",
-							"description": "Copy activity to copy one object",
-							"type": "Copy",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "SalesforceSource",
-									"readBehavior": "query"
-								},
-								"sink": {
-									"type": "DelimitedTextSink",
-									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
-									},
-									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".txt"
-									}
-								},
-								"enableStaging": false,
-								"dataIntegrationUnits": 0,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "LegSalesforceObject",
-									"type": "DatasetReference",
-									"parameters": {
-										"SFObjectName": {
-											"value": "@item().objectname",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "ds_salesforce_extract_csv",
-									"type": "DatasetReference"
-								}
-							]
-						},
 						{
 							"name": "Copy to STG DB",
 							"type": "Copy",
@@ -179,6 +120,71 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Account - map IDs",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"query": "select Id, LegacyId__c from Account where LegacyId__c != null  ",
+						"readBehavior": "query"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "delete from [Audit].[mig_mapIDs] where [objectname]='Account';",
+							"type": "Expression"
+						},
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "LegSalesforceObject",
+						"type": "DatasetReference",
+						"parameters": {
+							"SFObjectName": {
+								"value": "Account",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sink_mig_stg_db",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": {
+								"value": "mig_mapIDs",
+								"type": "Expression"
+							},
+							"SchemaName": "Audit"
+						}
+					}
+				]
 			}
 		],
 		"variables": {
