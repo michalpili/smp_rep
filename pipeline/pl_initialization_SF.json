@@ -181,6 +181,7 @@
 			},
 			{
 				"name": "SF - Create mig_account_list",
+				"description": "Table holding list of accounts for migration. To be populated manually.",
 				"type": "Script",
 				"dependsOn": [],
 				"policy": {
