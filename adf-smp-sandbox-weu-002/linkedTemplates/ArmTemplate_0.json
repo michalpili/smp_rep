@@ -505,7 +505,7 @@
 							"scripts": [
 								{
 									"type": "NonQuery",
-									"text": "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='mig_account_list' and xtype='U')\n    CREATE TABLE [Audit].[mig_account_list] (\n        AccountId varchar(1000),\n        insert_datetime datetime default GETDATE()\n    )\nGO"
+									"text": "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='mig_account_list' and xtype='U')\n    CREATE TABLE [Audit].[mig_account_list] (\n        AccountId varchar(1000),\n        insert_datetime datetime default GETDATE()\n    )"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
