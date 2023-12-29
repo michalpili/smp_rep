@@ -24,7 +24,7 @@
 								"value": "Account"
 							}
 						],
-						"query": "select  Id, LegacyId__c from Account where LegacyId__c != null",
+						"query": "select Id, LegacyId__c,PersonContactId from Account where LegacyId__c != null",
 						"readBehavior": "query"
 					},
 					"sink": {
