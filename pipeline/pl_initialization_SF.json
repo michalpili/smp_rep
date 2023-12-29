@@ -114,7 +114,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "\n--- Lead\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Account','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Contact','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Lead','Salesforce','Salesforce Standard',\n'\nselect\nl.LastName,\nl.FirstName,\nl.Salutation,\nl.Title,\nl.Company,\nl.Street,\nl.City,\nl.State,\nl.PostalCode,\nl.Country,\nl.Latitude,\nl.Longitude,\nl.GeocodeAccuracy,\nl.Phone,\nl.MobilePhone,\nl.Fax,\nl.Email,\nl.Website,\nl.Description,\nl.LeadSource,\nl.Status,\nl.Industry,\nl.Rating,\nl.AnnualRevenue,\nl.NumberOfEmployees,\nl.HasOptedOutOfEmail,\nl.IsConverted,\nl.ConvertedDate, \ncase \n\twhen l.IsConverted =1 \n\tthen (select m.Id from audit.mig_mapIDs m where m.LegacyId__c = l.ConvertedAccountId ) \nend ConvertedAccountId,\ncase \n\twhen l.IsConverted =1 \n\tthen (select m.PersonContactId from audit.mig_mapIDs m where m.LegacyId__c = l.ConvertedAccountId ) \nend ConvertedContactId,\nl.IsUnreadByOwner,\nDATETRUNC(day, CONVERT(DATETIME, l.CreatedDate)) as CreatedDate,\nl.LastModifiedDate,\nl.DoNotCall,\nl.HasOptedOutOfFax,\nl.smagicinteract__SMSOptOut__c,\nl.Unica_AddressLine1__c,\nl.Unica_AddressLine2__c,\nl.Unica_Base_ID__c,\nl.Unica_City__c,\nl.Unica_MDB_ID__c,\nl.Unica_ZipCode__c\nfrom SF_archive.Lead t\nwhere l.IsDeleted = 0\n',1,0,1,1);\n\n---"
+							"text": "\n--- Lead\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Account','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Contact','Salesforce','Salesforce Standard',null,1,0,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Lead','Salesforce','Salesforce Standard',\n'\nselect\nl.LastName,\nl.FirstName,\nl.Salutation,\nl.Title,\nl.Company,\nl.Street,\nl.City,\nl.State,\nl.PostalCode,\nl.Country,\nl.Latitude,\nl.Longitude,\nl.GeocodeAccuracy,\nl.Phone,\nl.MobilePhone,\nl.Fax,\nl.Email,\nl.Website,\nl.Description,\nl.LeadSource,\nl.Status,\nl.Industry,\nl.Rating,\nl.AnnualRevenue,\nl.NumberOfEmployees,\nl.HasOptedOutOfEmail,\nl.IsConverted,\nl.ConvertedDate, \ncase \n\twhen l.IsConverted =1 \n\tthen (select m.Id from audit.mig_mapIDs m where m.LegacyId__c = l.ConvertedAccountId and m.objectname=''Account'') \nend ConvertedAccountId,\ncase \n\twhen l.IsConverted =1 \n\tthen (select m.PersonContactId from audit.mig_mapIDs m where m.LegacyId__c = l.ConvertedAccountId and m.objectname=''Account'') \nend ConvertedContactId,\nl.IsUnreadByOwner,\nDATETRUNC(day, CONVERT(DATETIME, l.CreatedDate)) as CreatedDate,\nl.LastModifiedDate,\nl.DoNotCall,\nl.HasOptedOutOfFax,\nl.smagicinteract__SMSOptOut__c,\nl.Unica_AddressLine1__c,\nl.Unica_AddressLine2__c,\nl.Unica_Base_ID__c,\nl.Unica_City__c,\nl.Unica_MDB_ID__c,\nl.Unica_ZipCode__c\nfrom SF_archive.Lead l\nwhere l.IsDeleted = 0 \nand (\n\texists (select 1 from [Audit].[mig_account_list] a where l.ConvertedAccountId = a.AccountId)\n\tor \n\tl.ConvertedAccountId is null\n)\n',1,0,1,1);\n\n---"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -174,6 +174,32 @@
 						{
 							"type": "NonQuery",
 							"text": "DROP TABLE IF EXISTS [Audit].[mig_mapIDs];\nCREATE TABLE [Audit].[mig_mapIDs] (\n    objectname varchar(1000),\n    Id varchar(1000),\n    LegacyId__c varchar(1000),\n    PersonContactId varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "SF - Create mig_account_list",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseMIG",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='mig_account_list' and xtype='U')\n    CREATE TABLE [Audit].[mig_account_list] (\n        AccountId varchar(1000),\n        insert_datetime datetime default GETDATE()\n    )\nGO"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
