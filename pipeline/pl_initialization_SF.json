@@ -173,7 +173,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "DROP TABLE IF EXISTS [Audit].[mig_mapIDs];\nCREATE TABLE [Audit].[mig_mapIDs] (\n    objectname varchar(1000),\n    Id varchar(1000),\n    LegacyId__c varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
+							"text": "DROP TABLE IF EXISTS [Audit].[mig_mapIDs];\nCREATE TABLE [Audit].[mig_mapIDs] (\n    objectname varchar(1000),\n    Id varchar(1000),\n    LegacyId__c varchar(1000),\n    PersonContactId varchar(1000),\n    insert_datetime datetime default GETDATE()\n);"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
