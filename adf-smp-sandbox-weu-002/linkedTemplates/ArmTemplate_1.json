@@ -1255,167 +1255,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_salesforce_sql_load')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "to load to SF based on sql stored in mig_objects_list table",
-				"activities": [
-					{
-						"name": "GetObjectList",
-						"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE sql is not null and enabled=1 and load =1",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "sink_mig_stg_db",
-								"type": "DatasetReference",
-								"parameters": {
-									"FileName": "x",
-									"SchemaName": "x"
-								}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEachObject",
-						"description": "ForEach activity to get the partition list from Lookup activity and then iterate each of them to Copy activity. ",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "GetObjectList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('GetObjectList').output.value",
-								"type": "Expression"
-							},
-							"batchCount": 20,
-							"activities": [
-								{
-									"name": "Salesforce - CopyOneObject",
-									"description": "Copy activity to copy one object",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "AzureSqlSource",
-											"sqlReaderStoredProcedureName": "[[SF_Archive].[proc_sf_sql_extract]",
-											"storedProcedureParameters": {
-												"ObjectName": {
-													"type": "String",
-													"value": {
-														"value": "@item().objectname",
-														"type": "Expression"
-													}
-												}
-											},
-											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
-										},
-										"sink": {
-											"type": "SalesforceSink",
-											"writeBatchSize": 5000,
-											"writeBehavior": "insert"
-										},
-										"enableStaging": false,
-										"dataIntegrationUnits": 0,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "sink_mig_stg_db",
-											"type": "DatasetReference",
-											"parameters": {
-												"FileName": {
-													"value": "@item().objectname",
-													"type": "Expression"
-												},
-												"SchemaName": "SF_Archive"
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "TarSalesforceObject",
-											"type": "DatasetReference",
-											"parameters": {
-												"SFObjectName": {
-													"value": "@item().objectname",
-													"type": "Expression"
-												},
-												"SFLinkedServiceURL": {
-													"value": "@pipeline().parameters.URL",
-													"type": "Expression"
-												},
-												"SFLinkedServiceUserName": {
-													"value": "@pipeline().parameters.UserName",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"URL": {
-						"type": "string",
-						"defaultValue": "https://falck-smp--test.sandbox.my.salesforce.com/"
-					},
-					"UserName": {
-						"type": "string",
-						"defaultValue": "azure.integration@falck.com.smp.test"
-					}
-				},
-				"folder": {
-					"name": "4. pl - salesforce load"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ds_source_aws_s3')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1664,6 +1503,204 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_source_aws_s3')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_salesforce_sql_load')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "to load to SF based on sql stored in mig_objects_list table",
+				"activities": [
+					{
+						"name": "GetObjectList",
+						"description": "Lookup activity to retrieve the list of partitions stored in the external control table.",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE sql is not null and enabled=1 and load =1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": "x",
+									"SchemaName": "x"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEachObject",
+						"description": "ForEach activity to get the partition list from Lookup activity and then iterate each of them to Copy activity. ",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetObjectList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetObjectList').output.value",
+								"type": "Expression"
+							},
+							"batchCount": 20,
+							"activities": [
+								{
+									"name": "Salesforce - CopyOneObject",
+									"description": "Copy activity to copy one object",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderStoredProcedureName": "[[SF_Archive].[proc_sf_sql_extract]",
+											"storedProcedureParameters": {
+												"ObjectName": {
+													"type": "String",
+													"value": {
+														"value": "@item().objectname",
+														"type": "Expression"
+													}
+												}
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SalesforceSink",
+											"writeBatchSize": 5000,
+											"writeBehavior": "insert"
+										},
+										"enableStaging": false,
+										"dataIntegrationUnits": 0,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "sink_mig_stg_db",
+											"type": "DatasetReference",
+											"parameters": {
+												"FileName": {
+													"value": "@item().objectname",
+													"type": "Expression"
+												},
+												"SchemaName": "SF_Archive"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "TarSalesforceObject",
+											"type": "DatasetReference",
+											"parameters": {
+												"SFObjectName": {
+													"value": "@item().objectname",
+													"type": "Expression"
+												},
+												"SFLinkedServiceURL": {
+													"value": "@pipeline().parameters.URL",
+													"type": "Expression"
+												},
+												"SFLinkedServiceUserName": {
+													"value": "@pipeline().parameters.UserName",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "If Account Person",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "Salesforce - CopyOneObject",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@item().objectname='Account_Person'",
+											"type": "Expression"
+										},
+										"ifTrueActivities": [
+											{
+												"name": "Map Account ID",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "pl_SF_extract_load_mig_mapIDs",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {}
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"URL": {
+						"type": "string",
+						"defaultValue": "https://falck-smp--test.sandbox.my.salesforce.com/"
+					},
+					"UserName": {
+						"type": "string",
+						"defaultValue": "azure.integration@falck.com.smp.test"
+					}
+				},
+				"folder": {
+					"name": "4. pl - salesforce load"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pl_SF_extract_load_mig_mapIDs')]"
 			]
 		}
 	]
