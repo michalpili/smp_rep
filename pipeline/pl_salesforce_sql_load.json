@@ -134,7 +134,7 @@
 							]
 						},
 						{
-							"name": "If Account Person",
+							"name": "If Account Person - run MigMapIDs",
 							"type": "IfCondition",
 							"dependsOn": [
 								{
