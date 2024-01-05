@@ -147,7 +147,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "CREATE OR ALTER PROCEDURE [SF_Archive].[proc_sf_sql_extract]\n    @ObjectName varchar(max)\nAS\nBEGIN\ndeclare @query varchar(max);\nset @query = (select top 1 sql from audit.mig_objects_list where objectname='' + @ObjectName + '' and enabled=1);\n\nexec (@query);\nEND"
+							"text": "CREATE OR ALTER PROCEDURE [SF_Archive].[proc_sf_sql_extract]\n@ObjectName varchar(max), \n@Label varchar(max)\nAS\nBEGIN\ndeclare @query varchar(max);\nset @query = (select top 1 sql from audit.mig_objects_list where objectname='' + @ObjectName + '' and label='' + Label + '' and enabled=1);\n\nexec (@query);\nEND"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
