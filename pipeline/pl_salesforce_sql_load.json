@@ -136,8 +136,6 @@
 						{
 							"name": "If Account Person",
 							"type": "IfCondition",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Salesforce - CopyOneObject",
@@ -149,7 +147,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@item().objectname='Account_Person'",
+									"value": "@equals(item().objectname,'Account_Person')",
 									"type": "Expression"
 								},
 								"ifTrueActivities": [
