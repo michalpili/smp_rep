@@ -132,6 +132,33 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "If Condition1",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@item().objectname='Account_Person'",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Execute Pipeline1",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "pl_SF_extract_load_mig_mapIDs",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true
+										}
+									}
+								]
+							}
 						}
 					]
 				}
