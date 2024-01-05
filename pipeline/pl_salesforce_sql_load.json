@@ -136,7 +136,14 @@
 						{
 							"name": "If Condition1",
 							"type": "IfCondition",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Salesforce - CopyOneObject",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
@@ -145,7 +152,7 @@
 								},
 								"ifTrueActivities": [
 									{
-										"name": "Execute Pipeline1",
+										"name": "Map Account ID",
 										"type": "ExecutePipeline",
 										"dependsOn": [],
 										"userProperties": [],
