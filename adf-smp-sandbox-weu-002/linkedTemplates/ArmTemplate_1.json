@@ -1656,7 +1656,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"expression": {
-											"value": "@item().objectname='Account_Person'",
+											"value": "@equals(item().objectname,'Account_Person')",
 											"type": "Expression"
 										},
 										"ifTrueActivities": [
