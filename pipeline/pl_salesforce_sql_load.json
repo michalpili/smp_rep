@@ -19,7 +19,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE sql is not null and enabled=1 and load =1 and objectname='Account_Person'",
+						"sqlReaderQuery": "SELECT [objectname],[label]\n  FROM [Audit].[mig_objects_list]\n  WHERE sql is not null and enabled=1 and load =1 and label='Account_Person'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -147,7 +147,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@equals(item().objectname,'Account_Person')",
+									"value": "@equals(item().label,'Account_Person')",
 									"type": "Expression"
 								},
 								"ifTrueActivities": [
