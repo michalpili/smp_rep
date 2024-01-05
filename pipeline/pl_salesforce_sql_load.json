@@ -78,6 +78,13 @@
 												"value": "@item().objectname",
 												"type": "Expression"
 											}
+										},
+										"Label": {
+											"type": "String",
+											"value": {
+												"value": "@item().label",
+												"type": "Expression"
+											}
 										}
 									},
 									"queryTimeout": "02:00:00",
