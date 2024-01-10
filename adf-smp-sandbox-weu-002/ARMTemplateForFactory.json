@@ -1755,7 +1755,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_salesforce_load_one_copy')]",
+			"name": "[concat(parameters('factoryName'), '/pl_salesforce_load_ALL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
