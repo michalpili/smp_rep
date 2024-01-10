@@ -1,5 +1,5 @@
 {
-	"name": "pl_salesforce_load_one_copy",
+	"name": "pl_salesforce_load_ALL",
 	"properties": {
 		"activities": [
 			{
