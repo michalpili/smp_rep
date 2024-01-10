@@ -6,8 +6,6 @@
 				"name": "Salesforce - Load ACCOUNT",
 				"description": "Copy activity to copy one object",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -72,8 +70,6 @@
 				"name": "Salesforce - Load ACCOUNT_PERSON",
 				"description": "Copy activity to copy one object",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -137,8 +133,6 @@
 			{
 				"name": "MIG_MAP_IDs",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Salesforce - Load ACCOUNT_PERSON",
@@ -166,8 +160,6 @@
 				"name": "Salesforce - Load CONTACT",
 				"description": "Copy activity to copy one object",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "MIG_MAP_IDs",
