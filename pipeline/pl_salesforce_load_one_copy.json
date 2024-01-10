@@ -1,7 +1,6 @@
 {
 	"name": "pl_salesforce_load_one_copy",
 	"properties": {
-		"description": "to load to SF based on sql stored in mig_objects_list table",
 		"activities": [
 			{
 				"name": "Salesforce - CopyOneObject_copy1",
