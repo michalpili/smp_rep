@@ -19,7 +19,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT [objectname],[label]\nFROM [Audit].[mig_objects_list]\nWHERE sql is not null and enabled=1 and load =1 and objectname in ('Account')  and label in ('Account_Person')\nORDER BY order_position  asc",
+						"sqlReaderQuery": "SELECT [objectname],[label]\nFROM [Audit].[mig_objects_list]\nWHERE sql is not null and enabled=1 and load =1 and objectname in ('Account')  \nORDER BY order_position  asc",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
