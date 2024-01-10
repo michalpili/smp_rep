@@ -221,7 +221,7 @@
 						"referenceName": "TarSalesforceObject",
 						"type": "DatasetReference",
 						"parameters": {
-							"SFObjectName": "Account",
+							"SFObjectName": "Contact",
 							"SFLinkedServiceURL": {
 								"value": "@pipeline().parameters.URL",
 								"type": "Expression"
