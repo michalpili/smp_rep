@@ -21,7 +21,8 @@
 		},
 		"AzureSqlDatabaseMIG_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseMIG'"
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseMIG'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=sql-datamig-weu-dev-01.database.windows.net;Initial Catalog=sql-datamig-weu-dev-01"
 		},
 		"Leg_SalesforceTEST_password": {
 			"type": "secureString",

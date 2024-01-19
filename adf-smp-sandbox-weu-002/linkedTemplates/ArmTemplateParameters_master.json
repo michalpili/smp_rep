@@ -15,7 +15,7 @@
 			"value": ""
 		},
 		"AzureSqlDatabaseMIG_connectionString": {
-			"value": ""
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=sql-datamig-weu-dev-01.database.windows.net;Initial Catalog=sql-datamig-weu-dev-01"
 		},
 		"Leg_SalesforceTEST_password": {
 			"value": ""
