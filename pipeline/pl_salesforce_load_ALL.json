@@ -366,7 +366,7 @@
 						"referenceName": "TarSalesforceObject",
 						"type": "DatasetReference",
 						"parameters": {
-							"SFObjectName": "Lead",
+							"SFObjectName": "Opportunity",
 							"SFLinkedServiceURL": {
 								"value": "@pipeline().parameters.URL",
 								"type": "Expression"
