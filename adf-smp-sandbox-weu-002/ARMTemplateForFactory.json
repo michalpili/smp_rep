@@ -1086,7 +1086,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [DurableId]\nFROM [SF_Archive].[EntityDefinition]\nWHERE DurableId in ('Account', 'Lead', 'Contact')",
+								"sqlReaderQuery": "SELECT [DurableId]\nFROM [SF_Archive].[EntityDefinition]\nWHERE DurableId in ('Opportunity')",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -1765,6 +1765,8 @@
 						"name": "Salesforce - Load ACCOUNT",
 						"description": "Copy activity to copy one object",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -1829,6 +1831,8 @@
 						"name": "Salesforce - Load ACCOUNT_PERSON",
 						"description": "Copy activity to copy one object",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -1892,6 +1896,8 @@
 					{
 						"name": "MIG_MAP_IDs",
 						"type": "ExecutePipeline",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Salesforce - Load ACCOUNT_PERSON",
@@ -1920,6 +1926,8 @@
 						"name": "Salesforce - Load CONTACT",
 						"description": "Copy activity to copy one object",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "MIG_MAP_IDs",
@@ -1991,6 +1999,8 @@
 						"name": "Salesforce - Load LEAD",
 						"description": "Copy activity to copy one object",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Salesforce - Load CONTACT",
@@ -2046,6 +2056,77 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"SFObjectName": "Lead",
+									"SFLinkedServiceURL": {
+										"value": "@pipeline().parameters.URL",
+										"type": "Expression"
+									},
+									"SFLinkedServiceUserName": {
+										"value": "@pipeline().parameters.UserName",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Salesforce - Load OPPORTUNITY",
+						"description": "Copy activity to copy one object",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Salesforce - Load CONTACT",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select\n\to.IsPrivate,\n\to.Name,\n\to.Description,\n\to.StageName,\n\to.Amount,\n\to.Probability,\n\to.ExpectedRevenue,\n\to.CloseDate,\n\to.Type,\n\to.NextStep,\n\to.LeadSource,\n\to.ForecastCategory,\n\to.ForecastCategoryName,\n\to.HasOpportunityLineItem,\n\to.CreatedDate,\n\to.LastModifiedDate,\n\to.PushCount,\n\to.LastStageChangeDate,\n\to.Fiscal,\n\to.HasOpenActivity,\n\to.HasOverdueTask,\n\to.ABA_Alarmtransmission__c,\n\to.AED__c,\n\to.Aarsag__c,\n\to.Amount_yearly_Approved__c,\n\to.Amount_yearly_for_commision__c,\n\to.Amount_yearly_in_KS__c,\n\to.Approval_Reject_Reasons__c,\n\to.Approval_Request_Comments__c,\n\to.Approval_Status__c,\n\to.Approved__c,\n\to.Cancel_Products_Price__c,\n\to.Churn_Reasons_Missing__c,\n\to.Collectionfee__c,\n\to.Counseling__c,\n\to.CoveredObjectsIssues__c,\n\to.DB_Competitor__c,\n\to.DIBS_no__c,\n\to.Delete_Reopen_Customer__c,\n\to.Deliverables_Created__c,\n\to.Delivery_Comments__c,\n\to.Email_of_Approval_Submitter__c,\n\to.Email_reply__c,\n\to.Emne_nr__c,\n\to.Enter_Detailed_Reasons__c,\n\to.Entered_Manually_in_KS__c,\n\to.Ext_SalesRep_id__c,\n\to.External_Quote_Number__c,\n\to.Fire_Material__c,\n\to.First_approval_date__c,\n\to.Future_Change__c,\n\to.Giroamount__c,\n\to.Gross_increase__c,\n\to.Has_more_products__c,\n\to.Has_products_been_ordered__c,\n\to.Ignorer_Kan_tidligst_opsiges__c,\n\to.In_BtB_Approval_Flow__c,\n\to.IsManualProration__c,\n\to.IsMitfalckOpportunity__c,\n\to.Is_Lead__c,\n\to.Is_existing_installation__c,\n\to.Is_in_Approval_process__c,\n\to.Kontantrabat__c,\n\to.Kontantsalg_Amount_Approved__c,\n\to.Kontantsalg_Amount_Closed_Won__c,\n\to.Kontantsalg_Amount_for_commision__c,\n\to.Leads_til_MM_VC__c,\n\to.Letter_text__c,\n\to.Level_2_Manager_Approval_Required__c,\n\to.Manual_handling__c,\n\to.Mitfalck_Order_Id__c,\n\to.Opgaver_til_s_lgers_genbehandling__c,\n\to.Opportunity_queue__c,\n\to.Order_Confirmation_Status__c,\n\to.Order_processing_codes__c,\n\to.Order_processing_status__c,\n\to.Order_processing_text__c,\n\to.Original_Account__c,\n\to.Original_Assignment_Directive__c,\n\to.Original_purchase_date__c,\n\to.Paymentmethod__c,\n\to.Primary_Contact__c,\n\to.Print_Destination__c,\n\to.Print_Status__c,\n\to.Print_Template__c,\n\to.Print_specification_from_date__c,\n\to.Print_specification_selection_1__c,\n\to.Print_specification_selection_2__c,\n\to.Print_specification_to_date__c,\n\to.Print_specifications__c,\n\to.Printcombisecurity__c,\n\to.Printcontract__c,\n\to.Printer__c,\n\to.Printgirocard__c,\n\to.Printhealthletter__c,\n\to.Printpaymentsaddress__c,\n\to.Product_list_to_order__c,\n\to.Products_Of_Interest__c,\n\to.Products__c,\n\to.Quote_Description__c,\n\to.Related_Case__c,\n\to.Sales_Agent__c,\n\to.Sales_Fitter__c,\n\to.Salgskanal__c,\n\to.Start_Date_of_Change__c,\n\to.Success_Probability__c,\n\to.SysVagtaftale__c,\n\to.TM_Campaign_Member_Id__c,\n\to.TM_Campaign_Member__c,\n\to.Temporary_contract_number__c,\n\to.Transfer_to_unnoted_list__c,\n\to.VAT__c,\n\to.VC_lead_til_Outbound__c,\n\to.Webshop_Order_ID__c,\n\to.Winning_Competitor__c,\n\to.bypass_validations__c,\n\to.campaign_discounts__c,\n\to.no_to_print__c,\n\to.run_order_consistency_validations__c,\n\to.Delete_Reason__c,\n\to.Order_Status__c,\n\to.Print_Destination_Printer__c,\n\to.Value__c\nfrom \nSF_Archive.Opportunity o \nwhere \n(\n    o.AccountId in (select AccountId from audit.mig_account_list) \n    or o.AccountId is null\n) and o.IsDeleted = 0 ",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SalesforceSink",
+								"writeBatchSize": 5000,
+								"writeBehavior": "insert"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": "x",
+									"SchemaName": "SF_Archive"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "TarSalesforceObject",
+								"type": "DatasetReference",
+								"parameters": {
+									"SFObjectName": "Opportunity",
 									"SFLinkedServiceURL": {
 										"value": "@pipeline().parameters.URL",
 										"type": "Expression"
@@ -2453,6 +2534,29 @@
 				"[concat(variables('factoryId'), '/datasets/TarSalesforceObject')]",
 				"[concat(variables('factoryId'), '/pipelines/pl_SF_extract_load_mig_mapIDs')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/test')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/LegSalesforceObject')]",
