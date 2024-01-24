@@ -165,7 +165,7 @@
 										"userProperties": [],
 										"typeProperties": {
 											"pipeline": {
-												"referenceName": "pl_SF_extract_load_mig_mapIDs",
+												"referenceName": "pl_SF_extract_load_mig_mapIDs_ACCOUNT",
 												"type": "PipelineReference"
 											},
 											"waitOnCompletion": true

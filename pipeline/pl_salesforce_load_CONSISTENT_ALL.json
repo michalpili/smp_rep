@@ -1,5 +1,5 @@
 {
-	"name": "pl_salesforce_load_ALL",
+	"name": "pl_salesforce_load_CONSISTENT_ALL",
 	"properties": {
 		"activities": [
 			{
@@ -135,34 +135,6 @@
 				]
 			},
 			{
-				"name": "MIG_MAP_IDs",
-				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [
-					{
-						"activity": "Salesforce - Load ACCOUNT_PERSON",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Salesforce - Load ACCOUNT",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "pl_SF_extract_load_mig_mapIDs",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "Salesforce - Load CONTACT",
 				"description": "Copy activity to copy one object",
 				"type": "Copy",
@@ -170,7 +142,7 @@
 				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "MIG_MAP_IDs",
+						"activity": "Account - map IDs",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -243,7 +215,7 @@
 				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "Salesforce - Load CONTACT",
+						"activity": "Contact - map IDs",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -314,7 +286,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Salesforce - Load CONTACT",
+						"activity": "Contact - map IDs",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -375,6 +347,178 @@
 								"value": "@pipeline().parameters.UserName",
 								"type": "Expression"
 							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Account - map IDs",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Salesforce - Load ACCOUNT",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Salesforce - Load ACCOUNT_PERSON",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"additionalColumns": [
+							{
+								"name": "objectname",
+								"value": "Account"
+							}
+						],
+						"query": "select Id, LegacyId__c,PersonContactId from Account where LegacyId__c != null",
+						"readBehavior": "query"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "delete from [Audit].[mig_mapIDs] where [objectname]='Account';",
+							"type": "Expression"
+						},
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "TarSalesforceObject",
+						"type": "DatasetReference",
+						"parameters": {
+							"SFObjectName": "Account ",
+							"SFLinkedServiceURL": {
+								"value": "@pipeline().parameters.URL",
+								"type": "Expression"
+							},
+							"SFLinkedServiceUserName": {
+								"value": "@pipeline().parameters.UserName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sink_mig_stg_db",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": {
+								"value": "mig_mapIDs",
+								"type": "Expression"
+							},
+							"SchemaName": "Audit"
+						}
+					}
+				]
+			},
+			{
+				"name": "Contact - map IDs",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Salesforce - Load CONTACT",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"additionalColumns": [
+							{
+								"name": "objectname",
+								"value": "Account"
+							}
+						],
+						"query": "select Id, LegacyId__c from Contact where LegacyId__c != null",
+						"readBehavior": "query"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "delete from [Audit].[mig_mapIDs] where [objectname]='Account';",
+							"type": "Expression"
+						},
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "TarSalesforceObject",
+						"type": "DatasetReference",
+						"parameters": {
+							"SFObjectName": "Account ",
+							"SFLinkedServiceURL": {
+								"value": "@pipeline().parameters.URL",
+								"type": "Expression"
+							},
+							"SFLinkedServiceUserName": {
+								"value": "@pipeline().parameters.UserName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sink_mig_stg_db",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": {
+								"value": "mig_mapIDs",
+								"type": "Expression"
+							},
+							"SchemaName": "Audit"
 						}
 					}
 				]
