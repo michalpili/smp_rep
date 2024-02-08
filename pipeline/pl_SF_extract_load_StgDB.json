@@ -181,7 +181,7 @@
 				}
 			},
 			{
-				"name": "Execute USER - extraction",
+				"name": "Extract USER - extraction",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
