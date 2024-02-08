@@ -686,7 +686,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE enabled=1 and extract=1",
+								"sqlReaderQuery": "SELECT [objectname]\n  FROM [Audit].[mig_objects_list]\n  WHERE enabled=1 and extract=1 and objectname!='User'",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -869,7 +869,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_SF_extract_load_mig_mapIDs')]",
+			"name": "[concat(parameters('factoryName'), '/pl_SF_extract_load_mig_mapIDs_Account')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1650,7 +1650,7 @@
 							"scripts": [
 								{
 									"type": "NonQuery",
-									"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load, label) values ('Account','Salesforce','Salesforce Standard',\n'\nSELECT\n      /*--[Id]\n      --,[IsDeleted]\n      --[MasterRecordId] referencja*/\n      [Name]\n      /*--,[LastName]\n      --,[FirstName]\n      --,[Salutation]*/\n      ,[Type]\n      ,CASE\n        WHEN [RecordTypeId] = ''012w0000000QYhHAAW'' THEN ''0127R000000c0E0''\n        WHEN [RecordTypeId] = ''012w0000000QYhGAAW'' THEN ''0127R000000c0LB''\n        WHEN [RecordTypeId] = ''012w0000000QYhIAAW'' THEN ''0127R000000c0LC''\n        WHEN [RecordTypeId] = ''01220000000AFrcAAG'' THEN ''0127R000000c0E5''\n      END as RecordTypeId\n      /*--,[RecordTypeId]\n      --,[ParentId] referencja*/\n      ,[BillingStreet]\n      ,[BillingCity]\n      ,[BillingState]\n      ,[BillingPostalCode]\n      ,[BillingCountry]\n      ,[BillingLatitude]\n      ,[BillingLongitude]\n      ,[BillingGeocodeAccuracy]\n      ,[ShippingStreet]\n      ,[ShippingCity]\n      ,[ShippingState]\n      ,[ShippingPostalCode]\n      ,[ShippingCountry]\n      ,[ShippingLatitude]\n      ,[ShippingLongitude]\n      ,[ShippingGeocodeAccuracy]\n      ,[Phone]\n      ,[Fax]\n      ,[AccountNumber]\n      ,[Website]\n      /*,[PhotoUrl]*/\n      ,[Sic]\n      ,[Industry]\n      ,[AnnualRevenue]\n      ,[NumberOfEmployees]\n      ,[Ownership]\n      ,[TickerSymbol]\n      ,[Description]\n      ,[Rating]\n      ,[Site]\n      /*--,[OwnerId] referencja + wskazuje na person account\n      --,[CreatedDate]\n      --,[CreatedById]\n      --,[LastModifiedDate]\n      --,[LastModifiedById]\n      --,[SystemModstamp]\n      --,[LastActivityDate]*/\n      /*,[LastViewedDate]\n      ,[LastReferencedDate]*/\n      /*--,[PersonContactId] referencja do contact\n      --,[IsPersonAccount]*/\n      ,[PersonMailingStreet]\n      ,[PersonMailingCity]\n      ,[PersonMailingState]\n      ,[PersonMailingPostalCode]\n      ,[PersonMailingCountry]\n      ,[PersonMailingLatitude]\n      ,[PersonMailingLongitude]\n      ,[PersonMailingGeocodeAccuracy]\n      ,[PersonOtherStreet]\n      ,[PersonOtherCity]\n      ,[PersonOtherState]\n      ,[PersonOtherPostalCode]\n      ,[PersonOtherCountry]\n      ,[PersonOtherLatitude]\n      ,[PersonOtherLongitude]\n      ,[PersonOtherGeocodeAccuracy]\n      ,[PersonMobilePhone]\n      ,[PersonHomePhone]\n      ,[PersonOtherPhone]\n      ,[PersonAssistantPhone]\n      ,[PersonEmail]\n      ,[PersonTitle]\n      ,[PersonDepartment]\n      ,[PersonAssistantName]\n      ,[PersonLeadSource]\n      ,[PersonBirthdate]\n      ,[PersonHasOptedOutOfEmail]\n      ,[PersonHasOptedOutOfFax]\n      ,[PersonDoNotCall]\n      /*,[PersonLastCURequestDate]\n      ,[PersonLastCUUpdateDate]*/\n      ,[PersonEmailBouncedReason]\n      ,[PersonEmailBouncedDate]\n      /*--,[PersonIndividualId] referencja do individual*/\n      ,[Jigsaw]\n      /*,[JigsawCompanyId]*/\n      ,[AccountSource]\n      ,[SicDesc]\n      /*--,[Total_Won_Opportunities__c]*/\n      ,[RobinsonMark__c]\n      ,[Address_Update_By_Code__c]\n      /*--,[Google_Maps_Link__c]*/\n      ,[Begr_nsning_i_abonnement__c]\n      ,[Betalingsannmodning__c]\n      ,[Betalingsby__c]\n      ,[Betalingsgadenummer__c]\n      ,[Betalingsgadeundernummer__c]\n      ,[Betalingsland__c]\n      ,[Betalingsmaade__c]\n      ,[Satisfaction_Level__c]\n      /*--,[Satisfaction_Indicator__c]*/\n      ,[Betalingsnavn__c]\n      ,[Betalingspostnummer__c]\n      ,[Betalingssgadenavn__c]\n      ,[Betalingstermin__c]\n      ,[Bevarings_dialog__c]\n      ,[By__c]\n      ,[Check_for_abo__c]\n      ,[CustAssEndDate__c]\n      ,[CustAssStartDate__c]\n      ,[Error_Message__c]\n      ,[Forny_dato__c]\n      ,[Gadenavn__c]\n      ,[Gadenummer__c]\n      ,[Gadeundernummer__c]\n      ,[Har_du_set_vores_TV_reklame__c]\n      ,[Hensstand__c]\n      ,[Hvor_mange_b_rn_er_der_i_husstanden__c]\n      ,[Indled_din_dialog__c]\n      ,[Inkasso_dato__c]\n      ,[KS_Bem_rkninger__c]\n      /*--,[KS_Lookup__c]*/\n      ,[Kan_tidligst_opsiges__c]\n      ,[Kommende_aendringer__c]\n      ,[Konto_nr__c]\n      ,[Korttyper__c]\n      ,[Kundenr__c]\n      ,[Kundetype__c]\n      ,[Land__c]\n      ,[N_ste_rykker__c]\n      ,[CVR_No_Technical__c]\n      ,[Overordnet_Betalingsdato__c]\n      /*--,[Overordnet_Kunde__c] referencja\n      --,[Is_Refund_Bank_Account_14_chars__c]\n      --,[PBS_Tilmelding__c]*/\n      ,[PBS_person_SE_nummer__c]\n      ,[Payment_Addr_Municipality_Code__c]\n      ,[Payment_Addr_Street_Code__c]\n      ,[Person_SE_nummer__c]\n      ,[Postnummer__c]\n      /*--,[Primary_Account_Cust_Num__c]*/\n      ,[Primary_Addr_Municipality_Code__c]\n      ,[Primary_Addr_Street_Code__c]\n      ,[Primary_adr_KS_BRID__c]\n      ,[Reg_nr__c]\n      /*--,[Ring_op__c]*/\n      ,[Rykker_1_md__c]\n      ,[Rykker_2_md__c]\n      ,[Rykker_3_md__c]\n      ,[Saldo__c]\n      ,[Salgs_dialog__c]\n      /*--,[Segmentering__c]*/\n      ,[Segmenteringskode__c]\n      ,[Seneste_PBS_anmodning__c]\n      ,[Sent__c]\n      ,[Sidste_ydelse__c]\n      ,[HealthTerms__c]\n      ,[Slettedato__c]\n      ,[Status__c]\n      ,[Supplerende_adresse__c]\n      ,[Supplerende_betalingsadresse__c]\n      ,[Supplerende_betalingsnavn__c]\n      ,[Supplerende_navn__c]\n      ,[Tegningsdato__c]\n      ,[Tilhorsforholdsnummer__c]\n      ,[Tilknyttet_Falckstation__c]\n      ,[Total__c]\n      /*--,[Tryk_her_for_Bevaringstip__c]\n      --,[Tryk_her_for_salgstip__c]*/\n      ,[aarsagsbeskrivelse__c]\n      ,[aarsagskode__c]\n      ,[ndringsdato__c]\n      /*--,[is_CPR_CVR_10_chars__c]*/\n      ,[isAccountActiveInUnica__c]\n      /*--,[isNewPBSaccount__c]\n      --,[Primaer_Adresse__c]*/\n      ,[PBS_Added_By__c]\n      ,[Ovrige_email_adr__c]\n      /*--[Betalingstermin_status__c]*/\n      ,[Betalingstermin_update_status__c]\n      ,[Betalingstermin_update_status_text__c]\n      ,[CPR_Marketing__c]\n      /*--,[Disable_focus_field_controls__c]\n      --,[FI_card_code__c] */\n      ,[FI_card_paymentId__c]\n      ,[Healthcare_Coverage__c]\n      ,[Housing__c]\n      ,[Insurance_Company__c]\n      /*--,[Last_Renew__c] */\n      ,[Noncovered_Holiday_Home__c]\n      ,[Opt_outFalckMarketing__c]\n      ,[Protected_Address_Info__c]\n      /*--,[ID18__c] */\n      ,[ffSts_Covered_Cars__c]\n      ,[ffSts_Email__c]\n      ,[ffSts_Household_Members__c]\n      ,[ffSts_Housing__c]\n      ,[ffSts_Insurance_Company__c]\n      ,[ffSts_Mobile__c]\n      ,[ffSts_Noncovered_Cars__c]\n      ,[ffSts_Noncovered_Holiday_Home__c]\n      ,[ffSts_PBS__c]\n      ,[ffSts_Phone__c]\n      /*--,[Last_Renew_Correct__c]\n      --,[Renew_Date_Correct__c] */\n      ,[ffSts_Healthcare_Coverage__c]\n      ,[ffSts_CPR__c]\n      ,[OBS__c]\n      ,[ffSts_Permissions__c]\n      ,[PBS_person_SE_nummer_type__c]\n      ,[Person_SE_nummer_type__c]\n      ,[exL_rerstandskunde__c]\n      /*--,[Alerts__c]\n      --,[Allow_Campaigns__c] */\n      ,[Antal_M2_bygning_manuel_override__c]\n      ,[Auto_sync_from_master__c]\n      /*--,[isCMNotInBisnodeTotalFile__c]\n      --,[CountOpportunities__c] */\n      ,[Read_Reminders_on_Create__c]\n      ,[CPR_Validation_Current_Status__c]\n      ,[CPR_Last_Check_Date__c]\n      ,[BtB_Depth_in_Customer_Relationship__c]\n      ,[BtB_PS_District__c]\n      /*--,[BtB_Strength_of_Relation__c] */\n      ,[BtB_TAM_District__c]\n      ,[BtB_Width_in_Customer_Relationship__c]\n      /*--,[BtB_segment_text__c] */\n      ,[Cars_manuel_override__c]\n      ,[Comments_to_Exclude_from_Auto_Renewal__c]\n      , ''a4Z7a000000Vr6jEAC'' as Company_Master__c\n      ,[DMR_Permission__c]\n      ,[EAN_Text__c]\n      ,[EAN_no_Valid__c]\n      ,[EAN_no__c]\n      ,[Email__c]\n      ,[Exclude_from_auto_renewal__c]\n      ,[External_Cars_at_CVR__c]\n      ,[External_M2_Building__c]\n      /*--,[External_employees_at_P__c]\n      --,[FDV_Account_No_OLD__c] */\n      ,[Force_sync_from_master__c]\n      /*--,[Full_address__c]\n      --,[Has_Payment_Address__c] */\n      ,[Hide_in_customer_portal__c]\n      /*--,[In_sync_with_master__c]\n      --,[Is_Customer__c]\n      --,[Is_KS_Integrated__c]\n      --,[Is_Public_Sector__c]\n      --,[Master_Phone__c]\n      --,[Name_in_Hierarchy__c]\n      --,[Needs_retain_opportunity__c]\n      --,[Negotiated_via__c] referencja */\n      ,[No_collection_fee__c]\n      ,[PBS_UUID__c]\n      /*--,[Personal_Sales_Agent_2__c] referencja do user */\n      ,[Reason_for_Extension__c]\n      ,[SAP_ID__c]\n      ,[Segment_class__c]\n      ,[Sub_Segment_class__c]\n      /*--,[Sync_status__c]\n      --,[TDC_ID__c]\n      --,[Total_Customer_Potential__c]\n      --,[Total_VAT__c] */\n      ,[PBS_mobile_status__c]\n      ,[Total_excl_VAT_Auto__c]\n      ,[Total_excl_VAT_Home_Building__c]\n      ,[Total_excl_VAT_Other__c]\n      ,[Total_excl_VAT_Personal__c]\n      ,[Total_excl_VAT__c]\n      /*--,[Ui_customer_cancelation_details__c]\n      --,[external_employees_at_CVR__c]*/\n      ,[PBS_Channel__c]\n      ,[ffSts_Contacts__c]\n      ,[ffSts_Employees__c]\n      /*--,[Special_Agreements__c]\n      --,[FDV_Account_No__c]\n      --,[ASF3__ACV__c]*/\n      ,[Needs_car_cleaning__c]\n      /*--,[PostNumber__c]\n      --,[PersonMobilePhoneClick__c]\n      --,[PhoneClick__c]*/\n      ,[Salarynumber__c]\n      ,[PBS_Description__c]\n      /*--,[PbsSubscribe__c]\n      --,[Primary_contact__c] referencja */\n      ,[Administrativ_Permission__c]\n      ,[RKI_CPRnummer__c]\n      ,[Black_box__c]\n      /*--,[Country_specific_mobile_number__c] */\n      ,[SMS_karens__c]\n      ,[CVR_for_Nemkonto__c]\n      ,[Refund_Bank_Account_Number__c]\n      ,[Refund_CPR_change__c]\n      ,[Refund_CPR_no__c]\n      /*--,[Opret_PACMAN_opf_lgningssager__c]\n      --,[CPR_Address_Match_Should_Subscribe__c] */\n      ,[Used_for_update__c]\n      /* --,[ASF3__ARR__c] */\n      ,[Trygmedlemmer__c]\n      ,[Service_misuse_marking__c]\n      /* --,[ASF3__A_Currency__c]\n      --,[ASF3__Active__c]\n      --,[ASF3__Aria_Account_Activation_Date__c]\n      --,[ASF3__Aria_Account_Contact__c]\n      --,[ASF3__Aria_Account_Functional_Group__c]\n      --,[ASF3__Aria_Account_Functional_Groups__c]\n      --,[ASF3__Aria_Balance__c]\n      --,[ASF3__Aria_Billing_Contact__c]\n      --,[ASF3__Aria_Billing_Day__c]\n      --,[ASF3__Aria_Client_Account_ID__c]\n      ----,[ASF3__Aria_Contact_Detail__c]\n      --,[ASF3__Aria_Created_Date__c]\n      --,[ASF3__Aria_Currency__c]\n      --,[ASF3__Aria_Days_Past_Due__c]\n      --,[ASF3__Aria_Discount_Total__c]\n      --,[ASF3__Aria_Id__c]\n      --,[ASF3__Aria_Ignore_Provisioning_Emails__c]\n      --,[ASF3__Aria_IncludePassword__c]\n      --,[ASF3__Aria_Is_Dirty__c]\n      --,[ASF3__Aria_Last_Bill_Thru_Date__c]\n      --,[ASF3__Aria_Last_Sync_Timestamp__c]\n      --,[ASF3__Aria_MMR_Unit_Total__c]\n      --,[ASF3__Aria_MRR_Total__c]\n      --,[ASF3__Aria_Needs_Account_Aria_Push_BatchNumber__c]\n      --,[ASF3__Aria_Needs_Account_Aria_Push__c]\n      --,[ASF3__Aria_Needs_Account_Details_Refresh__c]\n      --,[ASF3__Aria_Needs_Account_Plans_Refresh__c]\n      --,[ASF3__Aria_Needs_Contact_Aria_Push_BatchNumber__c]\n      --,[ASF3__Aria_Needs_Supp_Fields_Refresh__c]\n      --,[ASF3__Aria_Next_Bill_Date__c]\n      --,[ASF3__Aria_Notify_Method__c]\n      --,[ASF3__Aria_Password__c]\n      --,[ASF3__Aria_Pay_Method__c]\n      --,[ASF3__Aria_Plan_ID__c]\n      --,[ASF3__Aria_PromoCode__c]\n      --,[ASF3__Aria_Responsibility_Level__c]\n      --,[ASF3__Aria_Senior_Account_ID__c]\n      --,[ASF3__Aria_Status_Date__c]\n      --,[ASF3__Aria_Status__c]\n      --,[ASF3__Aria_Tax_payer_ID__c]\n      --,[ASF3__Aria_Test_Account__c]\n      --,[ASF3__Aria_Transaction_ID__c]\n      --,[ASF3__Aria_Transaction_ID_text__c]\n      ----,[ASF3__Aria_User_Id__c]\n      --,[ASF3__Invoice_Approval_Required__c]\n      --,[ASF3__Net_Price__c]\n      --,[ASF3__New_Account_Treated_As__c]\n      --,[ASF3__Order_Net_Price__c]\n      --,[ASF3__Order_Tax__c]\n      --,[ASF3__Order_Total__c]\n      --,[ASF3__Previous_Aria_MRR_Total__c]\n      --,[ASF3__TCV__c]\n      --,[ASF3__Tax_Exemption_Level_Federal__c]\n      --,[ASF3__Tax_Exemption_Level_State__c]\n      --,[ASF3__Tax__c]\n      --,[ASF3__Test_Acct_Ind__c]\n      --,[ASF3__Total__c]\n      --,[ASF3__acct_start_date__c]\n      --,[ASF3__acct_surcharges__c]\n      --,[ASF3__client_cn_alt_msg_template_id__c]\n      --,[ASF3__ignoreFurtherCalls__c]\n      --,[ASF3__tax_exemption_level__c]\n      --,[Account_No_Autonumber__c] */\n      ,[Account_No__c]\n      ,[Applicable_Discounts__c]\n      ,[PBS_Mandate_Id__c]\n      ,[Blacklist_Reason__c]\n      ,[CPR_Address_Match_Change_Date__c]\n      ,[CPR_Address_Match_Contact_Address__c]\n      ,[CPR_Address_Match_Fields_Changed__c]\n      ,[CPR_Address_Match_Message__c]\n      ,[CPR_Address_Match_Processing__c]\n      /*--,[CPR_Address_Match_Should_Update__c] */\n      ,[CPR_Address_Match_Status__c]\n      ,[CPR_Address_Match_Subscribed__c]\n      /*--,[CVR_No__c] */\n      ,[Customer_Relation_Modified__c]\n      ,[Customer_Relation__c]\n      ,[Default_Refund_Method__c]\n      ,[Finance_Customer_Group__c]\n      ,[Foreign_Customer__c]\n      ,[GL_Account_Group__c]\n      ,[Handle_Credits_Manually__c]\n      ,[Handling_Restrictions__c]\n      ,[INCLUDE_in_extact_for_PACMAN__c]\n      ,[Invoice_Immediately__c]\n      /*--,[Is_Active_Customer__c]*/\n      ,[Max_Dunning_Step_Date__c]\n      ,[Max_Dunning_Step__c]\n     /*--,[Name_and_Address_Letter__c]\n     --,[Name_and_Address_Line__c] */\n      ,[Override_Communication__c]\n      ,[Percentage_Based_Dunning__c]\n      ,[Refund_Credit_Card_Suffix__c]\n      ,[ShippingAddressAwsId__c]\n      ,[ShippingAddressKvhx__c]\n      /*--,[Shipping_Address_Letter__c]\n      --,[Shipping_Address_Line__c] */\n      ,[Supplementary_Name__c]\n      ,[Sync_To_Person_Contact__c]\n      ,[Trading_Partner__c]\n      ,[Type__c]\n      ,[Verify_Usage_Manually__c]\n      ,[pbsccLEANUP__c]\n      ,[Analyse__c]\n      ,[Address_Changed_Date__c]\n      ,[Force_Update_Date__c]\n      /*--,[ASF3__Aria_Unique_Client_Account_ID__c]\n      --,[Backup__c] referencja\n      --,[S_lger_til_kundebs_g__c] referencja\n      --,[Bes_gsinterval__c]\n      --,[M_deforberedelsesdato__c]\n      --,[Days_Since_Activity__c]*/\n      ,[Created_By_Lead_ID__c]\n      /*--,[CPRAddressMatchSubscription__c]*/\n      ,[InternalDiscountId__c]\n      ,[IsInitialValidationDismissed__c]\n      ,[OverrideCommunicationEndDate__c]\n      ,[RPA_Task_To_Run__c]\n      ,[IsOwnershipChanged__c]\n      ,[OwnershipChangeDate__c]\n      ,[PBS_BankAccountNo__c]\n      ,[PBS_IdentificationNo__c]\n      ,[PBS_MandateCreatedDate__c]\n      ,[PBS_MandateStatus__c]\n      ,[PBS_RegistrationNo__c]\n      ,[PBS_SentToBSDate__c]\n      /*--,[Advisor__c] referencja\n      --,[Brand_KAM__c] referencja\n      --,[Value_Management_Brevvariant__c]\n      --,[Segment__c]\n      --,[Breve_fra_Falck__pc]\n      --,[Gode_tilbud__pc]\n      --,[Information_Mangler__pc]\n      --,[Interesser__pc]\n      --,[MDB_ID__pc]\n      --,[Nyhedsbrev__pc]\n      --,[Email_Updated__pc]\n      --,[Email_Updated_By__pc]\n      --,[Kunde_nr__pc]\n      --,[Adresse__pc]\n      --,[Permissions_channels__pc]\n      --,[Kundenr_Dup__pc]\n      --,[BtB_Decision_Maker_Within_Productfamily__pc]\n      --,[Inactive__pc]\n      --,[Is_Dummy_Campaign_Contact__pc]\n      --,[Is_Primary__pc]\n      --,[Migration_Data_Key__pc]\n      --,[Role__pc]\n      --,[bypass_validations__pc]\n      --,[Kundenr_Dup_contact_del__pc]\n      --,[Gender__pc]\n      --,[Is_customer__pc]\n      --,[Has_Received_Welcome_Gift__pc]\n      --,[mitfalckdk_last_login__pc]\n      ----,[ASF3__Account_Aria_Id__pc]\n      --,[smagicinteract__SMSOptOut__pc]\n      --,[Contact_No__pc]\n      --,[Permissions_channels_BtB__pc]\n      ----,[ASF3__Aria_Company_Name__pc]\n      ----,[ASF3__Aria_Home_Phone_Extension__pc]\n      ----,[ASF3__Aria_International_Cell_Phone__pc]\n      ----,[ASF3__Aria_International_Phone__pc]\n      ----,[ASF3__Aria_Middle_Initial__pc]\n      ----,[ASF3__Aria_Work_Phone_Extension__pc]\n      ----,[ASF3__Country_Code__pc]\n      ----,[ASF3__Do_Not_Use_Email__pc]\n      ----,[ASF3__Languages__pc]\n      ----,[ASF3__Level__pc]\n      ----,[ASF3__Unique_Key__pc]\n      --,[Account_No_Dup__pc]\n      --,[Contact_Match_Criteria__pc]\n      --,[MailingAddressAwsId__pc]\n      --,[MailingAddressKvhx__pc]\n      --,[Mailing_Address_Letter__pc]\n      --,[Name_and_Address_Letter__pc]\n      --,[Person_Name__pc]\n      --,[Print_Order_Name__pc]\n      --,[Reminders__pc]\n      --,[Supplementary_Name__pc]\n      --,[Sync_From_Account__pc]\n      --,[Address_Changed_Date__pc]\n      --,[PBS_mobile_sign_up_consent__pc]*/\n      ,id as LegacyId__c\n\t  /*,[CreatedDate]\n    ,[LastModifiedDate]*/\n  FROM [SF_Archive].[account]\n  WHERE IsPersonAccount = ''False'' and id in (select AccountId from audit.mig_account_list)\n',\n  1,1,1,1,'Account');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load, label) values ('Account','Salesforce','Salesforce Standard',\n'\nSELECT \n      [LastName]\n      ,coalesce([FirstName],''_'') as FirstName\n      ,[Salutation]\n      ,[Type]\n      ,CASE\n\t\t\tWHEN [RecordTypeId] = ''012w0000000QYhHAAW'' THEN ''0127R000000c0E0''\n\t\t\tWHEN [RecordTypeId] = ''012w0000000QYhGAAW'' THEN ''0127R000000c0LB''\n\t\t\tWHEN [RecordTypeId] = ''012w0000000QYhIAAW'' THEN ''0127R000000c0LC''\n\t\t\tWHEN [RecordTypeId] = ''01220000000AFrcAAG'' THEN ''0127R000000c0E5''\n\t   END as RecordTypeId\n      ,[BillingStreet]\n      ,[BillingCity]\n      ,[BillingState]\n      ,[BillingPostalCode]\n      ,[BillingCountry]\n      ,[BillingLatitude]\n      ,[BillingLongitude]\n      ,[BillingGeocodeAccuracy]\n      ,[ShippingStreet]\n      ,[ShippingCity]\n      ,[ShippingState]\n      ,[ShippingPostalCode]\n      ,[ShippingCountry]\n      ,[ShippingLatitude]\n      ,[ShippingLongitude]\n      ,[ShippingGeocodeAccuracy]\n      ,[Phone]\n      ,[Fax]\n      ,[AccountNumber]\n      ,[Website]\n      /*,[PhotoUrl]*/\n      ,[Sic]\n      ,[Industry]\n      ,[AnnualRevenue]\n      ,[NumberOfEmployees]\n      ,[Ownership]\n      ,[TickerSymbol]\n      ,[Description]\n      ,[Rating]\n      ,[Site]\n      ,[CreatedDate]\n      ,[LastModifiedDate]\n      /*,[LastViewedDate]*/\n      /*,[LastReferencedDate]*/\n      ,[PersonMailingStreet]\n      ,[PersonMailingCity]\n      ,[PersonMailingState]\n      ,[PersonMailingPostalCode]\n      ,[PersonMailingCountry]\n      ,[PersonMailingLatitude]\n      ,[PersonMailingLongitude]\n      ,[PersonMailingGeocodeAccuracy]\n      ,[PersonOtherStreet]\n      ,[PersonOtherCity]\n      ,[PersonOtherState]\n      ,[PersonOtherPostalCode]\n      ,[PersonOtherCountry]\n      ,[PersonOtherLatitude]\n      ,[PersonOtherLongitude]\n      ,[PersonOtherGeocodeAccuracy]\n      ,[PersonMobilePhone]\n      ,[PersonHomePhone]\n      ,[PersonOtherPhone]\n      ,[PersonAssistantPhone]\n      ,[PersonEmail]\n      ,[PersonTitle]\n      ,[PersonDepartment]\n      ,[PersonAssistantName]\n      ,[PersonLeadSource]\n      ,[PersonBirthdate]\n      ,[PersonHasOptedOutOfEmail]\n      ,[PersonHasOptedOutOfFax]\n      ,[PersonDoNotCall]\n      /*,[PersonLastCURequestDate]\n      ,[PersonLastCUUpdateDate]*/\n      ,[PersonEmailBouncedReason]\n      ,[PersonEmailBouncedDate]\n      ,[Jigsaw]\n      /*,[JigsawCompanyId]*/\n      ,[AccountSource]\n      ,[SicDesc]\n      ,[RobinsonMark__c]\n      ,[Address_Update_By_Code__c]\n      ,[Begr_nsning_i_abonnement__c]\n      ,[Betalingsannmodning__c]\n      ,[Betalingsby__c]\n      ,[Betalingsgadenummer__c]\n      ,[Betalingsgadeundernummer__c]\n      ,[Betalingsland__c]\n      ,[Betalingsmaade__c]\n      ,[Satisfaction_Level__c]\n      ,[Betalingsnavn__c]\n      ,[Betalingspostnummer__c]\n      ,[Betalingssgadenavn__c]\n      ,[Betalingstermin__c]\n      ,[Bevarings_dialog__c]\n      ,[By__c]\n      ,[Check_for_abo__c]\n      ,[CustAssEndDate__c]\n      ,[CustAssStartDate__c]\n      ,[Error_Message__c]\n      ,[Forny_dato__c]\n      ,[Gadenavn__c]\n      ,[Gadenummer__c]\n      ,[Gadeundernummer__c]\n      ,[Har_du_set_vores_TV_reklame__c]\n      ,[Hensstand__c]\n      ,[Hvor_mange_b_rn_er_der_i_husstanden__c]\n      ,[Indled_din_dialog__c]\n      ,[Inkasso_dato__c]\n      ,[KS_Bem_rkninger__c]\n      ,[Kan_tidligst_opsiges__c]\n      ,[Kommende_aendringer__c]\n      ,[Konto_nr__c]\n      ,[Korttyper__c]\n      ,[Kundenr__c]\n      ,[Kundetype__c]\n      ,[Land__c]\n      ,[N_ste_rykker__c]\n      ,[CVR_No_Technical__c]\n      ,[Overordnet_Betalingsdato__c]\n      ,[PBS_person_SE_nummer__c]\n      ,[Payment_Addr_Municipality_Code__c]\n      ,[Payment_Addr_Street_Code__c]\n      ,[Person_SE_nummer__c]\n      ,[Postnummer__c]\n      /*,[Primary_Account_Cust_Num__c]*/\n      ,[Primary_Addr_Municipality_Code__c]\n      ,[Primary_Addr_Street_Code__c]\n      ,[Primary_adr_KS_BRID__c]\n      ,[Reg_nr__c]\n      ,[Rykker_1_md__c]\n      ,[Rykker_2_md__c]\n      ,[Rykker_3_md__c]\n      ,[Saldo__c]\n      ,[Salgs_dialog__c]\n      ,[Segmenteringskode__c]\n      ,[Seneste_PBS_anmodning__c]\n      ,[Sent__c]\n      ,[Sidste_ydelse__c]\n      ,[HealthTerms__c]\n      ,[Slettedato__c]\n      ,[Status__c]\n      ,[Supplerende_adresse__c]\n      ,[Supplerende_betalingsadresse__c]\n      ,[Supplerende_betalingsnavn__c]\n      ,[Supplerende_navn__c]\n      ,[Tegningsdato__c]\n      ,[Tilhorsforholdsnummer__c]\n      ,[Tilknyttet_Falckstation__c]\n      ,[Total__c]\n      ,[aarsagsbeskrivelse__c]\n      ,[aarsagskode__c]\n      ,[ndringsdato__c]\n      ,[isAccountActiveInUnica__c]\n      ,[PBS_Added_By__c]\n      ,[Ovrige_email_adr__c]\n      ,[Betalingstermin_update_status__c]\n      ,[Betalingstermin_update_status_text__c]\n      ,[CPR_Marketing__c]\n      /*,[Disable_focus_field_controls__c]*/\n      ,[FI_card_paymentId__c]\n      ,[Healthcare_Coverage__c]\n      ,[Housing__c]\n      ,[Insurance_Company__c]\n      ,[Last_Renew__c]\n      ,[Noncovered_Holiday_Home__c]\n      ,[Opt_outFalckMarketing__c]\n      ,[Protected_Address_Info__c]\n      ,[ffSts_Covered_Cars__c]\n      ,[ffSts_Email__c]\n      ,[ffSts_Household_Members__c]\n      ,[ffSts_Housing__c]\n      ,[ffSts_Insurance_Company__c]\n      ,[ffSts_Mobile__c]\n      ,[ffSts_Noncovered_Cars__c]\n      ,[ffSts_Noncovered_Holiday_Home__c]\n      ,[ffSts_PBS__c]\n      ,[ffSts_Phone__c]\n      ,[ffSts_Healthcare_Coverage__c]\n      ,[ffSts_CPR__c]\n      ,[OBS__c]\n      ,[ffSts_Permissions__c]\n      ,[PBS_person_SE_nummer_type__c]\n      ,[Person_SE_nummer_type__c]\n      ,[exL_rerstandskunde__c]\n      ,[Antal_M2_bygning_manuel_override__c]\n      ,[Auto_sync_from_master__c]\n      ,[Read_Reminders_on_Create__c]\n      ,[CPR_Validation_Current_Status__c]\n      ,[CPR_Last_Check_Date__c]\n      ,[BtB_Depth_in_Customer_Relationship__c]\n      ,[BtB_PS_District__c]\n      ,[BtB_TAM_District__c]\n      ,[BtB_Width_in_Customer_Relationship__c]\n      ,[Cars_manuel_override__c]\n      ,[Comments_to_Exclude_from_Auto_Renewal__c]\n      ,[DMR_Permission__c]\n      ,[EAN_Text__c]\n      ,[EAN_no_Valid__c]\n      ,[EAN_no__c]\n      ,[Email__c]\n      ,[Exclude_from_auto_renewal__c]\n      ,[External_Cars_at_CVR__c]\n      ,[External_M2_Building__c]\n      ,[Force_sync_from_master__c]\n      ,[Hide_in_customer_portal__c]\n      ,[No_collection_fee__c]\n      ,[PBS_UUID__c]\n      ,[Reason_for_Extension__c]\n      ,[SAP_ID__c]\n      ,[Segment_class__c]\n      ,[Sub_Segment_class__c]\n      ,[PBS_mobile_status__c]\n      ,[Total_excl_VAT_Auto__c]\n      ,[Total_excl_VAT_Home_Building__c]\n      ,[Total_excl_VAT_Other__c]\n      ,[Total_excl_VAT_Personal__c]\n      ,[Total_excl_VAT__c]\n      ,[PBS_Channel__c]\n      ,[ffSts_Contacts__c]\n      ,[ffSts_Employees__c]\n      ,[Needs_car_cleaning__c]\n      /*,[PersonMobilePhoneClick__c]*/\n      ,[Salarynumber__c]\n      ,[PBS_Description__c]\n      ,[Administrativ_Permission__c]\n      ,[RKI_CPRnummer__c]\n      ,[Black_box__c]\n      ,[SMS_karens__c]\n      ,[CVR_for_Nemkonto__c]\n      ,[Refund_Bank_Account_Number__c]\n      ,[Refund_CPR_change__c]\n      ,[Refund_CPR_no__c]\n      ,[Used_for_update__c]\n      ,[Trygmedlemmer__c]\n      ,[Service_misuse_marking__c]\n      ,[Account_No__c]\n      ,[Applicable_Discounts__c]\n      ,[PBS_Mandate_Id__c]\n      ,[Blacklist_Reason__c]\n      ,[CPR_Address_Match_Change_Date__c]\n      ,[CPR_Address_Match_Contact_Address__c]\n      ,[CPR_Address_Match_Fields_Changed__c]\n      ,[CPR_Address_Match_Message__c]\n      ,[CPR_Address_Match_Processing__c]\n      ,[CPR_Address_Match_Status__c]\n      ,[CPR_Address_Match_Subscribed__c]\n      ,[Customer_Relation_Modified__c]\n      ,[Customer_Relation__c]\n      ,[Default_Refund_Method__c]\n      ,[Finance_Customer_Group__c]\n      ,[Foreign_Customer__c]\n      ,[GL_Account_Group__c]\n      ,[Handle_Credits_Manually__c]\n      ,[Handling_Restrictions__c]\n      ,[INCLUDE_in_extact_for_PACMAN__c]\n      ,[Invoice_Immediately__c]\n      ,[Max_Dunning_Step_Date__c]\n      ,[Max_Dunning_Step__c]\n      ,[Override_Communication__c]\n      ,[Percentage_Based_Dunning__c]\n      ,[Refund_Credit_Card_Suffix__c]\n      ,[ShippingAddressAwsId__c]\n      ,[ShippingAddressKvhx__c]\n      ,[Supplementary_Name__c]\n      ,[Sync_To_Person_Contact__c]\n      ,[Trading_Partner__c]\n      ,[Type__c]\n      ,[Verify_Usage_Manually__c]\n      ,[pbsccLEANUP__c]\n      ,[Analyse__c]\n      ,[Address_Changed_Date__c]\n      ,[Force_Update_Date__c]\n      ,[Created_By_Lead_ID__c]\n      ,[InternalDiscountId__c]\n      ,[IsInitialValidationDismissed__c]\n      ,[OverrideCommunicationEndDate__c]\n      ,[RPA_Task_To_Run__c]\n      ,[IsOwnershipChanged__c]\n      ,[OwnershipChangeDate__c]\n      ,[PBS_BankAccountNo__c]\n      ,[PBS_IdentificationNo__c]\n      ,[PBS_MandateCreatedDate__c]\n      ,[PBS_MandateStatus__c]\n      ,[PBS_RegistrationNo__c]\n      ,[PBS_SentToBSDate__c]\n      ,[Breve_fra_Falck__pc]\n      ,[Gode_tilbud__pc]\n      ,[Interesser__pc]\n      ,[MDB_ID__pc]\n      ,[Nyhedsbrev__pc]\n      ,[Email_Updated__pc]\n      ,[Email_Updated_By__pc]\n      ,[Permissions_channels__pc]\n      ,[Kundenr_Dup__pc]\n      ,[BtB_Decision_Maker_Within_Productfamily__pc]\n      ,[Inactive__pc]\n      ,[Is_Dummy_Campaign_Contact__pc]\n      ,[Is_Primary__pc]\n      ,[Migration_Data_Key__pc]\n      ,[Role__pc]\n      ,[bypass_validations__pc]\n      ,[Kundenr_Dup_contact_del__pc]\n      ,[Gender__pc]\n      ,[Has_Received_Welcome_Gift__pc]\n      ,[mitfalckdk_last_login__pc]\n      ,[smagicinteract__SMSOptOut__pc]\n      ,[Permissions_channels_BtB__pc]\n      ,[Account_No_Dup__pc]\n      ,[MailingAddressAwsId__pc]\n      ,[MailingAddressKvhx__pc]\n      ,[Person_Name__pc]\n      /*,[Reminders__pc]*/\n      ,[Supplementary_Name__pc]\n      ,[Sync_From_Account__pc]\n      ,[Address_Changed_Date__pc]\n      ,[PBS_mobile_sign_up_consent__pc]\n      ,Id as LegacyId__c\nFROM [SF_Archive].[account]\nWHERE IsPersonAccount = ''True'' and id in (select AccountId from audit.mig_account_list)\n',\n  1,2,1,1,'Account_Person');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Contact','Salesforce','Salesforce Standard',null,1,3,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Lead','Salesforce','Salesforce Standard',\n'\nselect\nl.LastName,\nl.FirstName,\nl.Salutation,\nl.Title,\nl.Company,\nl.Street,\nl.City,\nl.State,\nl.PostalCode,\nl.Country,\nl.Latitude,\nl.Longitude,\nl.GeocodeAccuracy,\nl.Phone,\nl.MobilePhone,\nl.Fax,\nl.Email,\nl.Website,\nl.Description,\nl.LeadSource,\nl.Status,\nl.Industry,\nl.Rating,\nl.AnnualRevenue,\nl.NumberOfEmployees,\nl.HasOptedOutOfEmail,\nl.IsConverted,\nl.ConvertedDate, \ncase \n\twhen l.IsConverted =1 \n\tthen (select m.Id from audit.mig_mapIDs m where m.LegacyId__c = l.ConvertedAccountId and m.objectname=''Account'') \nend ConvertedAccountId,\ncase \n\twhen l.IsConverted =1 \n\tthen (select m.PersonContactId from audit.mig_mapIDs m where m.LegacyId__c = l.ConvertedAccountId and m.objectname=''Account'') \nend ConvertedContactId,\nl.IsUnreadByOwner,\nDATETRUNC(day, CONVERT(DATETIME, l.CreatedDate)) as CreatedDate,\nl.LastModifiedDate,\nl.DoNotCall,\nl.HasOptedOutOfFax,\nl.smagicinteract__SMSOptOut__c,\nl.Unica_AddressLine1__c,\nl.Unica_AddressLine2__c,\nl.Unica_Base_ID__c,\nl.Unica_City__c,\nl.Unica_MDB_ID__c,\nl.Unica_ZipCode__c\nfrom SF_archive.Lead l\nwhere l.IsDeleted = 0 \nand (\n\texists (select 1 from [Audit].[mig_account_list] a where l.ConvertedAccountId = a.AccountId)\n\tor \n\tl.ConvertedAccountId is null\n)\n',1,4,1,1);\n\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Opportunity','Salesforce','Salesforce Standard',null,1,5,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Campaign','Salesforce','Salesforce Standard',null,1,6,1,1);\n\n"
+									"text": "insert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load, label) values ('Account','Salesforce','Salesforce Standard',\n'\nSELECT\n      /*--[Id]\n      --,[IsDeleted]\n      --[MasterRecordId] referencja*/\n      [Name]\n      /*--,[LastName]\n      --,[FirstName]\n      --,[Salutation]*/\n      ,[Type]\n      ,CASE\n        WHEN [RecordTypeId] = ''012w0000000QYhHAAW'' THEN ''0127R000000c0E0''\n        WHEN [RecordTypeId] = ''012w0000000QYhGAAW'' THEN ''0127R000000c0LB''\n        WHEN [RecordTypeId] = ''012w0000000QYhIAAW'' THEN ''0127R000000c0LC''\n        WHEN [RecordTypeId] = ''01220000000AFrcAAG'' THEN ''0127R000000c0E5''\n      END as RecordTypeId\n      /*--,[RecordTypeId]\n      --,[ParentId] referencja*/\n      ,[BillingStreet]\n      ,[BillingCity]\n      ,[BillingState]\n      ,[BillingPostalCode]\n      ,[BillingCountry]\n      ,[BillingLatitude]\n      ,[BillingLongitude]\n      ,[BillingGeocodeAccuracy]\n      ,[ShippingStreet]\n      ,[ShippingCity]\n      ,[ShippingState]\n      ,[ShippingPostalCode]\n      ,[ShippingCountry]\n      ,[ShippingLatitude]\n      ,[ShippingLongitude]\n      ,[ShippingGeocodeAccuracy]\n      ,[Phone]\n      ,[Fax]\n      ,[AccountNumber]\n      ,[Website]\n      /*,[PhotoUrl]*/\n      ,[Sic]\n      ,[Industry]\n      ,[AnnualRevenue]\n      ,[NumberOfEmployees]\n      ,[Ownership]\n      ,[TickerSymbol]\n      ,[Description]\n      ,[Rating]\n      ,[Site]\n      /*--,[OwnerId] referencja + wskazuje na person account\n      --,[CreatedDate]\n      --,[CreatedById]\n      --,[LastModifiedDate]\n      --,[LastModifiedById]\n      --,[SystemModstamp]\n      --,[LastActivityDate]*/\n      /*,[LastViewedDate]\n      ,[LastReferencedDate]*/\n      /*--,[PersonContactId] referencja do contact\n      --,[IsPersonAccount]*/\n      ,[PersonMailingStreet]\n      ,[PersonMailingCity]\n      ,[PersonMailingState]\n      ,[PersonMailingPostalCode]\n      ,[PersonMailingCountry]\n      ,[PersonMailingLatitude]\n      ,[PersonMailingLongitude]\n      ,[PersonMailingGeocodeAccuracy]\n      ,[PersonOtherStreet]\n      ,[PersonOtherCity]\n      ,[PersonOtherState]\n      ,[PersonOtherPostalCode]\n      ,[PersonOtherCountry]\n      ,[PersonOtherLatitude]\n      ,[PersonOtherLongitude]\n      ,[PersonOtherGeocodeAccuracy]\n      ,[PersonMobilePhone]\n      ,[PersonHomePhone]\n      ,[PersonOtherPhone]\n      ,[PersonAssistantPhone]\n      ,[PersonEmail]\n      ,[PersonTitle]\n      ,[PersonDepartment]\n      ,[PersonAssistantName]\n      ,[PersonLeadSource]\n      ,[PersonBirthdate]\n      ,[PersonHasOptedOutOfEmail]\n      ,[PersonHasOptedOutOfFax]\n      ,[PersonDoNotCall]\n      /*,[PersonLastCURequestDate]\n      ,[PersonLastCUUpdateDate]*/\n      ,[PersonEmailBouncedReason]\n      ,[PersonEmailBouncedDate]\n      /*--,[PersonIndividualId] referencja do individual*/\n      ,[Jigsaw]\n      /*,[JigsawCompanyId]*/\n      ,[AccountSource]\n      ,[SicDesc]\n      /*--,[Total_Won_Opportunities__c]*/\n      ,[RobinsonMark__c]\n      ,[Address_Update_By_Code__c]\n      /*--,[Google_Maps_Link__c]*/\n      ,[Begr_nsning_i_abonnement__c]\n      ,[Betalingsannmodning__c]\n      ,[Betalingsby__c]\n      ,[Betalingsgadenummer__c]\n      ,[Betalingsgadeundernummer__c]\n      ,[Betalingsland__c]\n      ,[Betalingsmaade__c]\n      ,[Satisfaction_Level__c]\n      /*--,[Satisfaction_Indicator__c]*/\n      ,[Betalingsnavn__c]\n      ,[Betalingspostnummer__c]\n      ,[Betalingssgadenavn__c]\n      ,[Betalingstermin__c]\n      ,[Bevarings_dialog__c]\n      ,[By__c]\n      ,[Check_for_abo__c]\n      ,[CustAssEndDate__c]\n      ,[CustAssStartDate__c]\n      ,[Error_Message__c]\n      ,[Forny_dato__c]\n      ,[Gadenavn__c]\n      ,[Gadenummer__c]\n      ,[Gadeundernummer__c]\n      ,[Har_du_set_vores_TV_reklame__c]\n      ,[Hensstand__c]\n      ,[Hvor_mange_b_rn_er_der_i_husstanden__c]\n      ,[Indled_din_dialog__c]\n      ,[Inkasso_dato__c]\n      ,[KS_Bem_rkninger__c]\n      /*--,[KS_Lookup__c]*/\n      ,[Kan_tidligst_opsiges__c]\n      ,[Kommende_aendringer__c]\n      ,[Konto_nr__c]\n      ,[Korttyper__c]\n      ,[Kundenr__c]\n      ,[Kundetype__c]\n      ,[Land__c]\n      ,[N_ste_rykker__c]\n      ,[CVR_No_Technical__c]\n      ,[Overordnet_Betalingsdato__c]\n      /*--,[Overordnet_Kunde__c] referencja\n      --,[Is_Refund_Bank_Account_14_chars__c]\n      --,[PBS_Tilmelding__c]*/\n      ,[PBS_person_SE_nummer__c]\n      ,[Payment_Addr_Municipality_Code__c]\n      ,[Payment_Addr_Street_Code__c]\n      ,[Person_SE_nummer__c]\n      ,[Postnummer__c]\n      /*--,[Primary_Account_Cust_Num__c]*/\n      ,[Primary_Addr_Municipality_Code__c]\n      ,[Primary_Addr_Street_Code__c]\n      ,[Primary_adr_KS_BRID__c]\n      ,[Reg_nr__c]\n      /*--,[Ring_op__c]*/\n      ,[Rykker_1_md__c]\n      ,[Rykker_2_md__c]\n      ,[Rykker_3_md__c]\n      ,[Saldo__c]\n      ,[Salgs_dialog__c]\n      /*--,[Segmentering__c]*/\n      ,[Segmenteringskode__c]\n      ,[Seneste_PBS_anmodning__c]\n      ,[Sent__c]\n      ,[Sidste_ydelse__c]\n      ,[HealthTerms__c]\n      ,[Slettedato__c]\n      ,[Status__c]\n      ,[Supplerende_adresse__c]\n      ,[Supplerende_betalingsadresse__c]\n      ,[Supplerende_betalingsnavn__c]\n      ,[Supplerende_navn__c]\n      ,[Tegningsdato__c]\n      ,[Tilhorsforholdsnummer__c]\n      ,[Tilknyttet_Falckstation__c]\n      ,[Total__c]\n      /*--,[Tryk_her_for_Bevaringstip__c]\n      --,[Tryk_her_for_salgstip__c]*/\n      ,[aarsagsbeskrivelse__c]\n      ,[aarsagskode__c]\n      ,[ndringsdato__c]\n      /*--,[is_CPR_CVR_10_chars__c]*/\n      ,[isAccountActiveInUnica__c]\n      /*--,[isNewPBSaccount__c]\n      --,[Primaer_Adresse__c]*/\n      ,[PBS_Added_By__c]\n      ,[Ovrige_email_adr__c]\n      /*--[Betalingstermin_status__c]*/\n      ,[Betalingstermin_update_status__c]\n      ,[Betalingstermin_update_status_text__c]\n      ,[CPR_Marketing__c]\n      /*--,[Disable_focus_field_controls__c]\n      --,[FI_card_code__c] */\n      ,[FI_card_paymentId__c]\n      ,[Healthcare_Coverage__c]\n      ,[Housing__c]\n      ,[Insurance_Company__c]\n      /*--,[Last_Renew__c] */\n      ,[Noncovered_Holiday_Home__c]\n      ,[Opt_outFalckMarketing__c]\n      ,[Protected_Address_Info__c]\n      /*--,[ID18__c] */\n      ,[ffSts_Covered_Cars__c]\n      ,[ffSts_Email__c]\n      ,[ffSts_Household_Members__c]\n      ,[ffSts_Housing__c]\n      ,[ffSts_Insurance_Company__c]\n      ,[ffSts_Mobile__c]\n      ,[ffSts_Noncovered_Cars__c]\n      ,[ffSts_Noncovered_Holiday_Home__c]\n      ,[ffSts_PBS__c]\n      ,[ffSts_Phone__c]\n      /*--,[Last_Renew_Correct__c]\n      --,[Renew_Date_Correct__c] */\n      ,[ffSts_Healthcare_Coverage__c]\n      ,[ffSts_CPR__c]\n      ,[OBS__c]\n      ,[ffSts_Permissions__c]\n      ,[PBS_person_SE_nummer_type__c]\n      ,[Person_SE_nummer_type__c]\n      ,[exL_rerstandskunde__c]\n      /*--,[Alerts__c]\n      --,[Allow_Campaigns__c] */\n      ,[Antal_M2_bygning_manuel_override__c]\n      ,[Auto_sync_from_master__c]\n      /*--,[isCMNotInBisnodeTotalFile__c]\n      --,[CountOpportunities__c] */\n      ,[Read_Reminders_on_Create__c]\n      ,[CPR_Validation_Current_Status__c]\n      ,[CPR_Last_Check_Date__c]\n      ,[BtB_Depth_in_Customer_Relationship__c]\n      ,[BtB_PS_District__c]\n      /*--,[BtB_Strength_of_Relation__c] */\n      ,[BtB_TAM_District__c]\n      ,[BtB_Width_in_Customer_Relationship__c]\n      /*--,[BtB_segment_text__c] */\n      ,[Cars_manuel_override__c]\n      ,[Comments_to_Exclude_from_Auto_Renewal__c]\n      , ''a4Z7a000000Vr6jEAC'' as Company_Master__c\n      ,[DMR_Permission__c]\n      ,[EAN_Text__c]\n      ,[EAN_no_Valid__c]\n      ,[EAN_no__c]\n      ,[Email__c]\n      ,[Exclude_from_auto_renewal__c]\n      ,[External_Cars_at_CVR__c]\n      ,[External_M2_Building__c]\n      /*--,[External_employees_at_P__c]\n      --,[FDV_Account_No_OLD__c] */\n      ,[Force_sync_from_master__c]\n      /*--,[Full_address__c]\n      --,[Has_Payment_Address__c] */\n      ,[Hide_in_customer_portal__c]\n      /*--,[In_sync_with_master__c]\n      --,[Is_Customer__c]\n      --,[Is_KS_Integrated__c]\n      --,[Is_Public_Sector__c]\n      --,[Master_Phone__c]\n      --,[Name_in_Hierarchy__c]\n      --,[Needs_retain_opportunity__c]\n      --,[Negotiated_via__c] referencja */\n      ,[No_collection_fee__c]\n      ,[PBS_UUID__c]\n      /*--,[Personal_Sales_Agent_2__c] referencja do user */\n      ,[Reason_for_Extension__c]\n      ,[SAP_ID__c]\n      ,[Segment_class__c]\n      ,[Sub_Segment_class__c]\n      /*--,[Sync_status__c]\n      --,[TDC_ID__c]\n      --,[Total_Customer_Potential__c]\n      --,[Total_VAT__c] */\n      ,[PBS_mobile_status__c]\n      ,[Total_excl_VAT_Auto__c]\n      ,[Total_excl_VAT_Home_Building__c]\n      ,[Total_excl_VAT_Other__c]\n      ,[Total_excl_VAT_Personal__c]\n      ,[Total_excl_VAT__c]\n      /*--,[Ui_customer_cancelation_details__c]\n      --,[external_employees_at_CVR__c]*/\n      ,[PBS_Channel__c]\n      ,[ffSts_Contacts__c]\n      ,[ffSts_Employees__c]\n      /*--,[Special_Agreements__c]\n      --,[FDV_Account_No__c]\n      --,[ASF3__ACV__c]*/\n      ,[Needs_car_cleaning__c]\n      /*--,[PostNumber__c]\n      --,[PersonMobilePhoneClick__c]\n      --,[PhoneClick__c]*/\n      ,[Salarynumber__c]\n      ,[PBS_Description__c]\n      /*--,[PbsSubscribe__c]\n      --,[Primary_contact__c] referencja */\n      ,[Administrativ_Permission__c]\n      ,[RKI_CPRnummer__c]\n      ,[Black_box__c]\n      /*--,[Country_specific_mobile_number__c] */\n      ,[SMS_karens__c]\n      ,[CVR_for_Nemkonto__c]\n      ,[Refund_Bank_Account_Number__c]\n      ,[Refund_CPR_change__c]\n      ,[Refund_CPR_no__c]\n      /*--,[Opret_PACMAN_opf_lgningssager__c]\n      --,[CPR_Address_Match_Should_Subscribe__c] */\n      ,[Used_for_update__c]\n      /* --,[ASF3__ARR__c] */\n      ,[Trygmedlemmer__c]\n      ,[Service_misuse_marking__c]\n      /* --,[ASF3__A_Currency__c]\n      --,[ASF3__Active__c]\n      --,[ASF3__Aria_Account_Activation_Date__c]\n      --,[ASF3__Aria_Account_Contact__c]\n      --,[ASF3__Aria_Account_Functional_Group__c]\n      --,[ASF3__Aria_Account_Functional_Groups__c]\n      --,[ASF3__Aria_Balance__c]\n      --,[ASF3__Aria_Billing_Contact__c]\n      --,[ASF3__Aria_Billing_Day__c]\n      --,[ASF3__Aria_Client_Account_ID__c]\n      ----,[ASF3__Aria_Contact_Detail__c]\n      --,[ASF3__Aria_Created_Date__c]\n      --,[ASF3__Aria_Currency__c]\n      --,[ASF3__Aria_Days_Past_Due__c]\n      --,[ASF3__Aria_Discount_Total__c]\n      --,[ASF3__Aria_Id__c]\n      --,[ASF3__Aria_Ignore_Provisioning_Emails__c]\n      --,[ASF3__Aria_IncludePassword__c]\n      --,[ASF3__Aria_Is_Dirty__c]\n      --,[ASF3__Aria_Last_Bill_Thru_Date__c]\n      --,[ASF3__Aria_Last_Sync_Timestamp__c]\n      --,[ASF3__Aria_MMR_Unit_Total__c]\n      --,[ASF3__Aria_MRR_Total__c]\n      --,[ASF3__Aria_Needs_Account_Aria_Push_BatchNumber__c]\n      --,[ASF3__Aria_Needs_Account_Aria_Push__c]\n      --,[ASF3__Aria_Needs_Account_Details_Refresh__c]\n      --,[ASF3__Aria_Needs_Account_Plans_Refresh__c]\n      --,[ASF3__Aria_Needs_Contact_Aria_Push_BatchNumber__c]\n      --,[ASF3__Aria_Needs_Supp_Fields_Refresh__c]\n      --,[ASF3__Aria_Next_Bill_Date__c]\n      --,[ASF3__Aria_Notify_Method__c]\n      --,[ASF3__Aria_Password__c]\n      --,[ASF3__Aria_Pay_Method__c]\n      --,[ASF3__Aria_Plan_ID__c]\n      --,[ASF3__Aria_PromoCode__c]\n      --,[ASF3__Aria_Responsibility_Level__c]\n      --,[ASF3__Aria_Senior_Account_ID__c]\n      --,[ASF3__Aria_Status_Date__c]\n      --,[ASF3__Aria_Status__c]\n      --,[ASF3__Aria_Tax_payer_ID__c]\n      --,[ASF3__Aria_Test_Account__c]\n      --,[ASF3__Aria_Transaction_ID__c]\n      --,[ASF3__Aria_Transaction_ID_text__c]\n      ----,[ASF3__Aria_User_Id__c]\n      --,[ASF3__Invoice_Approval_Required__c]\n      --,[ASF3__Net_Price__c]\n      --,[ASF3__New_Account_Treated_As__c]\n      --,[ASF3__Order_Net_Price__c]\n      --,[ASF3__Order_Tax__c]\n      --,[ASF3__Order_Total__c]\n      --,[ASF3__Previous_Aria_MRR_Total__c]\n      --,[ASF3__TCV__c]\n      --,[ASF3__Tax_Exemption_Level_Federal__c]\n      --,[ASF3__Tax_Exemption_Level_State__c]\n      --,[ASF3__Tax__c]\n      --,[ASF3__Test_Acct_Ind__c]\n      --,[ASF3__Total__c]\n      --,[ASF3__acct_start_date__c]\n      --,[ASF3__acct_surcharges__c]\n      --,[ASF3__client_cn_alt_msg_template_id__c]\n      --,[ASF3__ignoreFurtherCalls__c]\n      --,[ASF3__tax_exemption_level__c]\n      --,[Account_No_Autonumber__c] */\n      ,[Account_No__c]\n      ,[Applicable_Discounts__c]\n      ,[PBS_Mandate_Id__c]\n      ,[Blacklist_Reason__c]\n      ,[CPR_Address_Match_Change_Date__c]\n      ,[CPR_Address_Match_Contact_Address__c]\n      ,[CPR_Address_Match_Fields_Changed__c]\n      ,[CPR_Address_Match_Message__c]\n      ,[CPR_Address_Match_Processing__c]\n      /*--,[CPR_Address_Match_Should_Update__c] */\n      ,[CPR_Address_Match_Status__c]\n      ,[CPR_Address_Match_Subscribed__c]\n      /*--,[CVR_No__c] */\n      ,[Customer_Relation_Modified__c]\n      ,[Customer_Relation__c]\n      ,[Default_Refund_Method__c]\n      ,[Finance_Customer_Group__c]\n      ,[Foreign_Customer__c]\n      ,[GL_Account_Group__c]\n      ,[Handle_Credits_Manually__c]\n      ,[Handling_Restrictions__c]\n      ,[INCLUDE_in_extact_for_PACMAN__c]\n      ,[Invoice_Immediately__c]\n      /*--,[Is_Active_Customer__c]*/\n      ,[Max_Dunning_Step_Date__c]\n      ,[Max_Dunning_Step__c]\n     /*--,[Name_and_Address_Letter__c]\n     --,[Name_and_Address_Line__c] */\n      ,[Override_Communication__c]\n      ,[Percentage_Based_Dunning__c]\n      ,[Refund_Credit_Card_Suffix__c]\n      ,[ShippingAddressAwsId__c]\n      ,[ShippingAddressKvhx__c]\n      /*--,[Shipping_Address_Letter__c]\n      --,[Shipping_Address_Line__c] */\n      ,[Supplementary_Name__c]\n      ,[Sync_To_Person_Contact__c]\n      ,[Trading_Partner__c]\n      ,[Type__c]\n      ,[Verify_Usage_Manually__c]\n      ,[pbsccLEANUP__c]\n      ,[Analyse__c]\n      ,[Address_Changed_Date__c]\n      ,[Force_Update_Date__c]\n      /*--,[ASF3__Aria_Unique_Client_Account_ID__c]\n      --,[Backup__c] referencja\n      --,[S_lger_til_kundebs_g__c] referencja\n      --,[Bes_gsinterval__c]\n      --,[M_deforberedelsesdato__c]\n      --,[Days_Since_Activity__c]*/\n      ,[Created_By_Lead_ID__c]\n      /*--,[CPRAddressMatchSubscription__c]*/\n      ,[InternalDiscountId__c]\n      ,[IsInitialValidationDismissed__c]\n      ,[OverrideCommunicationEndDate__c]\n      ,[RPA_Task_To_Run__c]\n      ,[IsOwnershipChanged__c]\n      ,[OwnershipChangeDate__c]\n      ,[PBS_BankAccountNo__c]\n      ,[PBS_IdentificationNo__c]\n      ,[PBS_MandateCreatedDate__c]\n      ,[PBS_MandateStatus__c]\n      ,[PBS_RegistrationNo__c]\n      ,[PBS_SentToBSDate__c]\n      /*--,[Advisor__c] referencja\n      --,[Brand_KAM__c] referencja\n      --,[Value_Management_Brevvariant__c]\n      --,[Segment__c]\n      --,[Breve_fra_Falck__pc]\n      --,[Gode_tilbud__pc]\n      --,[Information_Mangler__pc]\n      --,[Interesser__pc]\n      --,[MDB_ID__pc]\n      --,[Nyhedsbrev__pc]\n      --,[Email_Updated__pc]\n      --,[Email_Updated_By__pc]\n      --,[Kunde_nr__pc]\n      --,[Adresse__pc]\n      --,[Permissions_channels__pc]\n      --,[Kundenr_Dup__pc]\n      --,[BtB_Decision_Maker_Within_Productfamily__pc]\n      --,[Inactive__pc]\n      --,[Is_Dummy_Campaign_Contact__pc]\n      --,[Is_Primary__pc]\n      --,[Migration_Data_Key__pc]\n      --,[Role__pc]\n      --,[bypass_validations__pc]\n      --,[Kundenr_Dup_contact_del__pc]\n      --,[Gender__pc]\n      --,[Is_customer__pc]\n      --,[Has_Received_Welcome_Gift__pc]\n      --,[mitfalckdk_last_login__pc]\n      ----,[ASF3__Account_Aria_Id__pc]\n      --,[smagicinteract__SMSOptOut__pc]\n      --,[Contact_No__pc]\n      --,[Permissions_channels_BtB__pc]\n      ----,[ASF3__Aria_Company_Name__pc]\n      ----,[ASF3__Aria_Home_Phone_Extension__pc]\n      ----,[ASF3__Aria_International_Cell_Phone__pc]\n      ----,[ASF3__Aria_International_Phone__pc]\n      ----,[ASF3__Aria_Middle_Initial__pc]\n      ----,[ASF3__Aria_Work_Phone_Extension__pc]\n      ----,[ASF3__Country_Code__pc]\n      ----,[ASF3__Do_Not_Use_Email__pc]\n      ----,[ASF3__Languages__pc]\n      ----,[ASF3__Level__pc]\n      ----,[ASF3__Unique_Key__pc]\n      --,[Account_No_Dup__pc]\n      --,[Contact_Match_Criteria__pc]\n      --,[MailingAddressAwsId__pc]\n      --,[MailingAddressKvhx__pc]\n      --,[Mailing_Address_Letter__pc]\n      --,[Name_and_Address_Letter__pc]\n      --,[Person_Name__pc]\n      --,[Print_Order_Name__pc]\n      --,[Reminders__pc]\n      --,[Supplementary_Name__pc]\n      --,[Sync_From_Account__pc]\n      --,[Address_Changed_Date__pc]\n      --,[PBS_mobile_sign_up_consent__pc]*/\n      ,id as LegacyId__c\n\t  /*,[CreatedDate]\n    ,[LastModifiedDate]*/\n  FROM [SF_Archive].[account]\n  WHERE IsPersonAccount = ''False'' and id in (select AccountId from audit.mig_account_list)\n',\n  1,1,1,1,'Account');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load, label) values ('Account','Salesforce','Salesforce Standard',\n'\nSELECT \n      [LastName]\n      ,coalesce([FirstName],''_'') as FirstName\n      ,[Salutation]\n      ,[Type]\n      ,CASE\n\t\t\tWHEN [RecordTypeId] = ''012w0000000QYhHAAW'' THEN ''0127R000000c0E0''\n\t\t\tWHEN [RecordTypeId] = ''012w0000000QYhGAAW'' THEN ''0127R000000c0LB''\n\t\t\tWHEN [RecordTypeId] = ''012w0000000QYhIAAW'' THEN ''0127R000000c0LC''\n\t\t\tWHEN [RecordTypeId] = ''01220000000AFrcAAG'' THEN ''0127R000000c0E5''\n\t   END as RecordTypeId\n      ,[BillingStreet]\n      ,[BillingCity]\n      ,[BillingState]\n      ,[BillingPostalCode]\n      ,[BillingCountry]\n      ,[BillingLatitude]\n      ,[BillingLongitude]\n      ,[BillingGeocodeAccuracy]\n      ,[ShippingStreet]\n      ,[ShippingCity]\n      ,[ShippingState]\n      ,[ShippingPostalCode]\n      ,[ShippingCountry]\n      ,[ShippingLatitude]\n      ,[ShippingLongitude]\n      ,[ShippingGeocodeAccuracy]\n      ,[Phone]\n      ,[Fax]\n      ,[AccountNumber]\n      ,[Website]\n      /*,[PhotoUrl]*/\n      ,[Sic]\n      ,[Industry]\n      ,[AnnualRevenue]\n      ,[NumberOfEmployees]\n      ,[Ownership]\n      ,[TickerSymbol]\n      ,[Description]\n      ,[Rating]\n      ,[Site]\n      ,[CreatedDate]\n      ,[LastModifiedDate]\n      /*,[LastViewedDate]*/\n      /*,[LastReferencedDate]*/\n      ,[PersonMailingStreet]\n      ,[PersonMailingCity]\n      ,[PersonMailingState]\n      ,[PersonMailingPostalCode]\n      ,[PersonMailingCountry]\n      ,[PersonMailingLatitude]\n      ,[PersonMailingLongitude]\n      ,[PersonMailingGeocodeAccuracy]\n      ,[PersonOtherStreet]\n      ,[PersonOtherCity]\n      ,[PersonOtherState]\n      ,[PersonOtherPostalCode]\n      ,[PersonOtherCountry]\n      ,[PersonOtherLatitude]\n      ,[PersonOtherLongitude]\n      ,[PersonOtherGeocodeAccuracy]\n      ,[PersonMobilePhone]\n      ,[PersonHomePhone]\n      ,[PersonOtherPhone]\n      ,[PersonAssistantPhone]\n      ,[PersonEmail]\n      ,[PersonTitle]\n      ,[PersonDepartment]\n      ,[PersonAssistantName]\n      ,[PersonLeadSource]\n      ,[PersonBirthdate]\n      ,[PersonHasOptedOutOfEmail]\n      ,[PersonHasOptedOutOfFax]\n      ,[PersonDoNotCall]\n      /*,[PersonLastCURequestDate]\n      ,[PersonLastCUUpdateDate]*/\n      ,[PersonEmailBouncedReason]\n      ,[PersonEmailBouncedDate]\n      ,[Jigsaw]\n      /*,[JigsawCompanyId]*/\n      ,[AccountSource]\n      ,[SicDesc]\n      ,[RobinsonMark__c]\n      ,[Address_Update_By_Code__c]\n      ,[Begr_nsning_i_abonnement__c]\n      ,[Betalingsannmodning__c]\n      ,[Betalingsby__c]\n      ,[Betalingsgadenummer__c]\n      ,[Betalingsgadeundernummer__c]\n      ,[Betalingsland__c]\n      ,[Betalingsmaade__c]\n      ,[Satisfaction_Level__c]\n      ,[Betalingsnavn__c]\n      ,[Betalingspostnummer__c]\n      ,[Betalingssgadenavn__c]\n      ,[Betalingstermin__c]\n      ,[Bevarings_dialog__c]\n      ,[By__c]\n      ,[Check_for_abo__c]\n      ,[CustAssEndDate__c]\n      ,[CustAssStartDate__c]\n      ,[Error_Message__c]\n      ,[Forny_dato__c]\n      ,[Gadenavn__c]\n      ,[Gadenummer__c]\n      ,[Gadeundernummer__c]\n      ,[Har_du_set_vores_TV_reklame__c]\n      ,[Hensstand__c]\n      ,[Hvor_mange_b_rn_er_der_i_husstanden__c]\n      ,[Indled_din_dialog__c]\n      ,[Inkasso_dato__c]\n      ,[KS_Bem_rkninger__c]\n      ,[Kan_tidligst_opsiges__c]\n      ,[Kommende_aendringer__c]\n      ,[Konto_nr__c]\n      ,[Korttyper__c]\n      ,[Kundenr__c]\n      ,[Kundetype__c]\n      ,[Land__c]\n      ,[N_ste_rykker__c]\n      ,[CVR_No_Technical__c]\n      ,[Overordnet_Betalingsdato__c]\n      ,[PBS_person_SE_nummer__c]\n      ,[Payment_Addr_Municipality_Code__c]\n      ,[Payment_Addr_Street_Code__c]\n      ,[Person_SE_nummer__c]\n      ,[Postnummer__c]\n      /*,[Primary_Account_Cust_Num__c]*/\n      ,[Primary_Addr_Municipality_Code__c]\n      ,[Primary_Addr_Street_Code__c]\n      ,[Primary_adr_KS_BRID__c]\n      ,[Reg_nr__c]\n      ,[Rykker_1_md__c]\n      ,[Rykker_2_md__c]\n      ,[Rykker_3_md__c]\n      ,[Saldo__c]\n      ,[Salgs_dialog__c]\n      ,[Segmenteringskode__c]\n      ,[Seneste_PBS_anmodning__c]\n      ,[Sent__c]\n      ,[Sidste_ydelse__c]\n      ,[HealthTerms__c]\n      ,[Slettedato__c]\n      ,[Status__c]\n      ,[Supplerende_adresse__c]\n      ,[Supplerende_betalingsadresse__c]\n      ,[Supplerende_betalingsnavn__c]\n      ,[Supplerende_navn__c]\n      ,[Tegningsdato__c]\n      ,[Tilhorsforholdsnummer__c]\n      ,[Tilknyttet_Falckstation__c]\n      ,[Total__c]\n      ,[aarsagsbeskrivelse__c]\n      ,[aarsagskode__c]\n      ,[ndringsdato__c]\n      ,[isAccountActiveInUnica__c]\n      ,[PBS_Added_By__c]\n      ,[Ovrige_email_adr__c]\n      ,[Betalingstermin_update_status__c]\n      ,[Betalingstermin_update_status_text__c]\n      ,[CPR_Marketing__c]\n      /*,[Disable_focus_field_controls__c]*/\n      ,[FI_card_paymentId__c]\n      ,[Healthcare_Coverage__c]\n      ,[Housing__c]\n      ,[Insurance_Company__c]\n      ,[Last_Renew__c]\n      ,[Noncovered_Holiday_Home__c]\n      ,[Opt_outFalckMarketing__c]\n      ,[Protected_Address_Info__c]\n      ,[ffSts_Covered_Cars__c]\n      ,[ffSts_Email__c]\n      ,[ffSts_Household_Members__c]\n      ,[ffSts_Housing__c]\n      ,[ffSts_Insurance_Company__c]\n      ,[ffSts_Mobile__c]\n      ,[ffSts_Noncovered_Cars__c]\n      ,[ffSts_Noncovered_Holiday_Home__c]\n      ,[ffSts_PBS__c]\n      ,[ffSts_Phone__c]\n      ,[ffSts_Healthcare_Coverage__c]\n      ,[ffSts_CPR__c]\n      ,[OBS__c]\n      ,[ffSts_Permissions__c]\n      ,[PBS_person_SE_nummer_type__c]\n      ,[Person_SE_nummer_type__c]\n      ,[exL_rerstandskunde__c]\n      ,[Antal_M2_bygning_manuel_override__c]\n      ,[Auto_sync_from_master__c]\n      ,[Read_Reminders_on_Create__c]\n      ,[CPR_Validation_Current_Status__c]\n      ,[CPR_Last_Check_Date__c]\n      ,[BtB_Depth_in_Customer_Relationship__c]\n      ,[BtB_PS_District__c]\n      ,[BtB_TAM_District__c]\n      ,[BtB_Width_in_Customer_Relationship__c]\n      ,[Cars_manuel_override__c]\n      ,[Comments_to_Exclude_from_Auto_Renewal__c]\n      ,[DMR_Permission__c]\n      ,[EAN_Text__c]\n      ,[EAN_no_Valid__c]\n      ,[EAN_no__c]\n      ,[Email__c]\n      ,[Exclude_from_auto_renewal__c]\n      ,[External_Cars_at_CVR__c]\n      ,[External_M2_Building__c]\n      ,[Force_sync_from_master__c]\n      ,[Hide_in_customer_portal__c]\n      ,[No_collection_fee__c]\n      ,[PBS_UUID__c]\n      ,[Reason_for_Extension__c]\n      ,[SAP_ID__c]\n      ,[Segment_class__c]\n      ,[Sub_Segment_class__c]\n      ,[PBS_mobile_status__c]\n      ,[Total_excl_VAT_Auto__c]\n      ,[Total_excl_VAT_Home_Building__c]\n      ,[Total_excl_VAT_Other__c]\n      ,[Total_excl_VAT_Personal__c]\n      ,[Total_excl_VAT__c]\n      ,[PBS_Channel__c]\n      ,[ffSts_Contacts__c]\n      ,[ffSts_Employees__c]\n      ,[Needs_car_cleaning__c]\n      /*,[PersonMobilePhoneClick__c]*/\n      ,[Salarynumber__c]\n      ,[PBS_Description__c]\n      ,[Administrativ_Permission__c]\n      ,[RKI_CPRnummer__c]\n      ,[Black_box__c]\n      ,[SMS_karens__c]\n      ,[CVR_for_Nemkonto__c]\n      ,[Refund_Bank_Account_Number__c]\n      ,[Refund_CPR_change__c]\n      ,[Refund_CPR_no__c]\n      ,[Used_for_update__c]\n      ,[Trygmedlemmer__c]\n      ,[Service_misuse_marking__c]\n      ,[Account_No__c]\n      ,[Applicable_Discounts__c]\n      ,[PBS_Mandate_Id__c]\n      ,[Blacklist_Reason__c]\n      ,[CPR_Address_Match_Change_Date__c]\n      ,[CPR_Address_Match_Contact_Address__c]\n      ,[CPR_Address_Match_Fields_Changed__c]\n      ,[CPR_Address_Match_Message__c]\n      ,[CPR_Address_Match_Processing__c]\n      ,[CPR_Address_Match_Status__c]\n      ,[CPR_Address_Match_Subscribed__c]\n      ,[Customer_Relation_Modified__c]\n      ,[Customer_Relation__c]\n      ,[Default_Refund_Method__c]\n      ,[Finance_Customer_Group__c]\n      ,[Foreign_Customer__c]\n      ,[GL_Account_Group__c]\n      ,[Handle_Credits_Manually__c]\n      ,[Handling_Restrictions__c]\n      ,[INCLUDE_in_extact_for_PACMAN__c]\n      ,[Invoice_Immediately__c]\n      ,[Max_Dunning_Step_Date__c]\n      ,[Max_Dunning_Step__c]\n      ,[Override_Communication__c]\n      ,[Percentage_Based_Dunning__c]\n      ,[Refund_Credit_Card_Suffix__c]\n      ,[ShippingAddressAwsId__c]\n      ,[ShippingAddressKvhx__c]\n      ,[Supplementary_Name__c]\n      ,[Sync_To_Person_Contact__c]\n      ,[Trading_Partner__c]\n      ,[Type__c]\n      ,[Verify_Usage_Manually__c]\n      ,[pbsccLEANUP__c]\n      ,[Analyse__c]\n      ,[Address_Changed_Date__c]\n      ,[Force_Update_Date__c]\n      ,[Created_By_Lead_ID__c]\n      ,[InternalDiscountId__c]\n      ,[IsInitialValidationDismissed__c]\n      ,[OverrideCommunicationEndDate__c]\n      ,[RPA_Task_To_Run__c]\n      ,[IsOwnershipChanged__c]\n      ,[OwnershipChangeDate__c]\n      ,[PBS_BankAccountNo__c]\n      ,[PBS_IdentificationNo__c]\n      ,[PBS_MandateCreatedDate__c]\n      ,[PBS_MandateStatus__c]\n      ,[PBS_RegistrationNo__c]\n      ,[PBS_SentToBSDate__c]\n      ,[Breve_fra_Falck__pc]\n      ,[Gode_tilbud__pc]\n      ,[Interesser__pc]\n      ,[MDB_ID__pc]\n      ,[Nyhedsbrev__pc]\n      ,[Email_Updated__pc]\n      ,[Email_Updated_By__pc]\n      ,[Permissions_channels__pc]\n      ,[Kundenr_Dup__pc]\n      ,[BtB_Decision_Maker_Within_Productfamily__pc]\n      ,[Inactive__pc]\n      ,[Is_Dummy_Campaign_Contact__pc]\n      ,[Is_Primary__pc]\n      ,[Migration_Data_Key__pc]\n      ,[Role__pc]\n      ,[bypass_validations__pc]\n      ,[Kundenr_Dup_contact_del__pc]\n      ,[Gender__pc]\n      ,[Has_Received_Welcome_Gift__pc]\n      ,[mitfalckdk_last_login__pc]\n      ,[smagicinteract__SMSOptOut__pc]\n      ,[Permissions_channels_BtB__pc]\n      ,[Account_No_Dup__pc]\n      ,[MailingAddressAwsId__pc]\n      ,[MailingAddressKvhx__pc]\n      ,[Person_Name__pc]\n      /*,[Reminders__pc]*/\n      ,[Supplementary_Name__pc]\n      ,[Sync_From_Account__pc]\n      ,[Address_Changed_Date__pc]\n      ,[PBS_mobile_sign_up_consent__pc]\n      ,Id as LegacyId__c\nFROM [SF_Archive].[account]\nWHERE IsPersonAccount = ''True'' and id in (select AccountId from audit.mig_account_list)\n',\n  1,2,1,1,'Account_Person');\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Contact','Salesforce','Salesforce Standard',null,1,3,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Lead','Salesforce','Salesforce Standard',\n'\nselect\nl.LastName,\nl.FirstName,\nl.Salutation,\nl.Title,\nl.Company,\nl.Street,\nl.City,\nl.State,\nl.PostalCode,\nl.Country,\nl.Latitude,\nl.Longitude,\nl.GeocodeAccuracy,\nl.Phone,\nl.MobilePhone,\nl.Fax,\nl.Email,\nl.Website,\nl.Description,\nl.LeadSource,\nl.Status,\nl.Industry,\nl.Rating,\nl.AnnualRevenue,\nl.NumberOfEmployees,\nl.HasOptedOutOfEmail,\nl.IsConverted,\nl.ConvertedDate, \ncase \n\twhen l.IsConverted =1 \n\tthen (select m.Id from audit.mig_mapIDs m where m.LegacyId__c = l.ConvertedAccountId and m.objectname=''Account'') \nend ConvertedAccountId,\ncase \n\twhen l.IsConverted =1 \n\tthen (select m.PersonContactId from audit.mig_mapIDs m where m.LegacyId__c = l.ConvertedAccountId and m.objectname=''Account'') \nend ConvertedContactId,\nl.IsUnreadByOwner,\nDATETRUNC(day, CONVERT(DATETIME, l.CreatedDate)) as CreatedDate,\nl.LastModifiedDate,\nl.DoNotCall,\nl.HasOptedOutOfFax,\nl.smagicinteract__SMSOptOut__c,\nl.Unica_AddressLine1__c,\nl.Unica_AddressLine2__c,\nl.Unica_Base_ID__c,\nl.Unica_City__c,\nl.Unica_MDB_ID__c,\nl.Unica_ZipCode__c\nfrom SF_archive.Lead l\nwhere l.IsDeleted = 0 \nand (\n\texists (select 1 from [Audit].[mig_account_list] a where l.ConvertedAccountId = a.AccountId)\n\tor \n\tl.ConvertedAccountId is null\n)\n',1,4,1,1);\n\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Opportunity','Salesforce','Salesforce Standard',null,1,5,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('Campaign','Salesforce','Salesforce Standard',null,1,6,1,1);\ninsert into [Audit].[mig_objects_list] (objectname , systemname , category, sql, enabled, order_position,extract, load) values ('User','Salesforce','Salesforce Standard',null,1,7,1,1);\n\n"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -1756,7 +1756,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_salesforce_load_ALL')]",
+			"name": "[concat(parameters('factoryName'), '/pl_salesforce_load_CONSISTENT_ALL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1894,35 +1894,6 @@
 						]
 					},
 					{
-						"name": "MIG_MAP_IDs",
-						"type": "ExecutePipeline",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "Salesforce - Load ACCOUNT_PERSON",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Salesforce - Load ACCOUNT",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pl_SF_extract_load_mig_mapIDs",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "Salesforce - Load CONTACT",
 						"description": "Copy activity to copy one object",
 						"type": "Copy",
@@ -1930,7 +1901,7 @@
 						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
-								"activity": "MIG_MAP_IDs",
+								"activity": "Account - map IDs",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2003,7 +1974,7 @@
 						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
-								"activity": "Salesforce - Load CONTACT",
+								"activity": "Contact - map IDs",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2074,7 +2045,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Salesforce - Load CONTACT",
+								"activity": "Contact - map IDs",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2091,7 +2062,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "select\n\to.IsPrivate,\n\to.Name,\n\to.Description,\n\to.StageName,\n\to.Amount,\n\to.Probability,\n\to.ExpectedRevenue,\n\to.CloseDate,\n\to.Type,\n\to.NextStep,\n\to.LeadSource,\n\to.ForecastCategory,\n\to.ForecastCategoryName,\n\to.HasOpportunityLineItem,\n\to.CreatedDate,\n\to.LastModifiedDate,\n\to.PushCount,\n\to.LastStageChangeDate,\n\to.Fiscal,\n\to.HasOpenActivity,\n\to.HasOverdueTask,\n\to.ABA_Alarmtransmission__c,\n\to.AED__c,\n\to.Aarsag__c,\n\to.Amount_yearly_Approved__c,\n\to.Amount_yearly_for_commision__c,\n\to.Amount_yearly_in_KS__c,\n\to.Approval_Reject_Reasons__c,\n\to.Approval_Request_Comments__c,\n\to.Approval_Status__c,\n\to.Approved__c,\n\to.Cancel_Products_Price__c,\n\to.Churn_Reasons_Missing__c,\n\to.Collectionfee__c,\n\to.Counseling__c,\n\to.CoveredObjectsIssues__c,\n\to.DB_Competitor__c,\n\to.DIBS_no__c,\n\to.Delete_Reopen_Customer__c,\n\to.Deliverables_Created__c,\n\to.Delivery_Comments__c,\n\to.Email_of_Approval_Submitter__c,\n\to.Email_reply__c,\n\to.Emne_nr__c,\n\to.Enter_Detailed_Reasons__c,\n\to.Entered_Manually_in_KS__c,\n\to.Ext_SalesRep_id__c,\n\to.External_Quote_Number__c,\n\to.Fire_Material__c,\n\to.First_approval_date__c,\n\to.Future_Change__c,\n\to.Giroamount__c,\n\to.Gross_increase__c,\n\to.Has_more_products__c,\n\to.Has_products_been_ordered__c,\n\to.Ignorer_Kan_tidligst_opsiges__c,\n\to.In_BtB_Approval_Flow__c,\n\to.IsManualProration__c,\n\to.IsMitfalckOpportunity__c,\n\to.Is_Lead__c,\n\to.Is_existing_installation__c,\n\to.Is_in_Approval_process__c,\n\to.Kontantrabat__c,\n\to.Kontantsalg_Amount_Approved__c,\n\to.Kontantsalg_Amount_Closed_Won__c,\n\to.Kontantsalg_Amount_for_commision__c,\n\to.Leads_til_MM_VC__c,\n\to.Letter_text__c,\n\to.Level_2_Manager_Approval_Required__c,\n\to.Manual_handling__c,\n\to.Mitfalck_Order_Id__c,\n\to.Opgaver_til_s_lgers_genbehandling__c,\n\to.Opportunity_queue__c,\n\to.Order_Confirmation_Status__c,\n\to.Order_processing_codes__c,\n\to.Order_processing_status__c,\n\to.Order_processing_text__c,\n\to.Original_Account__c,\n\to.Original_Assignment_Directive__c,\n\to.Original_purchase_date__c,\n\to.Paymentmethod__c,\n\to.Primary_Contact__c,\n\to.Print_Destination__c,\n\to.Print_Status__c,\n\to.Print_Template__c,\n\to.Print_specification_from_date__c,\n\to.Print_specification_selection_1__c,\n\to.Print_specification_selection_2__c,\n\to.Print_specification_to_date__c,\n\to.Print_specifications__c,\n\to.Printcombisecurity__c,\n\to.Printcontract__c,\n\to.Printer__c,\n\to.Printgirocard__c,\n\to.Printhealthletter__c,\n\to.Printpaymentsaddress__c,\n\to.Product_list_to_order__c,\n\to.Products_Of_Interest__c,\n\to.Products__c,\n\to.Quote_Description__c,\n\to.Related_Case__c,\n\to.Sales_Agent__c,\n\to.Sales_Fitter__c,\n\to.Salgskanal__c,\n\to.Start_Date_of_Change__c,\n\to.Success_Probability__c,\n\to.SysVagtaftale__c,\n\to.TM_Campaign_Member_Id__c,\n\to.TM_Campaign_Member__c,\n\to.Temporary_contract_number__c,\n\to.Transfer_to_unnoted_list__c,\n\to.VAT__c,\n\to.VC_lead_til_Outbound__c,\n\to.Webshop_Order_ID__c,\n\to.Winning_Competitor__c,\n\to.bypass_validations__c,\n\to.campaign_discounts__c,\n\to.no_to_print__c,\n\to.run_order_consistency_validations__c,\n\to.Delete_Reason__c,\n\to.Order_Status__c,\n\to.Print_Destination_Printer__c,\n\to.Value__c\nfrom \nSF_Archive.Opportunity o \nwhere \n(\n    o.AccountId in (select AccountId from audit.mig_account_list) \n    or o.AccountId is null\n) and o.IsDeleted = 0 ",
+								"sqlReaderQuery": "select\n\to.IsPrivate,\n\to.Name,\n\to.Description,\n\to.StageName,\n\to.Amount,\n\to.Probability,\n\t--o.ExpectedRevenue,\n\to.CloseDate,\n\to.Type,\n\to.NextStep,\n\to.LeadSource,\n\t--o.ForecastCategory,\n\to.ForecastCategoryName,\n\t--o.HasOpportunityLineItem,\n\to.CreatedDate,\n\to.LastModifiedDate,\n\t--o.PushCount,\n\t--o.LastStageChangeDate,\n\t--o.Fiscal,\n\t--o.HasOpenActivity,\n\t--o.HasOverdueTask,\n\to.ABA_Alarmtransmission__c,\n\to.AED__c,\n\to.Aarsag__c,\n\to.Amount_yearly_Approved__c,\n\to.Amount_yearly_for_commision__c,\n\to.Amount_yearly_in_KS__c,\n\to.Approval_Reject_Reasons__c,\n\to.Approval_Request_Comments__c,\n\to.Approval_Status__c,\n\to.Approved__c,\n\to.Cancel_Products_Price__c,\n\to.Churn_Reasons_Missing__c,\n\to.Collectionfee__c,\n\to.Counseling__c,\n\to.CoveredObjectsIssues__c,\n\to.DB_Competitor__c,\n\to.DIBS_no__c,\n\to.Delete_Reopen_Customer__c,\n\to.Deliverables_Created__c,\n\to.Delivery_Comments__c,\n\to.Email_of_Approval_Submitter__c,\n\to.Email_reply__c,\n\to.Emne_nr__c,\n\to.Enter_Detailed_Reasons__c,\n\to.Entered_Manually_in_KS__c,\n\to.Ext_SalesRep_id__c,\n\to.External_Quote_Number__c,\n\to.Fire_Material__c,\n\to.First_approval_date__c,\n\to.Future_Change__c,\n\to.Giroamount__c,\n\to.Gross_increase__c,\n\to.Has_more_products__c,\n\to.Has_products_been_ordered__c,\n\to.Ignorer_Kan_tidligst_opsiges__c,\n\to.In_BtB_Approval_Flow__c,\n\to.IsManualProration__c,\n\to.IsMitfalckOpportunity__c,\n\to.Is_Lead__c,\n\to.Is_existing_installation__c,\n\to.Is_in_Approval_process__c,\n\to.Kontantrabat__c,\n\to.Kontantsalg_Amount_Approved__c,\n\to.Kontantsalg_Amount_Closed_Won__c,\n\to.Kontantsalg_Amount_for_commision__c,\n\to.Leads_til_MM_VC__c,\n\to.Letter_text__c,\n\to.Level_2_Manager_Approval_Required__c,\n\to.Manual_handling__c,\n\to.Mitfalck_Order_Id__c,\n\to.Opgaver_til_s_lgers_genbehandling__c,\n\to.Opportunity_queue__c,\n\to.Order_Confirmation_Status__c,\n\to.Order_processing_codes__c,\n\to.Order_processing_status__c,\n\to.Order_processing_text__c,\n\to.Original_Account__c,\n\to.Original_Assignment_Directive__c,\n\to.Original_purchase_date__c,\n\to.Paymentmethod__c,\n\to.Primary_Contact__c,\n\to.Print_Destination__c,\n\to.Print_Status__c,\n\to.Print_Template__c,\n\to.Print_specification_from_date__c,\n\to.Print_specification_selection_1__c,\n\to.Print_specification_selection_2__c,\n\to.Print_specification_to_date__c,\n\to.Print_specifications__c,\n\to.Printcombisecurity__c,\n\to.Printcontract__c,\n\to.Printer__c,\n\to.Printgirocard__c,\n\to.Printhealthletter__c,\n\to.Printpaymentsaddress__c,\n\to.Product_list_to_order__c,\n\to.Products_Of_Interest__c,\n\to.Products__c,\n\to.Quote_Description__c,\n\to.Related_Case__c,\n\to.Sales_Agent__c,\n\to.Sales_Fitter__c,\n\to.Salgskanal__c,\n\to.Start_Date_of_Change__c,\n\to.Success_Probability__c,\n\to.SysVagtaftale__c,\n\to.TM_Campaign_Member_Id__c,\n\to.TM_Campaign_Member__c,\n\to.Temporary_contract_number__c,\n\to.Transfer_to_unnoted_list__c,\n\to.VAT__c,\n\to.VC_lead_til_Outbound__c,\n\to.Webshop_Order_ID__c,\n\to.Winning_Competitor__c,\n\to.bypass_validations__c,\n\to.campaign_discounts__c,\n\to.no_to_print__c,\n\to.run_order_consistency_validations__c,\n\to.Delete_Reason__c,\n\to.Order_Status__c,\n\to.Print_Destination_Printer__c,\n\to.Value__c,\n\to.Id as LegacyId__c\nfrom \nSF_Archive.Opportunity o \nwhere \n(\n    o.AccountId in (select AccountId from audit.mig_account_list) \n    or o.AccountId is null\n) and o.IsDeleted = 0 ",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -2138,6 +2109,178 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Account - map IDs",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Salesforce - Load ACCOUNT",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Salesforce - Load ACCOUNT_PERSON",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"additionalColumns": [
+									{
+										"name": "objectname",
+										"value": "Account"
+									}
+								],
+								"query": "select Id, LegacyId__c,PersonContactId from Account where LegacyId__c != null",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": {
+									"value": "delete from [Audit].[mig_mapIDs] where [objectname]='Account';",
+									"type": "Expression"
+								},
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "TarSalesforceObject",
+								"type": "DatasetReference",
+								"parameters": {
+									"SFObjectName": "Account ",
+									"SFLinkedServiceURL": {
+										"value": "@pipeline().parameters.URL",
+										"type": "Expression"
+									},
+									"SFLinkedServiceUserName": {
+										"value": "@pipeline().parameters.UserName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "mig_mapIDs",
+										"type": "Expression"
+									},
+									"SchemaName": "Audit"
+								}
+							}
+						]
+					},
+					{
+						"name": "Contact - map IDs",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Salesforce - Load CONTACT",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"additionalColumns": [
+									{
+										"name": "objectname",
+										"value": "Account"
+									}
+								],
+								"query": "select Id, LegacyId__c from Contact where LegacyId__c != null",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": {
+									"value": "delete from [Audit].[mig_mapIDs] where [objectname]='Account';",
+									"type": "Expression"
+								},
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "TarSalesforceObject",
+								"type": "DatasetReference",
+								"parameters": {
+									"SFObjectName": "Account ",
+									"SFLinkedServiceURL": {
+										"value": "@pipeline().parameters.URL",
+										"type": "Expression"
+									},
+									"SFLinkedServiceUserName": {
+										"value": "@pipeline().parameters.UserName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "mig_mapIDs",
+										"type": "Expression"
+									},
+									"SchemaName": "Audit"
+								}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -2160,8 +2303,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]",
-				"[concat(variables('factoryId'), '/datasets/TarSalesforceObject')]",
-				"[concat(variables('factoryId'), '/pipelines/pl_SF_extract_load_mig_mapIDs')]"
+				"[concat(variables('factoryId'), '/datasets/TarSalesforceObject')]"
 			]
 		},
 		{
@@ -2497,7 +2639,7 @@
 												"userProperties": [],
 												"typeProperties": {
 													"pipeline": {
-														"referenceName": "pl_SF_extract_load_mig_mapIDs",
+														"referenceName": "pl_SF_extract_load_mig_mapIDs_Account",
 														"type": "PipelineReference"
 													},
 													"waitOnCompletion": true,
@@ -2532,7 +2674,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]",
 				"[concat(variables('factoryId'), '/datasets/TarSalesforceObject')]",
-				"[concat(variables('factoryId'), '/pipelines/pl_SF_extract_load_mig_mapIDs')]"
+				"[concat(variables('factoryId'), '/pipelines/pl_SF_extract_load_mig_mapIDs_Account')]"
 			]
 		},
 		{
@@ -3690,6 +3832,269 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_SF_extract_load_mig_mapIDs_Contact')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
+				"activities": [
+					{
+						"name": "Contact - map IDs",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"additionalColumns": [
+									{
+										"name": "objectname",
+										"value": "Account"
+									}
+								],
+								"query": "select Id, LegacyId__c from Contact where LegacyId__c != null",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": {
+									"value": "delete from [Audit].[mig_mapIDs] where [objectname]='Account';",
+									"type": "Expression"
+								},
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "TarSalesforceObject",
+								"type": "DatasetReference",
+								"parameters": {
+									"SFObjectName": "Account ",
+									"SFLinkedServiceURL": {
+										"value": "@pipeline().parameters.URL",
+										"type": "Expression"
+									},
+									"SFLinkedServiceUserName": {
+										"value": "@pipeline().parameters.UserName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "mig_mapIDs",
+										"type": "Expression"
+									},
+									"SchemaName": "Audit"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"URL": {
+						"type": "string",
+						"defaultValue": "https://falck-smp--test.sandbox.my.salesforce.com/"
+					},
+					"UserName": {
+						"type": "string",
+						"defaultValue": "azure.integration@falck.com.smp.test"
+					}
+				},
+				"variables": {
+					"drop-table": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "3. pl - salesforce extract"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/TarSalesforceObject')]",
+				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_SF_USER_extract_load_StgDB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy huge amount of data in bulk from database using external control table to store source table list with partitions for each table.\n\nWhen you want to migrate data from your Azure Synapse Analytics like Oracle server, Netezza server, Teradata server or SQL Server to Azure, you have to load huge amount of data from multiple tables in data sources. In most cases, data has to be further partitioned in each table so that you can load rows with multiple threads in parallel from single table.",
+				"activities": [
+					{
+						"name": "Copy to STG DB - USER",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": {
+									"value": "drop  table if exists [SF_Archive].SF_User}",
+									"type": "Expression"
+								},
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "LegSalesforceObject",
+								"type": "DatasetReference",
+								"parameters": {
+									"SFObjectName": {
+										"value": "User",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "SF_User",
+										"type": "Expression"
+									},
+									"SchemaName": "SF_archive"
+								}
+							}
+						]
+					},
+					{
+						"name": "Salesforce - Copy USER",
+						"description": "Copy activity to copy one object",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "LegSalesforceObject",
+								"type": "DatasetReference",
+								"parameters": {
+									"SFObjectName": {
+										"value": "User",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_salesforce_extract_csv",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"drop-table": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "3. pl - salesforce extract"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/LegSalesforceObject')]",
+				"[concat(variables('factoryId'), '/datasets/sink_mig_stg_db')]",
+				"[concat(variables('factoryId'), '/datasets/ds_salesforce_extract_csv')]"
+			]
 		}
 	]
 }
