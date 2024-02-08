@@ -179,6 +179,26 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Execute USER - extraction",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "GetObjectList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_SF_USER_extract_load_StgDB",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"variables": {
