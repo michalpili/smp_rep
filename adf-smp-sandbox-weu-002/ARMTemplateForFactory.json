@@ -2046,7 +2046,14 @@
 						"type": "Copy",
 						"state": "Inactive",
 						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "USER - map IDs",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -2112,7 +2119,14 @@
 						"type": "Copy",
 						"state": "Inactive",
 						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "USER - map IDs",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -2322,6 +2336,8 @@
 						"name": "Salesforce - Load OPPORTUNITY",
 						"description": "Copy activity to copy one object",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Contact - map IDs",
@@ -2392,6 +2408,8 @@
 					{
 						"name": "Account - map IDs",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Salesforce - Load ACCOUNT",
@@ -2481,6 +2499,8 @@
 					{
 						"name": "Contact - map IDs",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Salesforce - Load CONTACT",
@@ -2536,6 +2556,155 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"SFObjectName": "Account ",
+									"SFLinkedServiceURL": {
+										"value": "@pipeline().parameters.URL",
+										"type": "Expression"
+									},
+									"SFLinkedServiceUserName": {
+										"value": "@pipeline().parameters.UserName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "mig_mapIDs",
+										"type": "Expression"
+									},
+									"SchemaName": "Audit"
+								}
+							}
+						]
+					},
+					{
+						"name": "Salesforce - Load USER",
+						"description": "Copy activity to copy one object",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select \n\tu.License_Type__c,\n\tu.Notes__c,\n\tu.FA_nummer__c,\n\tu.DK_Nummer__c,\n\tu.External_Maintainer_For_Company_Master__c,\n\tu.Loop__LOOPlus_Tester__c,\n\tu.Loop__dsPassword__c,\n\tu.Loop__dsToken__c,\n\tu.DB_Region__c,\n\tu.Salgskanal__c,\n\tu.Salarynumber__c,\n\tu.RequestedPermissionSets__c,\n\tu.Username,\n\tu.CompanyName,\n\tu.Division,\n\tu.Department,\n\tu.Title,\n\tu.Email,\n\tu.SenderEmail,\n\tu.SenderName,\n\tu.Signature,\n\tu.StayInTouchSubject,\n\tu.StayInTouchSignature,\n\tu.StayInTouchNote,\n\tu.Phone,\n\tu.Fax,\n\tu.MobilePhone,\n\tu.Alias,\n\tu.CommunityNickname,\n\tu.IsActive,\n\tu.TimeZoneSidKey,\n\tu.LocaleSidKey,\n\tu.ReceivesInfoEmails,\n\tu.ReceivesAdminInfoEmails,\n\tu.EmailEncodingKey,\n\tu.LanguageLocaleKey,\n\tu.EmployeeNumber,\n\tu.DelegatedApproverId,\n\tu.CreatedById,\n\tu.LastModifiedById,\n\tu.ForecastEnabled,\n\t(select m.Id from audit.mig_mapIDs m where m.LegacyId__c = u.AccountId and m.objectname='Account') as AccountId,\n\tu.CallCenterId,\n\tu.Extension,\n\tu.FederationIdentifier,\n\tu.AboutMe,\n\tu.MediumPhotoUrl,\n\tu.DigestFrequency,\n\tu.DefaultGroupNotificationFrequency,\n\tu.id as LegacyId__c\nfrom \nSF_Archive.SF_User u",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SalesforceSink",
+								"writeBatchSize": 5000,
+								"writeBehavior": "insert"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sink_mig_stg_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": "x",
+									"SchemaName": "SF_Archive"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "TarSalesforceObject",
+								"type": "DatasetReference",
+								"parameters": {
+									"SFObjectName": "User",
+									"SFLinkedServiceURL": {
+										"value": "@pipeline().parameters.URL",
+										"type": "Expression"
+									},
+									"SFLinkedServiceUserName": {
+										"value": "@pipeline().parameters.UserName",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "USER - map IDs",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Salesforce - Load USER",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"additionalColumns": [
+									{
+										"name": "objectname",
+										"value": "Account"
+									}
+								],
+								"query": "select Id, LegacyId__c,PersonContactId from User where LegacyId__c != null",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": {
+									"value": "delete from [Audit].[mig_mapIDs] where [objectname]='User';",
+									"type": "Expression"
+								},
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "TarSalesforceObject",
+								"type": "DatasetReference",
+								"parameters": {
+									"SFObjectName": "x",
 									"SFLinkedServiceURL": {
 										"value": "@pipeline().parameters.URL",
 										"type": "Expression"
