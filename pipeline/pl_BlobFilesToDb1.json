@@ -22,7 +22,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "DECLARE @sql NVARCHAR(max)=''\nSELECT @sql += 'DROP TABLE ' + '[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']' FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = 'Aria_Archive_1' \nExec Sp_executesql @sql\n"
+							"text": "DECLARE @sql NVARCHAR(max)=''\nSELECT @sql += 'DROP TABLE ' + '[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']' FROM INFORMATION_SCHEMA.TABLES \nWHERE TABLE_SCHEMA = 'Aria_Archive' \nExec Sp_executesql @sql\n"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -89,6 +89,9 @@
 							"name": "Execute Pipeline- load table",
 							"type": "ExecutePipeline",
 							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
@@ -138,11 +141,11 @@
 		"parameters": {
 			"ExtractionDate": {
 				"type": "string",
-				"defaultValue": "20231203"
+				"defaultValue": "20240728"
 			},
 			"FilterFolderName": {
 				"type": "string",
-				"defaultValue": "raw-acct-dunning-group"
+				"defaultValue": "raw-acct"
 			}
 		},
 		"folder": {
